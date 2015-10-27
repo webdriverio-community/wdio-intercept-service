@@ -1,0 +1,35 @@
+{
+  "name": "webdriverajax",
+  "version": "1.0.0",
+  "description": "Intercept and assert HTTP ajax calls in webdriver.io",
+  "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/.bin/wdio"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chmanie/webdriverajax.git"
+  },
+  "keywords": [
+    "selenium",
+    "webdriver",
+    "webdriverio",
+    "webdriverjs",
+    "ajax",
+    "http",
+    "test",
+    "testing"
+  ],
+  "author": "Christian Maniewski <chmanie@fastmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/chmanie/webdriverajax/issues"
+  },
+  "homepage": "https://github.com/chmanie/webdriverajax#readme",
+  "devDependencies": {
+    "mocha": "^2.3.3",
+    "node-static": "^0.7.7",
+    "selenium-standalone": "^4.7.1",
+    "webdriverio": "^3.2.5"
+  }
+}

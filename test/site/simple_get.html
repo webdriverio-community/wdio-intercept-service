@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Simple get</title>
+</head>
+<body>
+  <p id="text">This file makes an ajax GET request to /one.json</p>
+  <button id="button">Press me</button>
+  <script>
+    'use strict';
+
+    (function (window, document) {
+
+      var button = document.querySelector('#button');
+      button.addEventListener('click', function (evt) {
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '/one.json');
+        xhr.send();
+
+      });
+
+    })(window, window.document);
+  </script>
+</body>
+</html>
