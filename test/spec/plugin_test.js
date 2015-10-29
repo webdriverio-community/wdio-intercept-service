@@ -25,7 +25,7 @@ describe('webdriverajax', function () {
             .expectRequest('get', 'http://localhost:8080/simple_get.json', 200)
             .click('#button')
             .pause(1000)
-            .flushInterceptor();
+            .assertRequests();
 
     });
 
@@ -36,12 +36,25 @@ describe('webdriverajax', function () {
             .expectRequest('get', /simple_get\.json/, 200)
             .click('#button')
             .pause(1000)
-            .flushInterceptor();
+            .assertRequests();
 
     });
 
-    // it('can access a certain response', function () {
-    //     // body...
-    // })
+    it('can access a certain response', function () {
+
+        return browser.url('/simple_get.html')
+            .setupInterceptor()
+            .click('#button')
+            .pause(1000)
+            .getResponse(0)
+            .then(function (response) {
+                assert.equal(response.method, 'GET');
+                assert.deepEqual(response.body, { OK: true });
+                assert.equal(response.url, 'http://localhost:8080/simple_get.json');
+                assert.equal(response.status, 200);
+                assert.equal(response.headers['content-length'], '15');
+            });
+
+    });
 
 });

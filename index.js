@@ -14,7 +14,8 @@ function plugin (wdInstance, options) {
 
     wdInstance.addCommand('setupInterceptor', setup.bind(wdInstance));
     wdInstance.addCommand('expectRequest', expectRequest.bind(wdInstance));
-    wdInstance.addCommand('flushInterceptor', flushInterceptor.bind(wdInstance));
+    wdInstance.addCommand('assertRequests', assertRequests.bind(wdInstance));
+    wdInstance.addCommand('getResponse', getResponse.bind(wdInstance));
 
     function setup (opts) {
         return this.execute(interceptor.setup, assign({}, options, opts));
@@ -27,8 +28,15 @@ function plugin (wdInstance, options) {
         return this.execute(interceptor.expectRequest, method, url, status);
     }
 
-    function flushInterceptor () {
-        return this.execute(interceptor.assertAllRequests);
+    function assertRequests () {
+        return this.execute(interceptor.assertRequests);
+    }
+
+    function getResponse (index) {
+        return this.execute(interceptor.getResponse, index)
+            .then(function (response) {
+                return response && response.value;
+            });
     }
 
 }
