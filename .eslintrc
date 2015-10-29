@@ -1,8 +1,8 @@
 {
     "env": {
-        "browser": true,
-        "commonjs": true,
-        "mocha": true
+        "node": true,
+        "mocha": true,
+        "browser": true
     },
     "globals": {
         "browser": true
@@ -13,6 +13,7 @@
         "no-array-constructor": 2,
         "no-caller": 2,
         "no-catch-shadow": 2,
+        "no-console": 0,
         "no-empty-label": 2,
         "no-eval": 2,
         "no-extend-native": 2,
@@ -54,7 +55,7 @@
         "dot-notation": [2, { "allowKeywords": true }],
         "eol-last": 1,
         "eqeqeq": [2, "smart"],
-        "indent": [2, 2],
+        "indent": [2, 4],
         "key-spacing": [2, { "beforeColon": false, "afterColon": true }],
         "max-depth": [1, 2],
         "max-len": [2, 120],

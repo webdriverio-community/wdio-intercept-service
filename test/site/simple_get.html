@@ -6,7 +6,7 @@
   <title>Simple get</title>
 </head>
 <body>
-  <p id="text">This file makes an ajax GET request to /one.json</p>
+  <p id="text">This file makes an ajax GET request to /simple_get.json</p>
   <button id="button">Press me</button>
   <script>
     'use strict';
@@ -17,7 +17,7 @@
       button.addEventListener('click', function (evt) {
 
         var xhr = new XMLHttpRequest();
-        xhr.open('GET', '/one.json');
+        xhr.open('GET', '/simple_get.json');
         xhr.send();
 
       });

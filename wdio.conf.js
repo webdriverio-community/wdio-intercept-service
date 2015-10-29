@@ -1,16 +1,17 @@
+'use strict';
+
 var http = require('http');
+var path = require('path');
 
 var selenium = require('selenium-standalone');
-var static = require('node-static');
-
-var WebdriverAjax = require('./index.js');
+var nodeStatic = require('node-static');
 
 var grid, staticServer;
 
 function startStaticServer (cb) {
     return new Promise(function (resolve, reject) {
-        var file = new static.Server('./test/site');
-        server = http.createServer(function (request, response) {
+        var file = new nodeStatic.Server('./test/site');
+        var server = http.createServer(function (request, response) {
             request.addListener('end', function () {
                 file.serve(request, response);
             }).resume();
@@ -22,10 +23,6 @@ function startStaticServer (cb) {
             resolve(server);
         });
     });
-}
-
-function stopStaticServer (cb) {
-    server.close(cb);
 }
 
 function startSelenium (cb) {
@@ -40,7 +37,9 @@ function startSelenium (cb) {
     });
 }
 
-exports.config = {
+var plugin = path.resolve(__dirname, 'index.js');
+
+var config = {
 
     //
     // ==================
@@ -103,16 +102,8 @@ exports.config = {
     // WebdriverCSS: https://github.com/webdriverio/webdrivercss
     // WebdriverRTC: https://github.com/webdriverio/webdriverrtc
     // Browserevent: https://github.com/webdriverio/browserevent
-    // plugins: {
-    //     webdrivercss: {
-    //         screenshotRoot: 'my-shots',
-    //         failedComparisonsRoot: 'diffs',
-    //         misMatchTolerance: 0.05,
-    //         screenWidth: [320,480,640,1024]
-    //     },
-    //     webdriverrtc: {},
-    //     browserevent: {}
-    // },
+    plugins: {
+    },
     //
     // Framework you want to run your specs with.
     // The following are supported: mocha, jasmine and cucumber
@@ -171,3 +162,7 @@ exports.config = {
         staticServer.close();
     }
 };
+
+config.plugins[plugin] = {};
+
+exports.config = config;
