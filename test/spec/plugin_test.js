@@ -29,4 +29,19 @@ describe('webdriverajax', function () {
 
     });
 
+    it('can use regular expressions for urls', function () {
+
+        return browser.url('/simple_get.html')
+            .setupInterceptor()
+            .expectRequest('get', /simple_get\.json/, 200)
+            .click('#button')
+            .pause(1000)
+            .flushInterceptor();
+
+    });
+
+    // it('can access a certain response', function () {
+    //     // body...
+    // })
+
 });
