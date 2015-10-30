@@ -6,7 +6,14 @@ var path = require('path');
 var selenium = require('selenium-standalone');
 var nodeStatic = require('node-static');
 
-var grid, staticServer;
+var grid, staticServer, seleniumArgs;
+
+if (process.env.CI === 'true') {
+    // Travis, FF >> 31 is required
+    seleniumArgs = ['-Dwebdriver.firefox.bin=/usr/local/bin/firefox'];
+} else {
+    seleniumArgs = [];
+}
 
 function startStaticServer (cb) {
     return new Promise(function (resolve, reject) {
@@ -27,7 +34,7 @@ function startStaticServer (cb) {
 
 function startSelenium (cb) {
     return new Promise(function (resolve, reject) {
-        selenium.start(function (err, sel) {
+        selenium.start({ seleniumArgs: seleniumArgs }, function (err, sel) {
             if (err) {
                 return reject(err);
             }
