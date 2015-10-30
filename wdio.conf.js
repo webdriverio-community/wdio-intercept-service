@@ -7,18 +7,64 @@ var selenium = require('selenium-standalone');
 var nodeStatic = require('node-static');
 var assign = require('object-assign');
 
-var grid, staticServer, capabilities, user, key;
+var grid, staticServer, capabilities;
 
 if (process.env.CI === 'true') {
 
     capabilities = [{
         browserName: 'firefox',
         version: '41',
-        platform: 'OS X 10.9'
+        platform: 'OS X 10.11'
     }, {
         browserName: 'firefox',
         version: '40',
-        platform: 'OS X 10.9'
+        platform: 'OS X 10.11'
+    }, {
+        browserName: 'chrome',
+        version: '46',
+        platform: 'OS X 10.11'
+    }, {
+        browserName: 'chrome',
+        version: '45',
+        platform: 'OS X 10.11'
+    }, {
+        browserName: 'safari',
+        version: '9',
+        platform: 'OS X 10.11'
+    }, {
+        browserName: 'safari',
+        version: '8',
+        platform: 'OS X 10.10'
+    }, {
+        browserName: 'microsoftedge',
+        version: '20.10240',
+        platform: 'Windows 10'
+    }, {
+        browserName: 'internet explorer',
+        version: '11.0',
+        platform: 'Windows 10'
+    }, {
+        browserName: 'internet explorer',
+        version: '10.0',
+        platform: 'Windows 8'
+    }, {
+        browserName: 'iphone',
+        version: '9.1',
+        platform: 'OS X 10.10',
+        deviceName: 'iPhone 6 Plus',
+        deviceOrientation: 'portrait'
+    }, {
+        browserName: 'iphone',
+        version: '8.4',
+        platform: 'OS X 10.10',
+        deviceName: 'iPhone 6 Plus',
+        deviceOrientation: 'portrait'
+    }, {
+        browserName: 'android',
+        version: '5.1',
+        platform: 'Linux',
+        deviceName: 'Android Emulator',
+        deviceOrientation: 'portrait'
     }].map(function (capability) {
         return assign(capability, {
             'tunnel-identifier': process.env.TRAVIS_JOB_NUMBER,
@@ -26,9 +72,6 @@ if (process.env.CI === 'true') {
             build: process.env.TRAVIS_BUILD_NUMBER
         });
     });
-
-    user = process.env.SAUCE_USERNAME;
-    key = process.env.SAUCE_ACCESS_KEY;
 
 } else {
     capabilities = [{
@@ -99,8 +142,8 @@ var config = {
     // https://docs.saucelabs.com/reference/platforms-configurator
     //
     capabilities: capabilities,
-    user: user,
-    key: key,
+    user: process.env.SAUCE_USERNAME,
+    key: process.env.SAUCE_ACCESS_KEY,
     //
     // ===================
     // Test Configurations
@@ -147,7 +190,7 @@ var config = {
     // Test reporter for stdout.
     // The following are supported: dot (default), spec and xunit
     // see also: http://webdriver.io/guide/testrunner/reporters.html
-    reporter: 'spec',
+    reporter: process.env.CI ? 'dot' : 'spec',
 
     //
     // Options to be passed to Mocha.
