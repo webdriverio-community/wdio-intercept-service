@@ -44,8 +44,8 @@ describe('webdriverajax', function () {
 
         return browser.url('/simple_get.html')
             .setupInterceptor()
-            .expectRequest('GET', 'http://localhost:8080/simple_get.json', 200)
-            .expectRequest('GET', 'http://localhost:8080/simple_get.json', 200)
+            .expectRequest('GET', '/simple_get.json', 200)
+            .expectRequest('GET', '/simple_get.json', 200)
             .click('#button')
             .pause(1000)
             .assertRequests().then(function () {
@@ -60,7 +60,7 @@ describe('webdriverajax', function () {
 
         return browser.url('/simple_get.html')
             .setupInterceptor()
-            .expectRequest('PUT', 'http://localhost:8080/simple_get.json', 200)
+            .expectRequest('PUT', '/simple_get.json', 200)
             .click('#button')
             .pause(1000)
             .assertRequests().then(function () {
@@ -75,7 +75,7 @@ describe('webdriverajax', function () {
 
         return browser.url('/simple_get.html')
             .setupInterceptor()
-            .expectRequest('GET', 'http://localhost:8080/wrong.json', 200)
+            .expectRequest('GET', '/wrong.json', 200)
             .click('#button')
             .pause(1000)
             .assertRequests().then(function () {
@@ -105,7 +105,7 @@ describe('webdriverajax', function () {
 
         return browser.url('/simple_get.html')
             .setupInterceptor()
-            .expectRequest('GET', 'http://localhost:8080/simple_get.json', 404)
+            .expectRequest('GET', '/simple_get.json', 404)
             .click('#button')
             .pause(1000)
             .assertRequests().then(function () {
