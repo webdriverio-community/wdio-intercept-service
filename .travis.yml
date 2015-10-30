@@ -1,8 +1,8 @@
 env:
-  - CXX=g++-4.8 DISPLAY=:99.0
+  - CXX=g++-4.8
 sudo: false
 addons:
-  firefox: "41.0"
+  sauce_connect: true
   apt:
     sources:
       - ubuntu-toolchain-r-test
@@ -11,5 +11,3 @@ addons:
 language: node_js
 node_js:
   - "4.1"
-before_install:
-  - sh -e /etc/init.d/xvfb start

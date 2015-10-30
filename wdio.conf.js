@@ -5,14 +5,35 @@ var path = require('path');
 
 var selenium = require('selenium-standalone');
 var nodeStatic = require('node-static');
+var assign = require('object-assign');
 
-var grid, staticServer, seleniumArgs;
+var grid, staticServer, capabilities, user, key;
 
 if (process.env.CI === 'true') {
-    // Travis, FF >> 31 is required
-    seleniumArgs = ['-Dwebdriver.firefox.bin=/usr/local/bin/firefox'];
+
+    capabilities = [{
+        browserName: 'firefox',
+        version: '41',
+        platform: 'OS X 10.9'
+    }, {
+        browserName: 'firefox',
+        version: '40',
+        platform: 'OS X 10.9'
+    }].map(function (capability) {
+        return assign(capability, {
+            'tunnel-identifier': process.env.TRAVIS_JOB_NUMBER,
+            name: 'integration',
+            build: process.env.TRAVIS_BUILD_NUMBER
+        });
+    });
+
+    user = process.env.SAUCE_USERNAME;
+    key = process.env.SAUCE_ACCESS_KEY;
+
 } else {
-    seleniumArgs = [];
+    capabilities = [{
+        browserName: 'chrome'
+    }];
 }
 
 function startStaticServer (cb) {
@@ -34,7 +55,7 @@ function startStaticServer (cb) {
 
 function startSelenium (cb) {
     return new Promise(function (resolve, reject) {
-        selenium.start({ seleniumArgs: seleniumArgs }, function (err, sel) {
+        selenium.start(function (err, sel) {
             if (err) {
                 return reject(err);
             }
@@ -77,9 +98,9 @@ var config = {
     // Sauce Labs platform configurator - a great tool to configure your capabilities:
     // https://docs.saucelabs.com/reference/platforms-configurator
     //
-    capabilities: [{
-        browserName: 'firefox'
-    }],
+    capabilities: capabilities,
+    user: user,
+    key: key,
     //
     // ===================
     // Test Configurations
@@ -132,7 +153,8 @@ var config = {
     // Options to be passed to Mocha.
     // See the full list at http://mochajs.org/
     mochaOpts: {
-        ui: 'bdd'
+        ui: 'bdd',
+        timeout: 30000
     },
 
     //

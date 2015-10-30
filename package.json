@@ -31,6 +31,7 @@
     "mocha": "^2.3.3",
     "node-static": "^0.7.7",
     "selenium-standalone": "^4.7.1",
-    "webdriverio": "^3.2.5"
+    "webdriverio": "^3.2.5",
+    "object-assign": "^4.0.1"
   }
 }
