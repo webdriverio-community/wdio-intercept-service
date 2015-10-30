@@ -57,4 +57,20 @@ describe('webdriverajax', function () {
 
     });
 
+    it('can get multiple requests', function () {
+        return browser.url('/simple_get.html')
+            .setupInterceptor()
+            .click('#button')
+            .pause(1000)
+            .click('#button')
+            .pause(1000)
+            .getRequests()
+            .then(function (requests) {
+                assert(Array.isArray(requests));
+                assert.equal(requests.length, 2);
+                assert.equal(requests[0].method, 'GET');
+                assert.equal(requests[1].method, 'GET');
+            });
+    });
+
 });
