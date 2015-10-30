@@ -31,8 +31,5 @@
     "node-static": "^0.7.7",
     "selenium-standalone": "^4.7.1",
     "webdriverio": "^3.2.5"
-  },
-  "dependencies": {
-    "object-assign": "^4.0.1"
   }
 }

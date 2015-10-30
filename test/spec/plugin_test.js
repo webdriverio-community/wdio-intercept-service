@@ -11,9 +11,9 @@ describe('webdriverajax', function () {
         return browser.url('/simple_get.html')
             .setupInterceptor()
             .execute(function checkSetup () {
-                if (typeof window.__webdriverajax != 'object') {
-                    throw new Error('WebdriverAjax was not setup properly');
-                }
+                return window.__webdriverajax;
+            }).then(function (ret) {
+                assert.deepEqual(ret.value, { requests: [] });
             });
 
     });
@@ -22,7 +22,7 @@ describe('webdriverajax', function () {
 
         return browser.url('/simple_get.html')
             .setupInterceptor()
-            .expectRequest('get', 'http://localhost:8080/simple_get.json', 200)
+            .expectRequest('GET', 'http://localhost:8080/simple_get.json', 200)
             .click('#button')
             .pause(1000)
             .assertRequests();
@@ -33,10 +33,86 @@ describe('webdriverajax', function () {
 
         return browser.url('/simple_get.html')
             .setupInterceptor()
-            .expectRequest('get', /simple_get\.json/, 200)
+            .expectRequest('GET', /simple_get\.json/, 200)
             .click('#button')
             .pause(1000)
             .assertRequests();
+
+    });
+
+    it('errors on wrong request count', function () {
+
+        return browser.url('/simple_get.html')
+            .setupInterceptor()
+            .expectRequest('GET', 'http://localhost:8080/simple_get.json', 200)
+            .expectRequest('GET', 'http://localhost:8080/simple_get.json', 200)
+            .click('#button')
+            .pause(1000)
+            .assertRequests().then(function () {
+                throw new Error('This should not be called');
+            }, function (err) {
+                assert(err, 'should be rejected');
+            });
+
+    });
+
+    it('errors on wrong method', function () {
+
+        return browser.url('/simple_get.html')
+            .setupInterceptor()
+            .expectRequest('PUT', 'http://localhost:8080/simple_get.json', 200)
+            .click('#button')
+            .pause(1000)
+            .assertRequests().then(function () {
+                throw new Error('This should not be called');
+            }, function (err) {
+                assert(err, 'should be rejected');
+            });
+
+    });
+
+    it('errors on wrong URL', function () {
+
+        return browser.url('/simple_get.html')
+            .setupInterceptor()
+            .expectRequest('GET', 'http://localhost:8080/wrong.json', 200)
+            .click('#button')
+            .pause(1000)
+            .assertRequests().then(function () {
+                throw new Error('This should not be called');
+            }, function (err) {
+                assert(err, 'should be rejected');
+            });
+
+    });
+
+    it('errors if regex doesn\'t match URL', function () {
+
+        return browser.url('/simple_get.html')
+            .setupInterceptor()
+            .expectRequest('GET', /wrong\.json/, 200)
+            .click('#button')
+            .pause(1000)
+            .assertRequests().then(function () {
+                throw new Error('This should not be called');
+            }, function (err) {
+                assert(err, 'should be rejected');
+            });
+
+    });
+
+    it('errors on wrong status code', function () {
+
+        return browser.url('/simple_get.html')
+            .setupInterceptor()
+            .expectRequest('GET', 'http://localhost:8080/simple_get.json', 404)
+            .click('#button')
+            .pause(1000)
+            .assertRequests().then(function () {
+                throw new Error('This should not be called');
+            }, function (err) {
+                assert(err, 'should be rejected');
+            });
 
     });
 
