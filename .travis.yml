@@ -1,0 +1,15 @@
+env:
+  - CXX=g++-4.8 DISPLAY=:99.0
+sudo: false
+addons:
+  firefox: "41.0"
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-4.8
+language: node_js
+node_js:
+  - "4.1"
+before_install:
+  - sh -e /etc/init.d/xvfb start
