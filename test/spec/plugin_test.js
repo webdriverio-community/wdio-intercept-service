@@ -22,7 +22,7 @@ describe('webdriverajax', function () {
 
         return browser.url('/simple_get.html')
             .setupInterceptor()
-            .expectRequest('GET', 'http://localhost:8080/simple_get.json', 200)
+            .expectRequest('GET', '/simple_get.json', 200)
             .click('#button')
             .pause(1000)
             .assertRequests();
@@ -125,7 +125,7 @@ describe('webdriverajax', function () {
             .getRequest(0)
             .then(function (request) {
                 assert.equal(request.method, 'GET');
-                assert.equal(request.url, 'http://localhost:8080/simple_get.json');
+                assert.equal(request.url, '/simple_get.json');
                 assert.deepEqual(request.response.body, { OK: true });
                 assert.equal(request.response.status, 200);
                 assert.equal(request.response.headers['content-length'], '15');
