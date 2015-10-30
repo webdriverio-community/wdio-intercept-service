@@ -40,19 +40,19 @@ describe('webdriverajax', function () {
 
     });
 
-    it('can access a certain response', function () {
+    it('can access a certain request', function () {
 
         return browser.url('/simple_get.html')
             .setupInterceptor()
             .click('#button')
             .pause(1000)
-            .getResponse(0)
-            .then(function (response) {
-                assert.equal(response.method, 'GET');
-                assert.deepEqual(response.body, { OK: true });
-                assert.equal(response.url, 'http://localhost:8080/simple_get.json');
-                assert.equal(response.status, 200);
-                assert.equal(response.headers['content-length'], '15');
+            .getRequest(0)
+            .then(function (request) {
+                assert.equal(request.method, 'GET');
+                assert.equal(request.url, 'http://localhost:8080/simple_get.json');
+                assert.deepEqual(request.response.body, { OK: true });
+                assert.equal(request.response.status, 200);
+                assert.equal(request.response.headers['content-length'], '15');
             });
 
     });

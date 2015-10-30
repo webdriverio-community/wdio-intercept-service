@@ -15,7 +15,7 @@ function plugin (wdInstance, options) {
     wdInstance.addCommand('setupInterceptor', setup.bind(wdInstance));
     wdInstance.addCommand('expectRequest', expectRequest.bind(wdInstance));
     wdInstance.addCommand('assertRequests', assertRequests.bind(wdInstance));
-    wdInstance.addCommand('getResponse', getResponse.bind(wdInstance));
+    wdInstance.addCommand('getRequest', getRequest.bind(wdInstance));
 
     function setup (opts) {
         return this.execute(interceptor.setup, assign({}, options, opts));
@@ -32,10 +32,10 @@ function plugin (wdInstance, options) {
         return this.execute(interceptor.assertRequests);
     }
 
-    function getResponse (index) {
-        return this.execute(interceptor.getResponse, index)
-            .then(function (response) {
-                return response && response.value;
+    function getRequest (index) {
+        return this.execute(interceptor.getRequest, index)
+            .then(function (request) {
+                return request && request.value;
             });
     }
 
