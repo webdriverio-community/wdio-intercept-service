@@ -4,11 +4,15 @@ Capture and assert HTTP ajax calls in [webdriver.io](http://webdriver.io/)
 ![Travis badge](https://travis-ci.org/chmanie/webdriverajax.svg?branch=master)
 
 This is a plugin for [webdriver.io](http://webdriver.io/). If you don't know it yet, check it out, it's pretty cool.
-**Heads up!** It's meant to be used with webdriver.io **v3.x**. So make sure you're using the correct version.
 
 Although selenium and webdriver are used for e2e and especially UI testing, you might want to assess HTTP requests done by your client code (e.g. when you don't have immediate UI feedback, like in metrics or tracking calls). With webdriverajax you can intercept ajax HTTP calls initiated by some user action (e.g. a button press, etc.) and make assertions about the request and corresponding resposes later.
 
 There's one catch though: you can't intercept HTTP calls that are initiated on page load (like in most SPAs), as it requires some setup work that can only be done after the page is loaded (due to limitations in selenium). **That means you can just capture requests that were initiated inside a test.** If you're fine with that, this plugin might be for you, so read on.
+
+## Prerequisites
+
+* node.js > **v0.12** (as we're using native ES6 Promises)
+* webdriver.io **v3.x**.
 
 ## Installation
 
