@@ -48,6 +48,10 @@ if (process.env.CI === 'true') {
         version: '10.0',
         platform: 'Windows 8'
     }, {
+        browserName: 'internet explorer',
+        version: '9.0',
+        platform: 'Windows 7'
+    }, {
         browserName: 'iphone',
         version: '9.0',
         platform: 'OS X 10.10',
@@ -192,7 +196,7 @@ var config = {
     // See the full list at http://mochajs.org/
     mochaOpts: {
         ui: 'bdd',
-        timeout: 50000
+        timeout: process.env.CI ? 100000 : 10000
     },
 
     //
