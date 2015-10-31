@@ -203,10 +203,11 @@ var config = {
     //
     // Gets executed before all workers get launched.
     onPrepare: function() {
-        return Promise.all([
-            startSelenium(),
-            startStaticServer()
-        ]);
+        var jobs = [startStaticServer()];
+        if (!process.env.CI) {
+            jobs.push(startSelenium());
+        }
+        return Promise.all(jobs);
     },
     //
     // Gets executed before test execution begins. At this point you will have access to all global
@@ -223,7 +224,9 @@ var config = {
     // Gets executed after all workers got shut down and the process is about to exit. It is not
     // possible to defer the end of the process using a promise.
     onComplete: function() {
-        grid.kill();
+        if (!process.env.CI) {
+            grid.kill();
+        }
         staticServer.close();
     }
 };
