@@ -116,6 +116,22 @@ describe('webdriverajax', function () {
 
     });
 
+    it('asserts generator-style', function *() {
+
+        yield browser.url('/simple_get.html')
+            .setupInterceptor()
+            .expectRequest('GET', '/simple_get.json', 404)
+            .click('#button')
+            .pause(1000);
+
+        try {
+            yield browser.assertRequests();
+        } catch (err) {
+            assert(err, 'it should error');
+        }
+
+    });
+
     it('can access a certain request', function () {
 
         return browser.url('/simple_get.html')
@@ -130,6 +146,18 @@ describe('webdriverajax', function () {
                 assert.equal(request.response.statusCode, 200);
                 assert.equal(request.response.headers['content-length'], '15');
             });
+
+    });
+
+    it('gets request generator-style', function *() {
+
+        yield browser.url('/simple_get.html')
+            .setupInterceptor()
+            .click('#button')
+            .pause(1000);
+
+        var request = yield browser.getRequest(0);
+        assert.equal(request.method, 'GET');
 
     });
 

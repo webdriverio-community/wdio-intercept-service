@@ -123,7 +123,7 @@ function plugin (wdInstance, options) {
         }
         return {
             url: req.url,
-            method: req.method,
+            method: req.method && req.method.toUpperCase(),
             response: {
                 headers: parseHeaders(req.headers),
                 body: parseBody(req.body),
