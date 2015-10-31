@@ -53,12 +53,6 @@ if (process.env.CI === 'true') {
         platform: 'Windows 7'
     }, {
         browserName: 'iphone',
-        version: '9.0',
-        platform: 'OS X 10.10',
-        deviceName: 'iPhone 6 Plus',
-        deviceOrientation: 'portrait'
-    }, {
-        browserName: 'iphone',
         version: '8.4',
         platform: 'OS X 10.10',
         deviceName: 'iPhone 6 Plus',
