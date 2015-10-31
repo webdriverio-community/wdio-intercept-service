@@ -127,7 +127,7 @@ describe('webdriverajax', function () {
                 assert.equal(request.method, 'GET');
                 assert.equal(request.url, '/simple_get.json');
                 assert.deepEqual(request.response.body, { OK: true });
-                assert.equal(request.response.status, 200);
+                assert.equal(request.response.statusCode, 200);
                 assert.equal(request.response.headers['content-length'], '15');
             });
 

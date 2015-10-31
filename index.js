@@ -22,11 +22,11 @@ function plugin (wdInstance, options) {
         return wdInstance.execute(interceptor.setup);
     }
 
-    function expectRequest (method, url, status) {
+    function expectRequest (method, url, statusCode) {
         wdInstance.__wdajaxExpectations.push({
             method: method.toUpperCase(),
             url: url,
-            status: status
+            statusCode: statusCode
         });
     }
 
@@ -81,14 +81,14 @@ function plugin (wdInstance, options) {
                     ));
                 }
 
-                if (request.response.status !== ex.status) {
+                if (request.response.statusCode !== ex.statusCode) {
                     return Promise.reject(new Error(
                         'Expected request to URL ' +
                         request.url +
                         ' to have status ' +
-                        ex.status +
+                        ex.statusCode +
                         ' but was ' +
-                        request.response.status
+                        request.response.statusCode
                     ));
                 }
 
@@ -123,7 +123,7 @@ function plugin (wdInstance, options) {
             response: {
                 headers: parseHeaders(req.headers),
                 body: parseBody(req.body),
-                status: req.status
+                statusCode: req.statusCode
             }
         };
     }
