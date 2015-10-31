@@ -4,7 +4,6 @@
   "description": "Capture and assert HTTP ajax calls in webdriver.io",
   "main": "index.js",
   "scripts": {
-    "postinstall": "./node_modules/.bin/selenium-standalone install",
     "test": "./node_modules/.bin/wdio"
   },
   "repository": {

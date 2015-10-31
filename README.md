@@ -132,7 +132,13 @@ Get all captured requests as an array.
 
 ## Running the tests
 
-Firefox has to be installed.
+Firefox has to be installed. Also install selenium standalone via:
+
+```
+node_modules/.bin/selenium-standalone install
+```
+
+then
 
 ```
 npm test
