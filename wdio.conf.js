@@ -49,7 +49,7 @@ if (process.env.CI === 'true') {
         platform: 'Windows 8'
     }, {
         browserName: 'iphone',
-        version: '9.1',
+        version: '9.0',
         platform: 'OS X 10.10',
         deviceName: 'iPhone 6 Plus',
         deviceOrientation: 'portrait'
@@ -59,17 +59,12 @@ if (process.env.CI === 'true') {
         platform: 'OS X 10.10',
         deviceName: 'iPhone 6 Plus',
         deviceOrientation: 'portrait'
-    }, {
-        browserName: 'android',
-        version: '5.1',
-        platform: 'Linux',
-        deviceName: 'Android Emulator',
-        deviceOrientation: 'portrait'
     }].map(function (capability) {
         return assign(capability, {
             'tunnel-identifier': process.env.TRAVIS_JOB_NUMBER,
             name: 'integration',
-            build: process.env.TRAVIS_BUILD_NUMBER
+            build: process.env.TRAVIS_BUILD_NUMBER,
+            public: true
         });
     });
 
@@ -197,7 +192,7 @@ var config = {
     // See the full list at http://mochajs.org/
     mochaOpts: {
         ui: 'bdd',
-        timeout: 30000
+        timeout: 50000
     },
 
     //
