@@ -109,6 +109,10 @@ function plugin (wdInstance, options) {
                 if (Array.isArray(request.value)) {
                     return request.value.map(transformRequest);
                 }
+                // The edge driver does not seem to typecast arrays correctly
+                if (typeof request.value[0] == 'object') {
+                    return mapIndexed(request.value, transformRequest);
+                }
                 return transformRequest(request.value);
             });
     }
@@ -150,6 +154,15 @@ function plugin (wdInstance, options) {
         return body;
     }
 
+    // maps an 'array-like' object. returns proper array
+    function mapIndexed (obj, fn) {
+        var arr = [];
+        var max = Math.max.apply(Math, Object.keys(obj).map(Number));
+        for (var i = 0; i <= max; i++) {
+            arr.push(fn(obj[i], i));
+        }
+        return arr;
+    }
 }
 
 /**
