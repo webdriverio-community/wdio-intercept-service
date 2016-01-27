@@ -2,11 +2,14 @@
     "env": {
         "node": true,
         "mocha": true,
-        "browser": true,
-        "ES6": true
+        "browser": true
     },
     "globals": {
         "browser": true
+    },
+    "ecmaFeatures": {
+        "generators": true,
+        "objectLiteralShorthandProperties": true
     },
     "extends": "eslint:recommended",
     "rules": {

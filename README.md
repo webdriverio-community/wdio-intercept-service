@@ -55,7 +55,7 @@ before(function() {
 });
 ```
 
-Once initialized, some related functions are added to you browser command chain (see [API](#api)).
+Once initialized, some related functions are added to your browser command chain (see [API](#api)).
 
 ## Quickstart
 

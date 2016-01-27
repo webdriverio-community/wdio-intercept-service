@@ -4,6 +4,8 @@ var assert = require('assert');
 
 describe('webdriverajax', function () {
 
+    this.timeout(process.env.CI ? 100000 : 10000);
+
     it('sets up the interceptor', function () {
 
         assert.equal(typeof browser.setupInterceptor, 'function');

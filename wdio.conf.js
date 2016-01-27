@@ -1,13 +1,11 @@
 'use strict';
 
-var http = require('http');
 var path = require('path');
 
-var selenium = require('selenium-standalone');
-var nodeStatic = require('node-static');
 var assign = require('object-assign');
+var utils = require('./test/utils');
 
-var grid, staticServer, capabilities;
+var capabilities;
 
 if (process.env.CI === 'true') {
 
@@ -72,35 +70,6 @@ if (process.env.CI === 'true') {
     }];
 }
 
-function startStaticServer (cb) {
-    return new Promise(function (resolve, reject) {
-        var file = new nodeStatic.Server('./test/site');
-        var server = http.createServer(function (request, response) {
-            request.addListener('end', function () {
-                file.serve(request, response);
-            }).resume();
-        }).listen(8080, function (err) {
-            if (err) {
-                return reject(err);
-            }
-            staticServer = server;
-            resolve(server);
-        });
-    });
-}
-
-function startSelenium (cb) {
-    return new Promise(function (resolve, reject) {
-        selenium.start(function (err, sel) {
-            if (err) {
-                return reject(err);
-            }
-            grid = sel;
-            resolve(sel);
-        });
-    });
-}
-
 var plugin = path.resolve(__dirname, 'index.js');
 
 var config = {
@@ -115,7 +84,7 @@ var config = {
     // directory is where your package.json resides, so `wdio` will be called from there.
     //
     specs: [
-        './test/spec/**/*.js'
+        './test/spec/plugin_test.js'
     ],
     // Patterns to exclude.
     exclude: [
@@ -189,8 +158,7 @@ var config = {
     // Options to be passed to Mocha.
     // See the full list at http://mochajs.org/
     mochaOpts: {
-        ui: 'bdd',
-        timeout: process.env.CI ? 100000 : 10000
+        ui: 'bdd'
     },
 
     //
@@ -203,9 +171,9 @@ var config = {
     //
     // Gets executed before all workers get launched.
     onPrepare: function() {
-        var jobs = [startStaticServer()];
+        var jobs = [utils.startStaticServer()];
         if (!process.env.CI) {
-            jobs.push(startSelenium());
+            jobs.push(utils.startSelenium());
         }
         return Promise.all(jobs);
     },
@@ -218,16 +186,15 @@ var config = {
     //
     // Gets executed after all tests are done. You still have access to all global variables from
     // the test.
-    after: function(failures, pid) {
-    },
+    after: function(failures, pid) {},
     //
     // Gets executed after all workers got shut down and the process is about to exit. It is not
     // possible to defer the end of the process using a promise.
     onComplete: function() {
-        if (!process.env.CI) {
-            grid.kill();
-        }
-        staticServer.close();
+        return Promise.all([
+            utils.stopStaticServer(),
+            utils.stopSelenium()
+        ]);
     }
 };
 
