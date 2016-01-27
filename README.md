@@ -1,4 +1,6 @@
 # webdriverajax
+
+[![Join the chat at https://gitter.im/chmanie/webdriverajax](https://badges.gitter.im/chmanie/webdriverajax.svg)](https://gitter.im/chmanie/webdriverajax?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 Capture and assert HTTP ajax calls in [webdriver.io](http://webdriver.io/)
 
 ![Travis badge](https://travis-ci.org/chmanie/webdriverajax.svg?branch=master)
