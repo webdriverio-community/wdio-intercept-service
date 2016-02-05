@@ -179,4 +179,32 @@ describe('webdriverajax', function () {
             });
     });
 
+    it('survives page changes', function () {
+        return browser.url('/page_change.html')
+            .setupInterceptor()
+            .click('#button1')
+            .pause(2000)
+            .getRequests()
+            .then(function (requests) {
+                assert(Array.isArray(requests));
+                assert.equal(requests.length, 1);
+                assert.equal(requests[0].method, 'GET');
+            });
+    });
+
+    it('survives page changes using multiple requests', function () {
+        return browser.url('/page_change.html')
+            .setupInterceptor()
+            .click('#button1')
+            .click('#button2')
+            .pause(2000)
+            .getRequests()
+            .then(function (requests) {
+                assert(Array.isArray(requests));
+                assert.equal(requests.length, 2);
+                assert.equal(requests[0].method, 'GET');
+                assert.equal(requests[1].method, 'GET');
+            });
+    });
+
 });
