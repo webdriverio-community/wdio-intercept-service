@@ -1,6 +1,6 @@
 {
   "name": "webdriverajax",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "Capture and assert HTTP ajax calls in webdriver.io",
   "main": "index.js",
   "scripts": {
