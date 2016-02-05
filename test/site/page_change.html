@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Simple get</title>
+</head>
+<body>
+  <p id="text">
+    This file makes an ajax GET request to /simple_get.json and changes the url to simple_get.html
+  </p>
+  <button id="button1">Press me</button>
+  <button id="button2">Press me already!</button>
+  <script>
+    'use strict';
+
+    (function (window, document) {
+
+      var button1 = document.querySelector('#button1');
+      var button2 = document.querySelector('#button2');
+
+      button1.addEventListener('click', function (evt) {
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '/simple_get.json');
+        xhr.send();
+
+      });
+
+      button2.addEventListener('click', function (evt) {
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '/simple_get.json');
+        xhr.addEventListener('load', function () {
+          window.location.pathname = '/simple_get.html';
+        });
+        xhr.send();
+
+      });
+
+    })(window, window.document);
+  </script>
+</body>
+</html>
