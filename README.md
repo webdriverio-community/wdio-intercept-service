@@ -11,8 +11,9 @@ There's one catch though: you can't intercept HTTP calls that are initiated on p
 
 ## Prerequisites
 
-* node.js > **v0.12** (as we're using native ES6 Promises)
-* webdriver.io **v3.x**.
+* webdriver.io **v4.x**.
+
+** Heads up! If you're still using webdriver.io v3, please use the v1.x branch of this plugin!**
 
 ## Installation
 
@@ -42,52 +43,32 @@ plugins: {
 
 and you're all set.
 
-#### Programatic usage
-
-You should require the package and call the config function with your webdriver-instance (`client` or `browser` or whatever you call it) before you initialize it with `.init()`. So for example (using [mocha](https://mochajs.org/)):
-
-```javascript
-var wdajax = require('webdriverajax');
-
-var client = webdriverio.remote({
-  desiredCapabilities: {
-    browserName: 'firefox'
-  }
-});
-
-before(function() {
-  wdajax.init(client);
-  return client.init();
-});
-```
-
 Once initialized, some related functions are added to your browser command chain (see [API](#api)).
 
 ## Quickstart
 
-Example usage (promise-style):
+Example usage:
 
 ```javascript
-browser
-  .url('http://foo.bar')
-  .setupInterceptor() // capture ajax calls
-  .expectRequest('GET', '/api/foo', 200) // expect GET request to /api/foo with 200 statusCode
-  .expectRequest('POST', '/api/foo', 400) // expect POST request to /api/foo with 400 statusCode
-  .expectRequest('GET', /\/api\/foo/, 200) // can validate a URL with regex, too
-  .click('#button') // button that initiates ajax request
-  .pause(1000) // maybe wait a bit until request is finished
-  .assertRequests(); // validate the requests
+browser.url('http://foo.bar');
+browser.setupInterceptor(); // capture ajax calls
+browser.expectRequest('GET', '/api/foo', 200); // expect GET request to /api/foo with 200 statusCode
+browser.expectRequest('POST', '/api/foo', 400); // expect POST request to /api/foo with 400 statusCode
+browser.expectRequest('GET', /\/api\/foo/, 200); // can validate a URL with regex, too
+browser.click('#button'); // button that initiates ajax request
+browser.pause(1000); // maybe wait a bit until request is finished
+browser.assertRequests(); // validate the requests
 ```
 
-Get details about requests (generator-style):
+Get details about requests:
 
 ```javascript
-yield browser.url('http://foo.bar')
-    .setupInterceptor()
-    .click('#button')
-    .pause(1000);
+browser.url('http://foo.bar')
+browser.setupInterceptor();
+browser.click('#button')
+browser.pause(1000);
 
-var request = yield browser.getRequest(0);
+var request = browser.getRequest(0);
 assert.equal(request.method, 'GET');
 assert.equal(request.response.headers['content-length'], '42');
 ```
@@ -127,7 +108,7 @@ To make more sophisticated assertions about a specific request you can get detai
 
 * `index` (`Number`): number of the request you want to access
 
-**Returns**: Promise that resolves to `request` object:
+**Returns** `request` object:
 
 * `request.url`: requested URL
 * `request.method`: used HTTP method
@@ -139,20 +120,20 @@ To make more sophisticated assertions about a specific request you can get detai
 
 Get all captured requests as an array.
 
-**Returns**: Promise that resolves to an array of `request` objects.
+**Returns** array of `request` objects.
 
 ## Running the tests
 
-Firefox has to be installed. Also install selenium standalone via:
+A compatible browser (Firefox, Chrome) has to be installed. Also install selenium standalone via:
 
-```
+```shell
 node_modules/.bin/selenium-standalone install
 ```
 
 then
 
-```
-npm test
+```shell
+yarn test # npm test works as well :)
 ```
 
 ## Contributing

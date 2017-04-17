@@ -7,7 +7,7 @@ function plugin (wdInstance, options) {
     /**
      * instance need to have addCommand method
      */
-    if(typeof wdInstance.addCommand !== 'function') {
+    if (typeof wdInstance.addCommand !== 'function') {
         throw new Error('you can\'t use WebdriverAjax with this version of WebdriverIO');
     }
 
@@ -19,7 +19,14 @@ function plugin (wdInstance, options) {
 
     function setup () {
         wdInstance.__wdajaxExpectations = [];
-        return wdInstance.execute(interceptor.setup);
+        wdInstance.execute(interceptor.setup);
+        return wdInstance.waitUntil(function waitForSetup() {
+            var ret = wdInstance.execute(function checkSetup () {
+                return window.__webdriverajax;
+            });
+            var isSetup = !!(ret.value && ret.value.requests);
+            return Promise.resolve(isSetup);
+        }, 5000);
     }
 
     function expectRequest (method, url, statusCode) {
@@ -28,6 +35,7 @@ function plugin (wdInstance, options) {
             url: url,
             statusCode: statusCode
         });
+        return {};
     }
 
     function assertRequests () {
@@ -148,7 +156,7 @@ function plugin (wdInstance, options) {
         var body;
         try {
             body = JSON.parse(str);
-        } catch(e) {
+        } catch (e) {
             body = str;
         }
         return body;

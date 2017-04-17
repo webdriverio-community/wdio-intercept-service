@@ -119,6 +119,7 @@ var config = {
     // https://docs.saucelabs.com/reference/platforms-configurator
     //
     capabilities: capabilities,
+    services: ['sauce'],
     user: process.env.SAUCE_USERNAME,
     key: process.env.SAUCE_ACCESS_KEY,
     //
@@ -206,10 +207,11 @@ var config = {
     // Gets executed after all workers got shut down and the process is about to exit. It is not
     // possible to defer the end of the process using a promise.
     onComplete: function() {
-        return Promise.all([
-            utils.stopStaticServer(),
-            utils.stopSelenium()
-        ]);
+        var jobs = [utils.stopStaticServer()];
+        if (!process.env.CI) {
+            jobs.push(utils.stopSelenium());
+        }
+        return Promise.all(jobs);
     }
 };
 
