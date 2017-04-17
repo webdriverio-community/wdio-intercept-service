@@ -27,6 +27,7 @@
   },
   "homepage": "https://github.com/chmanie/webdriverajax#readme",
   "devDependencies": {
+    "eslint": "^3.19.0",
     "mocha": "^3.2.0",
     "node-static": "^0.7.9",
     "object-assign": "^4.1.1",

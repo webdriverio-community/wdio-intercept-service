@@ -27,7 +27,7 @@ describe('manual initialisation', function () {
         wdajax.init(client);
 
         client.options.baseUrl = config.baseUrl;
-        GLOBAL.browser = client;
+        global.browser = client;
 
         return client.init();
     });
