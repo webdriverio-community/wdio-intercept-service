@@ -11,31 +11,31 @@ if (process.env.CI === 'true') {
 
     capabilities = [{
         browserName: 'firefox',
-        version: '41',
-        platform: 'OS X 10.11'
-    }, {
-        browserName: 'firefox',
-        version: '40',
-        platform: 'OS X 10.11'
+        version: '52.0',
+        platform: 'macOS 10.12'
     }, {
         browserName: 'chrome',
-        version: '46',
-        platform: 'OS X 10.11'
+        version: '57.0',
+        platform: 'macOS 10.12'
     }, {
-        browserName: 'chrome',
-        version: '45',
+        browserName: 'safari',
+        version: '10.0',
+        platform: 'macOS 10.12'
+    }, {
+        browserName: 'safari',
+        version: '9.0',
         platform: 'OS X 10.11'
     }, {
         browserName: 'safari',
-        version: '9',
-        platform: 'OS X 10.11'
-    }, {
-        browserName: 'safari',
-        version: '8',
+        version: '8.0',
         platform: 'OS X 10.10'
     }, {
-        browserName: 'microsoftedge',
-        version: '20.10240',
+        browserName: 'MicrosoftEdge',
+        version: '14.14393',
+        platform: 'Windows 10'
+    }, {
+        browserName: 'MicrosoftEdge',
+        version: '13.10586',
         platform: 'Windows 10'
     }, {
         browserName: 'internet explorer',
@@ -50,10 +50,25 @@ if (process.env.CI === 'true') {
         version: '9.0',
         platform: 'Windows 7'
     }, {
-        browserName: 'iphone',
-        version: '8.4',
-        platform: 'OS X 10.10',
-        deviceName: 'iPhone 6 Plus',
+        browserName: 'Safari',
+        appiumVersion: '1.6.4',
+        platformName: 'iOS',
+        platformVersion: '10.2',
+        deviceName: 'iPhone 7 Plus Simulator',
+        deviceOrientation: 'portrait'
+    }, {
+        browserName: 'Safari',
+        appiumVersion: '1.6.4',
+        platformName: 'iOS',
+        platformVersion: '9.3',
+        deviceName: 'iPhone 6s Plus Simulator',
+        deviceOrientation: 'portrait'
+    }, {
+        browserName: 'Safari',
+        appiumVersion: '1.6.4',
+        platformName: 'iOS',
+        platformVersion: '8.4',
+        deviceName: 'iPhone 6 Plus Simulator',
         deviceOrientation: 'portrait'
     }].map(function (capability) {
         return assign(capability, {
