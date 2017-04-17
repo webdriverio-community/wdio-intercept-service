@@ -1,6 +1,6 @@
 # webdriverajax
 
-![Travis badge](https://travis-ci.org/chmanie/webdriverajax.svg?branch=master) [![Join the chat at https://gitter.im/chmanie/webdriverajax](https://badges.gitter.im/chmanie/webdriverajax.svg)](https://gitter.im/chmanie/webdriverajax?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Build Status](https://travis-ci.org/chmanie/webdriverajax.svg?branch=master)](https://travis-ci.org/chmanie/webdriverajax) [![Join the chat at https://gitter.im/chmanie/webdriverajax](https://badges.gitter.im/chmanie/webdriverajax.svg)](https://gitter.im/chmanie/webdriverajax?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 Capture and assert HTTP ajax calls in [webdriver.io](http://webdriver.io/)
 
 This is a plugin for [webdriver.io](http://webdriver.io/). If you don't know it yet, check it out, it's pretty cool.
@@ -96,7 +96,8 @@ assert.equal(request.response.headers['content-length'], '42');
 
 It should work with somewhat newer versions of all browsers.
 
-![Browser matrix](https://saucelabs.com/browser-matrix/webdriverajax.svg)
+
+[![Sauce Test Status](https://saucelabs.com/browser-matrix/webdriverajax.svg)](https://saucelabs.com/u/webdriverajax)
 
 ## API
 
