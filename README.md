@@ -16,10 +16,16 @@ There's one catch though: you can't intercept HTTP calls that are initiated on p
 
 ## Installation
 
-Use [npm](https://npmjs.org):
+Use [yarn](https://yarnpkg.com):
 
 ```
-npm install webdriverajax
+yarn add webdriverajax -D
+```
+
+[npm](https://npmjs.org) works as well:
+
+```
+npm install webdriverajax -D
 ```
 
 ## Usage
