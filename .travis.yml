@@ -1,13 +1,5 @@
-env:
-  - CXX=g++-4.8
-sudo: false
 addons:
   sauce_connect: true
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-    packages:
-      - g++-4.8
 language: node_js
 node_js:
-  - "4.1"
+  - "6"
