@@ -13,7 +13,7 @@ There's one catch though: you can't intercept HTTP calls that are initiated on p
 
 * webdriver.io **v4.x**.
 
-** Heads up! If you're still using webdriver.io v3, please use the v1.x branch of this plugin!**
+**Heads up! If you're still using webdriver.io v3, please use the v1.x branch of this plugin!**
 
 ## Installation
 
