@@ -8,7 +8,7 @@ describe('webdriverajax', function () {
 
     it('sets up the interceptor', function () {
         assert.equal(typeof browser.setupInterceptor, 'function');
-        browser.url('/simple_get.html');
+        browser.url('/get.html');
         browser.setupInterceptor();
         var ret = browser.execute(function checkSetup () {
             return window.__webdriverajax;
@@ -17,24 +17,24 @@ describe('webdriverajax', function () {
     });
 
     it('can intercept a simple GET request', function () {
-        browser.url('/simple_get.html').setupInterceptor();
-        browser.expectRequest('GET', '/simple_get.json', 200);
+        browser.url('/get.html').setupInterceptor();
+        browser.expectRequest('GET', '/get.json', 200);
         browser.click('#button').pause(1000);
         browser.assertRequests();
     });
 
     it('can use regular expressions for urls', function () {
-        browser.url('/simple_get.html').setupInterceptor();
-        browser.expectRequest('GET', /simple_get\.json/, 200);
+        browser.url('/get.html').setupInterceptor();
+        browser.expectRequest('GET', /get\.json/, 200);
         browser.click('#button').pause(1000);
         browser.assertRequests();
     });
 
     it('errors on wrong request count', function () {
-        browser.url('/simple_get.html').setupInterceptor();
+        browser.url('/get.html').setupInterceptor();
         browser
-            .expectRequest('GET', '/simple_get.json', 200)
-            .expectRequest('GET', '/simple_get.json', 200);
+            .expectRequest('GET', '/get.json', 200)
+            .expectRequest('GET', '/get.json', 200);
         browser.click('#button').pause(1000);
         assert.throws(function () {
             browser.assertRequests();
@@ -42,8 +42,8 @@ describe('webdriverajax', function () {
     });
 
     it('errors on wrong method', function () {
-        browser.url('/simple_get.html').setupInterceptor();
-        browser.expectRequest('PUT', '/simple_get.json', 200);
+        browser.url('/get.html').setupInterceptor();
+        browser.expectRequest('PUT', '/get.json', 200);
         browser.click('#button').pause(1000);
         assert.throws(function () {
             browser.assertRequests();
@@ -51,7 +51,7 @@ describe('webdriverajax', function () {
     });
 
     it('errors on wrong URL', function () {
-        browser.url('/simple_get.html').setupInterceptor();
+        browser.url('/get.html').setupInterceptor();
         browser.expectRequest('GET', '/wrong.json', 200);
         browser.click('#button').pause(1000);
         assert.throws(function () {
@@ -60,18 +60,18 @@ describe('webdriverajax', function () {
     });
 
     it('errors if regex doesn\'t match URL', function () {
-        browser.url('/simple_get.html').setupInterceptor();
+        browser.url('/get.html').setupInterceptor();
         browser.expectRequest('GET', /wrong\.json/, 200);
         browser.click('#button').pause(1000);
         assert.throws(function () {
             browser.assertRequests();
-        }, /simple_get\.json/);
+        }, /get\.json/);
 
     });
 
     it('errors on wrong status code', function () {
-        browser.url('/simple_get.html').setupInterceptor();
-        browser.expectRequest('GET', '/simple_get.json', 404);
+        browser.url('/get.html').setupInterceptor();
+        browser.expectRequest('GET', '/get.json', 404);
         browser.click('#button').pause(1000);
         assert.throws(function () {
             browser.assertRequests();
@@ -79,18 +79,18 @@ describe('webdriverajax', function () {
     });
 
     it('can access a certain request', function () {
-        browser.url('/simple_get.html').setupInterceptor();
+        browser.url('/get.html').setupInterceptor();
         browser.click('#button').pause(1000);
         var request = browser.getRequest(0);
         assert.equal(request.method, 'GET');
-        assert.equal(request.url, '/simple_get.json');
+        assert.equal(request.url, '/get.json');
         assert.deepEqual(request.response.body, { OK: true });
         assert.equal(request.response.statusCode, 200);
         assert.equal(request.response.headers['content-length'], '15');
     });
 
     it('can get multiple requests', function () {
-        browser.url('/simple_get.html').setupInterceptor();
+        browser.url('/get.html').setupInterceptor();
         browser.click('#button').pause(1000);
         browser.click('#button').pause(1000);
         var requests = browser.getRequests();

@@ -7,7 +7,7 @@
 </head>
 <body>
   <p id="text">
-    This file makes an ajax GET request to /simple_get.json and changes the url to simple_get.html
+    This file makes an ajax GET request to /get.json and changes the url to get.html
   </p>
   <button id="button1">Press me</button>
   <button id="button2">Press me already!</button>
@@ -22,7 +22,7 @@
       button1.addEventListener('click', function (evt) {
 
         var xhr = new XMLHttpRequest();
-        xhr.open('GET', '/simple_get.json');
+        xhr.open('GET', '/get.json');
         xhr.send();
 
       });
@@ -30,9 +30,9 @@
       button2.addEventListener('click', function (evt) {
 
         var xhr = new XMLHttpRequest();
-        xhr.open('GET', '/simple_get.json');
+        xhr.open('GET', '/get.json');
         xhr.addEventListener('load', function () {
-          window.location.pathname = '/simple_get.html';
+          window.location.pathname = '/get.html';
         });
         xhr.send();
 
