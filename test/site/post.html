@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Post request</title>
+</head>
+<body>
+  <p id="text">This file makes an ajax POST request to /post.json</p>
+  <button id="buttonstring">Press me for string data</button>
+  <button id="buttonjson">Press me for JSON data</button>
+  <button id="buttonform">Press me for form data</button>
+  <script>
+    'use strict';
+
+    (function (window, document) {
+
+      var buttonstring = document.querySelector('#buttonstring');
+      buttonstring.addEventListener('click', function (evt) {
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/post.json');
+        var payload = 'foobar';
+        xhr.send(payload);
+      });
+
+      var buttonjson = document.querySelector('#buttonjson');
+      buttonjson.addEventListener('click', function (evt) {
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/post.json');
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        var payload = JSON.stringify({ foo: 'bar' });
+        xhr.send(payload);
+      });
+
+      var buttonform = document.querySelector('#buttonform');
+      buttonform.addEventListener('click', function (evt) {
+
+        var xhr = new XMLHttpRequest();
+        var form = new FormData();
+        form.append('foo', 'bar');
+        xhr.open('POST', '/post.json');
+        var payload = form;
+        xhr.send(payload);
+      });
+
+    })(window, window.document);
+  </script>
+</body>
+</html>

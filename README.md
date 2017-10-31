@@ -112,9 +112,18 @@ To make more sophisticated assertions about a specific request you can get detai
 
 * `request.url`: requested URL
 * `request.method`: used HTTP method
+* `request.body`: payload/body data used in request
 * `request.response.headers`: response http headers as JS object
 * `request.response.body`: response body (will be parsed as JSON if possible)
 * `request.response.statusCode`: response status code
+
+**A note on `request.body`:** webdriverajax will try to parse the request body as follows:
+
+* string: Just return the string (`'value'`)
+* JSON: Parse the JSON object using `JSON.parse()` (`({ key: value })`)
+* FormData: Will output the FormData in the format `{ key: [value1, value2, ...] }`
+* ArrayBuffer: Will try to convert the buffer to a string (experimental)
+* Anything else: Will use a brutal `JSON.stringify()` on your data. Good luck!
 
 ### browser.getRequests()
 
