@@ -1,5 +1,8 @@
 ## webdriverajax changelog
 
+### [ [>](https://github.com/chmanie/webdriverajax/tree/v2.1.1) ] 2.1.1 / 15.12.2017
+* Fix problems with newer versions of selenium
+
 ### [ [>](https://github.com/chmanie/webdriverajax/tree/v2.1.0) ] 2.1.0 / 31.10.2017
 * Add possibility to assess the requests payload using `request.body`
 
