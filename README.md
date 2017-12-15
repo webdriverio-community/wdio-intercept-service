@@ -75,10 +75,7 @@ assert.equal(request.response.headers['content-length'], '42');
 
 ## Supported browsers
 
-It should work with somewhat newer versions of all browsers.
-
-
-[![Sauce Test Status](https://saucelabs.com/browser-matrix/webdriverajax.svg)](https://saucelabs.com/u/webdriverajax)
+It should work with somewhat newer versions of all browsers. Please report an issue if it doesn't seem to work with yours.
 
 ## API
 

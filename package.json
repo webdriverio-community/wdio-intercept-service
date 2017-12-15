@@ -4,7 +4,8 @@
   "description": "Capture and assert HTTP ajax calls in webdriver.io 🕸",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/.bin/wdio"
+    "test": "./node_modules/.bin/wdio",
+    "pretest": "selenium-standalone install"
   },
   "repository": {
     "type": "git",
@@ -30,10 +31,8 @@
     "eslint": "^3.19.0",
     "mocha": "^4.0.1",
     "node-static": "^0.7.10",
-    "object-assign": "^4.1.1",
     "selenium-standalone": "^6.12.0",
     "wdio-mocha-framework": "^0.5.12",
-    "wdio-sauce-service": "^0.4.6",
     "webdriverio": "^4.9.11"
   }
 }

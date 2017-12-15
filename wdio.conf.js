@@ -2,88 +2,7 @@
 
 var path = require('path');
 
-var assign = require('object-assign');
 var utils = require('./test/utils');
-
-var capabilities;
-
-if (process.env.CI === 'true') {
-
-    capabilities = [{
-        browserName: 'firefox',
-        version: '52.0',
-        platform: 'macOS 10.12'
-    }, {
-        browserName: 'chrome',
-        version: '57.0',
-        platform: 'macOS 10.12'
-    }, {
-        browserName: 'safari',
-        version: '10.0',
-        platform: 'macOS 10.12'
-    }, {
-        browserName: 'safari',
-        version: '9.0',
-        platform: 'OS X 10.11'
-    }, {
-        browserName: 'safari',
-        version: '8.0',
-        platform: 'OS X 10.10'
-    }, {
-        browserName: 'MicrosoftEdge',
-        version: '14.14393',
-        platform: 'Windows 10'
-    }, {
-        browserName: 'MicrosoftEdge',
-        version: '13.10586',
-        platform: 'Windows 10'
-    }, {
-        browserName: 'internet explorer',
-        version: '11.0',
-        platform: 'Windows 10'
-    }, {
-        browserName: 'internet explorer',
-        version: '10.0',
-        platform: 'Windows 8'
-    }, {
-        browserName: 'internet explorer',
-        version: '9.0',
-        platform: 'Windows 7'
-    }, {
-        browserName: 'Safari',
-        appiumVersion: '1.6.4',
-        platformName: 'iOS',
-        platformVersion: '10.2',
-        deviceName: 'iPhone 7 Plus Simulator',
-        deviceOrientation: 'portrait'
-    }, {
-        browserName: 'Safari',
-        appiumVersion: '1.6.4',
-        platformName: 'iOS',
-        platformVersion: '9.3',
-        deviceName: 'iPhone 6s Plus Simulator',
-        deviceOrientation: 'portrait'
-    }, {
-        browserName: 'Safari',
-        appiumVersion: '1.6.4',
-        platformName: 'iOS',
-        platformVersion: '8.4',
-        deviceName: 'iPhone 6 Plus Simulator',
-        deviceOrientation: 'portrait'
-    }].map(function (capability) {
-        return assign(capability, {
-            'tunnel-identifier': process.env.TRAVIS_JOB_NUMBER,
-            name: 'integration',
-            build: process.env.TRAVIS_BUILD_NUMBER,
-            public: true
-        });
-    });
-
-} else {
-    capabilities = [{
-        browserName: 'chrome'
-    }];
-}
 
 var plugin = path.resolve(__dirname, 'index.js');
 
@@ -118,10 +37,12 @@ var config = {
     // Sauce Labs platform configurator - a great tool to configure your capabilities:
     // https://docs.saucelabs.com/reference/platforms-configurator
     //
-    capabilities: capabilities,
-    services: ['sauce'],
-    user: process.env.SAUCE_USERNAME,
-    key: process.env.SAUCE_ACCESS_KEY,
+    capabilities: [{
+        browserName: 'chrome',
+        chromeOptions: {
+            args: ['headless']
+        }
+    }],
     //
     // ===================
     // Test Configurations
@@ -168,7 +89,7 @@ var config = {
     // Test reporter for stdout.
     // The following are supported: dot (default), spec and xunit
     // see also: http://webdriver.io/guide/testrunner/reporters.html
-    reporter: process.env.CI ? 'dot' : 'spec',
+    reporter: 'spec',
 
     //
     // Options to be passed to Mocha.
@@ -187,10 +108,10 @@ var config = {
     //
     // Gets executed before all workers get launched.
     onPrepare: function() {
-        var jobs = [utils.startStaticServer()];
-        if (!process.env.CI) {
-            jobs.push(utils.startSelenium());
-        }
+        var jobs = [
+            utils.startStaticServer(),
+            utils.startSelenium()
+        ];
         return Promise.all(jobs);
     },
     //
@@ -207,10 +128,10 @@ var config = {
     // Gets executed after all workers got shut down and the process is about to exit. It is not
     // possible to defer the end of the process using a promise.
     onComplete: function() {
-        var jobs = [utils.stopStaticServer()];
-        if (!process.env.CI) {
-            jobs.push(utils.stopSelenium());
-        }
+        var jobs = [
+            utils.stopStaticServer(),
+            utils.stopSelenium(),
+        ];
         return Promise.all(jobs);
     }
 };
