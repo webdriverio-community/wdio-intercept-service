@@ -1,9 +1,8 @@
 # webdriverajax
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/chmanie/webdriverajax.svg)](https://greenkeeper.io/)
+🕸 Capture and assert HTTP ajax calls in [webdriver.io](http://webdriver.io/)
 
-[![Build Status](https://travis-ci.org/chmanie/webdriverajax.svg?branch=master)](https://travis-ci.org/chmanie/webdriverajax) [![Join the chat at https://gitter.im/chmanie/webdriverajax](https://badges.gitter.im/chmanie/webdriverajax.svg)](https://gitter.im/chmanie/webdriverajax?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-Capture and assert HTTP ajax calls in [webdriver.io](http://webdriver.io/)
+[![Greenkeeper badge](https://badges.greenkeeper.io/chmanie/webdriverajax.svg)](https://greenkeeper.io/) [![Build Status](https://travis-ci.org/chmanie/webdriverajax.svg?branch=master)](https://travis-ci.org/chmanie/webdriverajax) [![Join the chat at https://gitter.im/chmanie/webdriverajax](https://badges.gitter.im/chmanie/webdriverajax.svg)](https://gitter.im/chmanie/webdriverajax?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 This is a plugin for [webdriver.io](http://webdriver.io/). If you don't know it yet, check it out, it's pretty cool.
 

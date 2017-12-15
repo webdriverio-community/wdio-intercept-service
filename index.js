@@ -138,7 +138,7 @@ function plugin (wdInstance, options) {
         var headers = {};
         var arr = str.trim().replace(/\r/g, '').split('\n');
         arr.forEach(function (header) {
-            var match = header.match(/^(.+)?\:\s?(.+)$/);
+            var match = header.match(/^(.+)?:\s?(.+)$/);
             if (match) {
                 headers[match[1].toLowerCase()] = match[2];
             }
