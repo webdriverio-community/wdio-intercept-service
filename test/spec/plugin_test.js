@@ -142,4 +142,11 @@ describe('webdriverajax', function () {
         assert.deepEqual(request.body, { foo: ['bar'] });
     });
 
+    it('can assess the request body using JSON data', function () {
+        browser.url('/post.html').setupInterceptor();
+        browser.click('#buttonjson').pause(wait);
+        var request = browser.getRequest(0);
+        assert.equal(request.headers['Content-Type'], 'application/json');
+    });
+
 });
