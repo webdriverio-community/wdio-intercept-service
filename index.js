@@ -122,10 +122,12 @@ function plugin (wdInstance, options) {
         if (!req) {
             return;
         }
+
         return {
             url: req.url,
             method: req.method && req.method.toUpperCase(),
             body: parseBody(req.requestBody),
+            headers: req.requestHeaders,
             response: {
                 headers: parseHeaders(req.headers),
                 body: parseBody(req.body),
