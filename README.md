@@ -111,6 +111,7 @@ To make more sophisticated assertions about a specific request you can get detai
 * `request.url`: requested URL
 * `request.method`: used HTTP method
 * `request.body`: payload/body data used in request
+* `request.headers`: request http headers as JS object
 * `request.response.headers`: response http headers as JS object
 * `request.response.body`: response body (will be parsed as JSON if possible)
 * `request.response.statusCode`: response status code

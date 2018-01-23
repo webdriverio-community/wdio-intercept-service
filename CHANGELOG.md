@@ -1,5 +1,11 @@
 ## webdriverajax changelog
 
+### [ [>](https://github.com/chmanie/webdriverajax/tree/v2.2.0) ] 2.2.0 / 23.01.2018
+* Add possibility to assess request headers
+* Improve error messages
+* Add test for iframe assertions
+* Fix chrome issue on CI
+
 ### [ [>](https://github.com/chmanie/webdriverajax/tree/v2.1.1) ] 2.1.1 / 15.12.2017
 * Fix problems with newer versions of selenium
 
