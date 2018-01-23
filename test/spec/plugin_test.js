@@ -146,7 +146,7 @@ describe('webdriverajax', function () {
         browser.url('/post.html').setupInterceptor();
         browser.click('#buttonjson').pause(wait);
         var request = browser.getRequest(0);
-        assert.equal(request.headers['Content-Type'], 'application/json');
+        assert.equal(request.headers['content-type'], 'application/json');
     });
 
     it('can get initialised inside an iframe', function () {

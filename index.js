@@ -134,16 +134,24 @@ function plugin (wdInstance, options) {
             url: req.url,
             method: req.method && req.method.toUpperCase(),
             body: parseBody(req.requestBody),
-            headers: req.requestHeaders,
+            headers: normalizeRequestHeaders(req.requestHeaders),
             response: {
-                headers: parseHeaders(req.headers),
+                headers: parseResponseHeaders(req.headers),
                 body: parseBody(req.body),
                 statusCode: req.statusCode
             }
         };
     }
 
-    function parseHeaders (str) {
+    function normalizeRequestHeaders (headers) {
+        var normalized = {};
+        Object.keys(headers).forEach(function (key) {
+            normalized[key.toLowerCase()] = headers[key];
+        });
+        return normalized;
+    }
+
+    function parseResponseHeaders (str) {
         var headers = {};
         var arr = str.trim().replace(/\r/g, '').split('\n');
         arr.forEach(function (header) {
