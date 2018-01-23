@@ -149,4 +149,27 @@ describe('webdriverajax', function () {
         assert.equal(request.headers['Content-Type'], 'application/json');
     });
 
+    it('can get initialised inside an iframe', function () {
+        browser.url('/frame.html').setupInterceptor();
+        var ret = browser.execute(function checkSetup () {
+            return window.__webdriverajax;
+        });
+        assert.deepEqual(ret.value, { requests: [] });
+        browser.waitForExist('#getinframe');
+        var frame = browser.element('#getinframe');
+        browser.frame(frame.value);
+        browser.setupInterceptor();
+        var frameRet = browser.execute(function checkSetup () {
+            return window.__webdriverajax;
+        });
+        assert.deepEqual(frameRet.value, { requests: [] });
+        browser.expectRequest('GET', '/get.json', 200);
+        browser.click('#button').pause(wait);
+        browser.assertRequests();
+        browser.frameParent();
+        assert.throws(() => {
+            browser.assertRequests();
+        });
+    });
+
 });
