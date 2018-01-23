@@ -172,4 +172,19 @@ describe('webdriverajax', function () {
         });
     });
 
+    it('errors with no requests set up', function () {
+        browser.url('/get.html').setupInterceptor();
+        assert.throws(() => {
+            browser.assertRequests();
+        }, /No\sexpectations\sfound/);
+    });
+
+    it('errors properly when no requests were captured', function () {
+        browser.url('/get.html').setupInterceptor();
+        browser.expectRequest('GET', '/get.json', 200);
+        assert.throws(() => {
+            browser.assertRequests();
+        }, /No\srequests\scaptured/);
+    });
+
 });

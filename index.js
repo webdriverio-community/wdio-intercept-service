@@ -33,9 +33,15 @@ function plugin (wdInstance, options) {
 
     function assertRequests () {
 
-        return getRequest().then(function assertAllRequests (requests) {
+        var expectations = wdInstance.__wdajaxExpectations;
 
-            var expectations = wdInstance.__wdajaxExpectations;
+
+        if (!expectations.length) {
+            return Promise.reject(new Error(
+                'No expectations found. Call .expectRequest() first'
+            ));
+        }
+        return getRequest().then(function assertAllRequests (requests) {
 
             if (expectations.length !== requests.length) {
                 return Promise.reject(new Error(
@@ -105,7 +111,8 @@ function plugin (wdInstance, options) {
         return wdInstance.execute(interceptor.getRequest, index)
             .then(function (request) {
                 if (!request.value) {
-                    return Promise.reject(new Error('Could not find request with index ' + index));
+                    const message = index ? 'Could not find request with index ' + index : 'No requests captured';
+                    return Promise.reject(new Error(message));
                 }
                 if (Array.isArray(request.value)) {
                     return request.value.map(transformRequest);
