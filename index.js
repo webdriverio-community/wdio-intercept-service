@@ -112,7 +112,7 @@ function plugin (wdInstance, options) {
             .then(function (request) {
                 if (!request.value) {
                     const message = index ? 'Could not find request with index ' + index : 'No requests captured';
-                    return Promise.reject(new Error(message));
+                    return (index ? Promise.reject(new Error(message)) : []);
                 }
                 if (Array.isArray(request.value)) {
                     return request.value.map(transformRequest);
