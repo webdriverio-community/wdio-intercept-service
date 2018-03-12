@@ -179,12 +179,10 @@ describe('webdriverajax', function () {
         }, /No\sexpectations\sfound/);
     });
 
-    it('errors properly when no requests were captured', function () {
+    it('returns an empty array for no captured requests', function () {
         browser.url('/get.html').setupInterceptor();
-        browser.expectRequest('GET', '/get.json', 200);
-        assert.throws(() => {
-            browser.assertRequests();
-        }, /No\srequests\scaptured/);
+        var count = browser.getRequests();
+        assert.deepEqual(count, []);
     });
 
 });

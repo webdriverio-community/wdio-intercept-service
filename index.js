@@ -35,7 +35,6 @@ function plugin (wdInstance, options) {
 
         var expectations = wdInstance.__wdajaxExpectations;
 
-
         if (!expectations.length) {
             return Promise.reject(new Error(
                 'No expectations found. Call .expectRequest() first'
@@ -111,8 +110,10 @@ function plugin (wdInstance, options) {
         return wdInstance.execute(interceptor.getRequest, index)
             .then(function (request) {
                 if (!request.value) {
-                    const message = index ? 'Could not find request with index ' + index : 'No requests captured';
-                    return Promise.reject(new Error(message));
+                    if (index != null) {
+                        return Promise.reject(new Error('Could not find request with index ' + index));
+                    }
+                    return [];
                 }
                 if (Array.isArray(request.value)) {
                     return request.value.map(transformRequest);
