@@ -4,7 +4,8 @@
   "description": "Capture and assert HTTP ajax calls in webdriver.io 🕸",
   "main": "index.js",
   "scripts": {
-    "test": "eslint lib test index.js && wdio",
+    "fix": "prettier --write --single-quote '{,!(node_modules)/**/}*.js'",
+    "test": "wdio",
     "pretest": "selenium-standalone install"
   },
   "repository": {
@@ -28,11 +29,18 @@
   },
   "homepage": "https://github.com/chmanie/webdriverajax#readme",
   "devDependencies": {
-    "eslint": "^4.13.1",
+    "husky": "^0.15.0-rc.9",
     "mocha": "^5.0.0",
     "node-static": "^0.7.10",
+    "prettier": "^1.11.1",
     "selenium-standalone": "^6.13.0",
     "wdio-mocha-framework": "^0.5.12",
     "webdriverio": "^4.9.11"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn fix",
+      "pre-push": "yarn fix"
+    }
   }
 }
