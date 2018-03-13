@@ -110,8 +110,8 @@ function plugin (wdInstance, options) {
     function getRequest (index) {
         return wdInstance.execute(interceptor.getRequest, index)
             .then(function (request) {
-                if (!request.value) {
-                    const message = index ? 'Could not find request with index ' + index : 'No requests captured';
+                if (!request.value && index) {
+                    const message = 'Could not find request with index ' + index;
                     return Promise.reject(new Error(message));
                 }
                 if (Array.isArray(request.value)) {
