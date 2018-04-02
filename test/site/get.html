@@ -8,6 +8,7 @@
 <body>
   <p id="text">This file makes an ajax GET request to /get.json</p>
   <button id="button">Press me</button>
+  <button id="fetchbutton">No, press me!</button>
   <script>
     'use strict';
 
@@ -15,11 +16,14 @@
 
       var button = document.querySelector('#button');
       button.addEventListener('click', function (evt) {
-
         var xhr = new XMLHttpRequest();
         xhr.open('GET', '/get.json');
         xhr.send();
+      });
 
+      var fetchButton = document.querySelector('#fetchbutton');
+      fetchButton.addEventListener('click', function (evt) {
+        fetch('/get.json');
       });
 
     })(window, window.document);

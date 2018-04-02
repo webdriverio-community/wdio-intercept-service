@@ -26,6 +26,13 @@ describe('webdriverajax', function testSuite() {
     browser.assertRequests();
   });
 
+  it('can intercept a simple GET request via the fetch API', () => {
+    browser.url('/get.html').setupInterceptor();
+    browser.expectRequest('GET', '/get.json', 200);
+    browser.click('#fetchbutton').pause(wait);
+    browser.assertRequests();
+  });
+
   it('can use regular expressions for urls', () => {
     browser.url('/get.html');
     browser.setupInterceptor();
