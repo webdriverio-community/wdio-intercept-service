@@ -34,7 +34,7 @@
     "node-static": "^0.7.10",
     "prettier": "^1.11.1",
     "selenium-standalone": "^6.13.0",
-    "wdio-mocha-framework": "^0.5.12",
+    "wdio-mocha-framework": "^0.6.1",
     "webdriverio": "^4.9.11"
   },
   "husky": {
