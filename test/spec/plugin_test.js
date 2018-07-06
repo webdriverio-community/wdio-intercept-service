@@ -89,7 +89,7 @@ describe('webdriverajax', function testSuite() {
     assert.equal(request.response.headers['content-length'], '15');
   });
 
-  it('can get multiple requests', () => {
+  it('can get multiple requests at once', () => {
     browser.url('/get.html').setupInterceptor();
     browser.click('#button').pause(wait);
     browser.click('#button').pause(wait);
@@ -98,6 +98,16 @@ describe('webdriverajax', function testSuite() {
     assert.equal(requests.length, 2);
     assert.equal(requests[0].method, 'GET');
     assert.equal(requests[1].method, 'GET');
+  });
+
+  it('can get multiple request one by one', () => {
+    browser.url('/get.html').setupInterceptor();
+    browser.click("#button").pause(wait);
+    browser.click("#button").pause(wait);
+    const firstRequest = browser.getRequest(0);
+    assert.equal(firstRequest.method, 'GET');
+    const secondRequest = browser.getRequest(1);
+    assert.equal(secondRequest.method, 'GET');
   });
 
   it('survives page changes', () => {
@@ -167,10 +177,6 @@ describe('webdriverajax', function testSuite() {
     browser.expectRequest('GET', '/get.json', 200);
     browser.click('#button').pause(wait);
     browser.assertRequests();
-    browser.frameParent();
-    assert.throws(() => {
-      browser.assertRequests();
-    });
   });
 
   it('errors with no requests set up', () => {
