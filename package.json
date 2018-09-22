@@ -29,7 +29,7 @@
   },
   "homepage": "https://github.com/chmanie/webdriverajax#readme",
   "devDependencies": {
-    "husky": "^0.15.0-rc.9",
+    "husky": "^1.0.0-rc.14",
     "mocha": "^5.0.0",
     "node-static": "^0.7.10",
     "prettier": "^1.11.1",
