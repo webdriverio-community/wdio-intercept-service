@@ -35,7 +35,7 @@
     "prettier": "^1.11.1",
     "selenium-standalone": "^6.13.0",
     "wdio-mocha-framework": "^0.5.12",
-    "webdriverio": "^4.9.11"
+    "webdriverio": "^5.0.0"
   },
   "husky": {
     "hooks": {
