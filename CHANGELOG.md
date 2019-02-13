@@ -1,5 +1,8 @@
 ## wdio-intercept-service changelog
 
+### [ [>](https://github.com/chmanie/wdio-intercept-service/tree/v3.0.1) ] 3.0.1 / 13.02.2019
+* Properly rename to wdio-intercept-service
+
 ### [ [>](https://github.com/chmanie/wdio-intercept-service/tree/v3.0.0) ] 3.0.0 / 13.02.2019
 * Rename to wdio-intercept-service
 * Bump webdriverio dependency to v5
