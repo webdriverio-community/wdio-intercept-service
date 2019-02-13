@@ -176,9 +176,12 @@ class WebdriverAjax {
       return normalized;
     }
 
-    function parseResponseHeaders(str) {
+    function parseResponseHeaders(stringOrObject) {
+      if (typeof stringOrObject == 'object') {
+        return stringOrObject;
+      }
       const headers = {};
-      const arr = str
+      const arr = stringOrObject
         .trim()
         .replace(/\r/g, '')
         .split('\n');
