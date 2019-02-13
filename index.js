@@ -2,124 +2,137 @@
 
 const interceptor = require('./lib/interceptor');
 
-function plugin(wdInstance, options) {
-  /**
-   * instance need to have addCommand method
-   */
-  if (typeof wdInstance.addCommand !== 'function') {
-    throw new Error(
-      "you can't use WebdriverAjax with this version of WebdriverIO"
-    );
+class WebdriverAjax {
+  constructor() {
+    this._wdajaxExpectations = null;
   }
 
-  wdInstance.addCommand('setupInterceptor', setup.bind(wdInstance));
-  wdInstance.addCommand('expectRequest', expectRequest.bind(wdInstance));
-  wdInstance.addCommand('assertRequests', assertRequests.bind(wdInstance));
-  wdInstance.addCommand('getRequest', getRequest.bind(wdInstance));
-  wdInstance.addCommand('getRequests', getRequest.bind(wdInstance));
-
-  function setup() {
-    wdInstance.__wdajaxExpectations = [];
-    return wdInstance.executeAsync(interceptor.setup);
+  beforeTest() {
+    this._wdajaxExpectations = [];
   }
 
-  function expectRequest(method, url, statusCode) {
-    wdInstance.__wdajaxExpectations.push({
-      method: method.toUpperCase(),
-      url: url,
-      statusCode: statusCode
-    });
-    return {};
-  }
-
-  function assertRequests() {
-    const expectations = wdInstance.__wdajaxExpectations;
-
-    if (!expectations.length) {
-      return Promise.reject(
-        new Error('No expectations found. Call .expectRequest() first')
+  before() {
+    /**
+     * instance need to have addCommand method
+     */
+    if (typeof browser.addCommand !== 'function') {
+      throw new Error(
+        "you can't use WebdriverAjax with this version of WebdriverIO"
       );
     }
-    return getRequest().then(requests => {
-      if (expectations.length !== requests.length) {
+
+    browser.addCommand('setupInterceptor', setup.bind(this));
+    browser.addCommand('expectRequest', expectRequest.bind(this));
+    browser.addCommand('assertRequests', assertRequests.bind(this));
+    browser.addCommand('getRequest', getRequest);
+    browser.addCommand('getRequests', getRequest);
+
+    function setup() {
+      return browser.executeAsync(interceptor.setup);
+    }
+
+    function expectRequest(method, url, statusCode) {
+      this._wdajaxExpectations.push({
+        method: method.toUpperCase(),
+        url: url,
+        statusCode: statusCode
+      });
+      return {};
+    }
+
+    function assertRequests() {
+      const expectations = this._wdajaxExpectations;
+
+      if (!expectations.length) {
         return Promise.reject(
-          new Error(
-            'Expected ' +
-              expectations.length +
-              ' requests but was ' +
-              requests.length
-          )
+          new Error('No expectations found. Call .expectRequest() first')
         );
       }
-
-      for (let i = 0; i < expectations.length; i++) {
-        const ex = expectations[i];
-        const request = requests[i];
-
-        if (request.method !== ex.method) {
+      return getRequest().then(requests => {
+        if (expectations.length !== requests.length) {
           return Promise.reject(
             new Error(
-              'Expected request to URL ' +
-                request.url +
-                ' to have method ' +
-                ex.method +
-                ' but was ' +
-                request.method
+              'Expected ' +
+                expectations.length +
+                ' requests but was ' +
+                requests.length
             )
           );
         }
 
-        if (
-          ex.url instanceof RegExp &&
-          request.url &&
-          !request.url.match(ex.url)
-        ) {
-          return Promise.reject(
-            new Error(
-              'Expected request ' +
-                i +
-                ' to match ' +
-                ex.url.toString() +
-                ' but was ' +
-                request.url
-            )
-          );
+        for (let i = 0; i < expectations.length; i++) {
+          const ex = expectations[i];
+          const request = requests[i];
+
+          if (request.method !== ex.method) {
+            return Promise.reject(
+              new Error(
+                'Expected request to URL ' +
+                  request.url +
+                  ' to have method ' +
+                  ex.method +
+                  ' but was ' +
+                  request.method
+              )
+            );
+          }
+
+          if (
+            ex.url instanceof RegExp &&
+            request.url &&
+            !request.url.match(ex.url)
+          ) {
+            return Promise.reject(
+              new Error(
+                'Expected request ' +
+                  i +
+                  ' to match ' +
+                  ex.url.toString() +
+                  ' but was ' +
+                  request.url
+              )
+            );
+          }
+
+          if (typeof ex.url == 'string' && request.url !== ex.url) {
+            return Promise.reject(
+              new Error(
+                'Expected request ' +
+                  i +
+                  ' to have URL ' +
+                  ex.url +
+                  ' but was ' +
+                  request.url
+              )
+            );
+          }
+
+          if (request.response.statusCode !== ex.statusCode) {
+            return Promise.reject(
+              new Error(
+                'Expected request to URL ' +
+                  request.url +
+                  ' to have status ' +
+                  ex.statusCode +
+                  ' but was ' +
+                  request.response.statusCode
+              )
+            );
+          }
         }
 
-        if (typeof ex.url == 'string' && request.url !== ex.url) {
-          return Promise.reject(
-            new Error(
-              'Expected request ' +
-                i +
-                ' to have URL ' +
-                ex.url +
-                ' but was ' +
-                request.url
-            )
-          );
-        }
+        return browser;
+      });
+    }
 
-        if (request.response.statusCode !== ex.statusCode) {
-          return Promise.reject(
-            new Error(
-              'Expected request to URL ' +
-                request.url +
-                ' to have status ' +
-                ex.statusCode +
-                ' but was ' +
-                request.response.statusCode
-            )
-          );
-        }
+    async function getRequest(index) {
+      let request;
+      if (index > -1) {
+        request = await browser.execute(interceptor.getRequest, index);
+      } else {
+        request = await browser.execute(interceptor.getRequest);
       }
-
-      return wdInstance;
-    });
-  }
-
-  function getRequest(index) {
-    return wdInstance.execute(interceptor.getRequest, index).then(request => {
-      if (!request.value) {
+      if (!request) {
         if (index != null) {
           return Promise.reject(
             new Error('Could not find request with index ' + index)
@@ -127,80 +140,77 @@ function plugin(wdInstance, options) {
         }
         return [];
       }
-      if (Array.isArray(request.value)) {
-        return request.value.map(transformRequest);
+      if (Array.isArray(request)) {
+        return request.map(transformRequest);
       }
       // The edge driver does not seem to typecast arrays correctly
-      if (typeof request.value[0] == 'object') {
-        return mapIndexed(request.value, transformRequest);
+      if (typeof request[0] == 'object') {
+        return mapIndexed(request, transformRequest);
       }
-      return transformRequest(request.value);
-    });
-  }
-
-  function transformRequest(req) {
-    if (!req) {
-      return;
+      return transformRequest(request);
     }
 
-    return {
-      url: req.url,
-      method: req.method && req.method.toUpperCase(),
-      body: parseBody(req.requestBody),
-      headers: normalizeRequestHeaders(req.requestHeaders),
-      response: {
-        headers: parseResponseHeaders(req.headers),
-        body: parseBody(req.body),
-        statusCode: req.statusCode
+    function transformRequest(req) {
+      if (!req) {
+        return;
       }
-    };
-  }
 
-  function normalizeRequestHeaders(headers) {
-    const normalized = {};
-    Object.keys(headers).forEach(key => {
-      normalized[key.toLowerCase()] = headers[key];
-    });
-    return normalized;
-  }
+      return {
+        url: req.url,
+        method: req.method && req.method.toUpperCase(),
+        body: parseBody(req.requestBody),
+        headers: normalizeRequestHeaders(req.requestHeaders),
+        response: {
+          headers: parseResponseHeaders(req.headers),
+          body: parseBody(req.body),
+          statusCode: req.statusCode
+        }
+      };
+    }
 
-  function parseResponseHeaders(str) {
-    const headers = {};
-    const arr = str
-      .trim()
-      .replace(/\r/g, '')
-      .split('\n');
-    arr.forEach(header => {
-      const match = header.match(/^(.+)?:\s?(.+)$/);
-      if (match) {
-        headers[match[1].toLowerCase()] = match[2];
+    function normalizeRequestHeaders(headers) {
+      const normalized = {};
+      Object.keys(headers).forEach(key => {
+        normalized[key.toLowerCase()] = headers[key];
+      });
+      return normalized;
+    }
+
+    function parseResponseHeaders(str) {
+      const headers = {};
+      const arr = str
+        .trim()
+        .replace(/\r/g, '')
+        .split('\n');
+      arr.forEach(header => {
+        const match = header.match(/^(.+)?:\s?(.+)$/);
+        if (match) {
+          headers[match[1].toLowerCase()] = match[2];
+        }
+      });
+      return headers;
+    }
+
+    function parseBody(str) {
+      let body;
+      try {
+        body = JSON.parse(str);
+      } catch (e) {
+        body = str;
       }
-    });
-    return headers;
-  }
-
-  function parseBody(str) {
-    let body;
-    try {
-      body = JSON.parse(str);
-    } catch (e) {
-      body = str;
+      return body;
     }
-    return body;
-  }
 
-  // maps an 'array-like' object. returns proper array
-  function mapIndexed(obj, fn) {
-    const arr = [];
-    const max = Math.max.apply(Math, Object.keys(obj).map(Number));
-    for (let i = 0; i <= max; i++) {
-      arr.push(fn(obj[i], i));
+    // maps an 'array-like' object. returns proper array
+    function mapIndexed(obj, fn) {
+      const arr = [];
+      const max = Math.max.apply(Math, Object.keys(obj).map(Number));
+      for (let i = 0; i <= max; i++) {
+        arr.push(fn(obj[i], i));
+      }
+      return arr;
     }
-    return arr;
   }
 }
 
-/**
- * expose WebdriverAjax
- */
-exports.init = plugin;
+module.exports = WebdriverAjax;
