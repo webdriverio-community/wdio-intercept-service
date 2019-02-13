@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Post request</title>
+</head>
+<body>
+  <p id="text">This file makes an ajax POST request to /post.json</p>
+  <button id="buttonstring">Press me for string data</button>
+  <button id="buttonjson">Press me for JSON data</button>
+  <button id="buttonform">Press me for form data</button>
+  <script>
+    'use strict';
+
+    (function (window, document) {
+
+      var buttonstring = document.querySelector('#buttonstring');
+      buttonstring.addEventListener('click', function (evt) {
+        fetch('/post.json', {
+          method: 'POST',
+          body: 'foobar',
+        });
+      });
+
+      var buttonjson = document.querySelector('#buttonjson');
+      buttonjson.addEventListener('click', function (evt) {
+        fetch('/post.json', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ foo: 'bar' }),
+        });
+      });
+
+    })(window, window.document);
+  </script>
+</body>
+</html>
