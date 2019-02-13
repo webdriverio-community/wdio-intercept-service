@@ -1,12 +1,12 @@
-# wdio-interceptor-service
+# wdio-intercept-service
 
 🕸 Capture and assert HTTP ajax calls in [webdriver.io](http://webdriver.io/)
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/chmanie/wdio-interceptor-service.svg)](https://greenkeeper.io/) [![Build Status](https://travis-ci.org/chmanie/wdio-interceptor-service.svg?branch=master)](https://travis-ci.org/chmanie/wdio-interceptor-service) [![Join the chat at https://gitter.im/chmanie/wdio-interceptor-service](https://badges.gitter.im/chmanie/wdio-interceptor-service.svg)](https://gitter.im/chmanie/wdio-interceptor-service?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Greenkeeper badge](https://badges.greenkeeper.io/chmanie/wdio-intercept-service.svg)](https://greenkeeper.io/) [![Build Status](https://travis-ci.org/chmanie/wdio-intercept-service.svg?branch=master)](https://travis-ci.org/chmanie/wdio-intercept-service) [![Join the chat at https://gitter.im/chmanie/wdio-intercept-service](https://badges.gitter.im/chmanie/wdio-intercept-service.svg)](https://gitter.im/chmanie/wdio-intercept-service?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 This is a plugin for [webdriver.io](http://webdriver.io/). If you don't know it yet, check it out, it's pretty cool.
 
-Although selenium and webdriver are used for e2e and especially UI testing, you might want to assess HTTP requests done by your client code (e.g. when you don't have immediate UI feedback, like in metrics or tracking calls). With wdio-interceptor-service you can intercept ajax HTTP calls initiated by some user action (e.g. a button press, etc.) and make assertions about the request and corresponding resposes later.
+Although selenium and webdriver are used for e2e and especially UI testing, you might want to assess HTTP requests done by your client code (e.g. when you don't have immediate UI feedback, like in metrics or tracking calls). With wdio-intercept-service you can intercept ajax HTTP calls initiated by some user action (e.g. a button press, etc.) and make assertions about the request and corresponding resposes later.
 
 There's one catch though: you can't intercept HTTP calls that are initiated on page load (like in most SPAs), as it requires some setup work that can only be done after the page is loaded (due to limitations in selenium). **That means you can just capture requests that were initiated inside a test.** If you're fine with that, this plugin might be for you, so read on.
 
@@ -21,18 +21,18 @@ There's one catch though: you can't intercept HTTP calls that are initiated on p
 Use [yarn](https://yarnpkg.com):
 
 ```
-yarn add wdio-interceptor-service -D
+yarn add wdio-intercept-service -D
 ```
 
 [npm](https://npmjs.org) works as well:
 
 ```
-npm install wdio-interceptor-service -D
+npm install wdio-intercept-service -D
 ```
 
 ## Usage
 
-It should be as easy as adding wdio-interceptor-service to your `wdio.conf.js`:
+It should be as easy as adding wdio-intercept-service to your `wdio.conf.js`:
 
 ```javascript
 exports.config = {
@@ -116,7 +116,7 @@ To make more sophisticated assertions about a specific request you can get detai
 * `request.response.body`: response body (will be parsed as JSON if possible)
 * `request.response.statusCode`: response status code
 
-**A note on `request.body`:** wdio-interceptor-service will try to parse the request body as follows:
+**A note on `request.body`:** wdio-intercept-service will try to parse the request body as follows:
 
 * string: Just return the string (`'value'`)
 * JSON: Parse the JSON object using `JSON.parse()` (`({ key: value })`)
