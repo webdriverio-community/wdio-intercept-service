@@ -1,96 +1,82 @@
-# webdriverajax
-Capture and assert HTTP ajax calls in [webdriver.io](http://webdriver.io/)
+# wdio-intercept-service
 
-![Travis badge](https://travis-ci.org/chmanie/webdriverajax.svg?branch=master)
+🕸 Capture and assert HTTP ajax calls in [webdriver.io](http://webdriver.io/)
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/chmanie/wdio-intercept-service.svg)](https://greenkeeper.io/) [![Build Status](https://travis-ci.org/chmanie/wdio-intercept-service.svg?branch=master)](https://travis-ci.org/chmanie/wdio-intercept-service) [![Join the chat at https://gitter.im/chmanie/wdio-intercept-service](https://badges.gitter.im/chmanie/wdio-intercept-service.svg)](https://gitter.im/chmanie/wdio-intercept-service?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Join the chat at https://gitter.im/wdio-intercept-service/community](https://badges.gitter.im/wdio-intercept-service/community.svg)](https://gitter.im/wdio-intercept-service/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 This is a plugin for [webdriver.io](http://webdriver.io/). If you don't know it yet, check it out, it's pretty cool.
 
-Although selenium and webdriver are used for e2e and especially UI testing, you might want to assess HTTP requests done by your client code (e.g. when you don't have immediate UI feedback, like in metrics or tracking calls). With webdriverajax you can intercept ajax HTTP calls initiated by some user action (e.g. a button press, etc.) and make assertions about the request and corresponding resposes later.
+Although selenium and webdriver are used for e2e and especially UI testing, you might want to assess HTTP requests done by your client code (e.g. when you don't have immediate UI feedback, like in metrics or tracking calls). With wdio-intercept-service you can intercept ajax HTTP calls initiated by some user action (e.g. a button press, etc.) and make assertions about the request and corresponding resposes later.
 
 There's one catch though: you can't intercept HTTP calls that are initiated on page load (like in most SPAs), as it requires some setup work that can only be done after the page is loaded (due to limitations in selenium). **That means you can just capture requests that were initiated inside a test.** If you're fine with that, this plugin might be for you, so read on.
 
 ## Prerequisites
 
-* node.js > **v0.12** (as we're using native ES6 Promises)
-* webdriver.io **v3.x**.
+* webdriver.io **v5.x**.
+
+**Heads up! If you're still using webdriver.io v4, please use the v2.x branch of this plugin!**
 
 ## Installation
 
-Use [npm](https://npmjs.org):
+Use [yarn](https://yarnpkg.com):
 
 ```
-npm install webdriverajax
+yarn add wdio-intercept-service -D
+```
+
+[npm](https://npmjs.org) works as well:
+
+```
+npm install wdio-intercept-service -D
 ```
 
 ## Usage
 
-#### Using with `wdio`
-
-If you use the integrated [test-runner](http://webdriver.io/guide/testrunner/gettingstarted.html) (`wdio`) it's as easy as adding webdriverajax to your `wdio.conf.js`:
+It should be as easy as adding wdio-intercept-service to your `wdio.conf.js`:
 
 ```javascript
-plugins: {
-  webdriverajax: {}
-}
+exports.config = {
+  // ...
+  services: ['interceptor']
+  // ...
+};
 ```
 
 and you're all set.
-
-#### Programatic usage
-
-You should require the package and call the config function with your webdriver-instance (`client` or `browser` or whatever you call it) before you initialize it with `.init()`. So for example (using [mocha](https://mochajs.org/)):
-
-```javascript
-var wdajax = require('webdriverajax');
-
-var client = webdriverio.remote({
-  desiredCapabilities: {
-    browserName: 'firefox'
-  }
-});
-
-before(function() {
-  wdajax.init(client);
-  return client.init();
-});
-```
 
 Once initialized, some related functions are added to your browser command chain (see [API](#api)).
 
 ## Quickstart
 
-Example usage (promise-style):
+Example usage:
 
 ```javascript
-browser
-  .url('http://foo.bar')
-  .setupInterceptor() // capture ajax calls
-  .expectRequest('GET', '/api/foo', 200) // expect GET request to /api/foo with 200 statusCode
-  .expectRequest('POST', '/api/foo', 400) // expect POST request to /api/foo with 400 statusCode
-  .expectRequest('GET', /\/api\/foo/, 200) // can validate a URL with regex, too
-  .click('#button') // button that initiates ajax request
-  .pause(1000) // maybe wait a bit until request is finished
-  .assertRequests(); // validate the requests
+browser.url('http://foo.bar');
+browser.setupInterceptor(); // capture ajax calls
+browser.expectRequest('GET', '/api/foo', 200); // expect GET request to /api/foo with 200 statusCode
+browser.expectRequest('POST', '/api/foo', 400); // expect POST request to /api/foo with 400 statusCode
+browser.expectRequest('GET', /\/api\/foo/, 200); // can validate a URL with regex, too
+browser.click('#button'); // button that initiates ajax request
+browser.pause(1000); // maybe wait a bit until request is finished
+browser.assertRequests(); // validate the requests
 ```
 
-Get details about requests (generator-style):
+Get details about requests:
 
 ```javascript
-yield browser.url('http://foo.bar')
-    .setupInterceptor()
-    .click('#button')
-    .pause(1000);
+browser.url('http://foo.bar')
+browser.setupInterceptor();
+browser.click('#button')
+browser.pause(1000);
 
-var request = yield browser.getRequest(0);
+var request = browser.getRequest(0);
 assert.equal(request.method, 'GET');
 assert.equal(request.response.headers['content-length'], '42');
 ```
 
 ## Supported browsers
 
-It should work with somewhat newer versions of all browsers.
-
-![Browser matrix](https://saucelabs.com/browser-matrix/webdriverajax.svg)
+It should work with somewhat newer versions of all browsers. Please report an issue if it doesn't seem to work with yours.
 
 ## API
 
@@ -120,32 +106,44 @@ To make more sophisticated assertions about a specific request you can get detai
 
 * `index` (`Number`): number of the request you want to access
 
-**Returns**: Promise that resolves to `request` object:
+**Returns** `request` object:
 
 * `request.url`: requested URL
 * `request.method`: used HTTP method
+* `request.body`: payload/body data used in request
+* `request.headers`: request http headers as JS object
 * `request.response.headers`: response http headers as JS object
 * `request.response.body`: response body (will be parsed as JSON if possible)
 * `request.response.statusCode`: response status code
+
+**A note on `request.body`:** wdio-intercept-service will try to parse the request body as follows:
+
+* string: Just return the string (`'value'`)
+* JSON: Parse the JSON object using `JSON.parse()` (`({ key: value })`)
+* FormData: Will output the FormData in the format `{ key: [value1, value2, ...] }`
+* ArrayBuffer: Will try to convert the buffer to a string (experimental)
+* Anything else: Will use a brutal `JSON.stringify()` on your data. Good luck!
+
+**For the `fetch` API, we only support string and JSON data!**
 
 ### browser.getRequests()
 
 Get all captured requests as an array.
 
-**Returns**: Promise that resolves to an array of `request` objects.
+**Returns** array of `request` objects.
 
 ## Running the tests
 
-Firefox has to be installed. Also install selenium standalone via:
+A compatible browser (Firefox, Chrome) has to be installed. Also install selenium standalone via:
 
-```
+```shell
 node_modules/.bin/selenium-standalone install
 ```
 
 then
 
-```
-npm test
+```shell
+yarn test # npm test works as well :)
 ```
 
 ## Contributing
