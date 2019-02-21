@@ -2,7 +2,7 @@ const path = require('path');
 
 const utils = require('./test/utils');
 
-const plugin = require('./index.js');
+const plugin = require('./index.js').default;
 
 exports.config = {
   //
