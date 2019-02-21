@@ -216,4 +216,4 @@ class WebdriverAjax {
   }
 }
 
-module.exports = WebdriverAjax;
+exports.default = WebdriverAjax;
