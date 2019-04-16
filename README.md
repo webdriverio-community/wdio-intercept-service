@@ -37,7 +37,7 @@ It should be as easy as adding wdio-intercept-service to your `wdio.conf.js`:
 ```javascript
 exports.config = {
   // ...
-  services: ['interceptor']
+  services: ['intercept']
   // ...
 };
 ```
