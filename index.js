@@ -14,7 +14,7 @@ class WebdriverAjax {
   beforeScenario() {
     this._wdajaxExpectations = [];
   }
-  
+
   before() {
     /**
      * instance need to have addCommand method
