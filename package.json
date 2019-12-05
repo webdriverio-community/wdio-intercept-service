@@ -45,8 +45,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn fix",
-      "pre-push": "yarn fix"
+      "pre-commit": "yarn fix && git add *.js && git add lib"
     }
   }
 }
