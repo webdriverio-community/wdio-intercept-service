@@ -1,5 +1,14 @@
 ## wdio-intercept-service changelog
 
+### [ [>](https://github.com/chmanie/wdio-intercept-service/tree/v3.0.3) ] 3.0.3 / 05.12.2019
+* Fix issues with IE11 (thanks @vrockai)
+* Fix undefined init values in `fetch` requests (thanks @lacell75)
+* Upgrade all dependencies
+* Fix a pre-commit issue
+
+### [ [>](https://github.com/chmanie/wdio-intercept-service/tree/v3.0.2) ] 3.0.2 / 21.02.2019
+* Fix the module exports (thanks @abjerstedt)
+
 ### [ [>](https://github.com/chmanie/wdio-intercept-service/tree/v3.0.1) ] 3.0.1 / 13.02.2019
 * Properly rename to wdio-intercept-service
 
