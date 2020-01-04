@@ -26,6 +26,8 @@ class WebdriverAjax {
     }
 
     browser.addCommand('setupInterceptor', setup.bind(this));
+    browser.addCommand('getExpectations', getExpectations.bind(this));
+    browser.addCommand('resetExpectations', resetExpectations.bind(this));
     browser.addCommand('expectRequest', expectRequest.bind(this));
     browser.addCommand('assertRequests', assertRequests.bind(this));
     browser.addCommand(
@@ -199,6 +201,16 @@ class WebdriverAjax {
 
         return browser;
       });
+    }
+
+    // In a long test, it's possible you might want to reset the list
+    // of expected requests after validating some.
+    function resetExpectations() {
+      this._wdajaxExpectations = [];
+    }
+
+    function getExpectations() {
+      return this._wdajaxExpectations;
     }
 
     async function getRequest(index) {
