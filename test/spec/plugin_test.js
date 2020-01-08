@@ -17,6 +17,17 @@ describe('webdriverajax', function testSuite() {
     assert.deepEqual(ret, { requests: [] });
   });
 
+  it('should reset expectations', () => {
+    assert.equal(typeof browser.setupInterceptor, 'function');
+    browser.url('/get.html');
+    browser.setupInterceptor();
+    browser.expectRequest('GET', '/get.json', 200);
+    browser.expectRequest('GET', '/get.json', 200);
+    assert.equal(browser.getExpectations().length, 2);
+    browser.resetExpectations();
+    assert.equal(browser.getExpectations().length, 0);
+  });
+
   describe('XHR API', () => {
     it('can intercept a simple GET request', () => {
       browser.url('/get.html');
@@ -25,6 +36,7 @@ describe('webdriverajax', function testSuite() {
       $('#button').click();
       browser.pause(wait);
       browser.assertRequests();
+      browser.assertExpectedRequestsOnly();
     });
 
     it('can use regular expressions for urls', () => {
@@ -34,6 +46,7 @@ describe('webdriverajax', function testSuite() {
       $('#button').click();
       browser.pause(wait);
       browser.assertRequests();
+      browser.assertExpectedRequestsOnly();
     });
 
     it('errors on wrong request count', () => {
@@ -202,6 +215,7 @@ describe('webdriverajax', function testSuite() {
       $('#button').click();
       browser.pause(wait);
       browser.assertRequests();
+      browser.assertExpectedRequestsOnly();
     });
 
     it('errors with no requests set up', () => {
@@ -218,6 +232,65 @@ describe('webdriverajax', function testSuite() {
       const count = browser.getRequests();
       assert.deepEqual(count, []);
     });
+
+    it('can validate only the expected requests, in order (implicit)', () => {
+      browser.url('/multiple_methods.html');
+      browser.setupInterceptor();
+      browser.expectRequest('GET', '/get.json', 200);
+      browser.expectRequest('POST', '/post.json', 200);
+      $('#getbutton').click();
+      browser.pause(wait);
+      $('#postbutton').click();
+      browser.pause(wait);
+      // The next two are not needed, but adding extra clicks to prove we can validate partial set
+      $('#getbutton').click();
+      browser.pause(wait);
+      $('#postbutton').click();
+      browser.pause(wait);
+      browser.assertExpectedRequestsOnly();
+      assert.throws(() => {
+        browser.assertRequests();
+      }, /Expected\s\d\srequests\sbut\swas\s\d/);
+    });
+
+    it('can validate only the expected requests, in order (explicit)', () => {
+      browser.url('/multiple_methods.html');
+      browser.setupInterceptor();
+      browser.expectRequest('GET', '/get.json', 200);
+      browser.expectRequest('POST', '/post.json', 200);
+      $('#getbutton').click();
+      browser.pause(wait);
+      $('#postbutton').click();
+      browser.pause(wait);
+      // The next two are not needed, but adding extra clicks to prove we can validate partial set
+      $('#getbutton').click();
+      browser.pause(wait);
+      $('#postbutton').click();
+      browser.pause(wait);
+      browser.assertExpectedRequestsOnly(true);
+      assert.throws(() => {
+        browser.assertRequests();
+      }, /Expected\s\d\srequests\sbut\swas\s\d/);
+    });
+
+    it('can validate only the expected requests, in any order', () => {
+      browser.url('/multiple_methods.html');
+      browser.setupInterceptor();
+      browser.expectRequest('GET', '/get.json', 200);
+      browser.expectRequest('POST', '/post.json', 200);
+      $('#postbutton').click();
+      browser.pause(wait);
+      $('#postbutton').click();
+      browser.pause(wait);
+      $('#getbutton').click();
+      browser.pause(wait);
+      $('#getbutton').click();
+      browser.pause(wait);
+      browser.assertExpectedRequestsOnly(false);
+      assert.throws(() => {
+        browser.assertRequests();
+      }, /Expected\s\d\srequests\sbut\swas\s\d/);
+    });
   });
 
   describe('fetch API', () => {
@@ -228,6 +301,7 @@ describe('webdriverajax', function testSuite() {
       $('#fetchbutton').click();
       browser.pause(wait);
       browser.assertRequests();
+      browser.assertExpectedRequestsOnly();
     });
 
     it('can access a certain request', () => {

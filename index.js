@@ -26,8 +26,14 @@ class WebdriverAjax {
     }
 
     browser.addCommand('setupInterceptor', setup.bind(this));
+    browser.addCommand('getExpectations', getExpectations.bind(this));
+    browser.addCommand('resetExpectations', resetExpectations.bind(this));
     browser.addCommand('expectRequest', expectRequest.bind(this));
     browser.addCommand('assertRequests', assertRequests.bind(this));
+    browser.addCommand(
+      'assertExpectedRequestsOnly',
+      assertExpectedRequestsOnly.bind(this)
+    );
     browser.addCommand('getRequest', getRequest);
     browser.addCommand('getRequests', getRequest);
 
@@ -127,6 +133,84 @@ class WebdriverAjax {
 
         return browser;
       });
+    }
+
+    function assertExpectedRequestsOnly(inOrder = true) {
+      const expectations = this._wdajaxExpectations;
+
+      return getRequest().then(requests => {
+        const clonedRequests = [...requests];
+
+        let matchedRequestIndexes = [];
+        for (let i = 0; i < expectations.length; i++) {
+          const ex = expectations[i];
+
+          const matchingRequestIndex = clonedRequests.findIndex(request => {
+            if (
+              !request ||
+              request.method !== ex.method ||
+              (ex.url instanceof RegExp &&
+                request.url &&
+                !request.url.match(ex.url)) ||
+              (typeof ex.url == 'string' && request.url !== ex.url) ||
+              request.response.statusCode !== ex.statusCode
+            ) {
+              return false;
+            }
+
+            return true;
+          });
+
+          if (matchingRequestIndex !== undefined) {
+            matchedRequestIndexes.push(matchingRequestIndex);
+            delete clonedRequests[matchingRequestIndex];
+          } else {
+            return Promise.reject(
+              new Error(
+                'Expected request was not found. ' +
+                  'method: ' +
+                  ex.method +
+                  ' url: ' +
+                  ex.url +
+                  ' statusCode: ' +
+                  ex.statusCode
+              )
+            );
+          }
+        }
+
+        if (matchedRequestIndexes.length !== expectations.length) {
+          return Promise.reject(
+            new Error(
+              'Expected ' +
+                expectations.length +
+                ' requests but found ' +
+                matchedRequestIndexes.length +
+                ' matching requests'
+            )
+          );
+        } else if (
+          inOrder &&
+          JSON.stringify(matchedRequestIndexes) !==
+            JSON.stringify(matchedRequestIndexes.concat().sort())
+        ) {
+          return Promise.reject(
+            new Error('Requests not received in the expected order')
+          );
+        }
+
+        return browser;
+      });
+    }
+
+    // In a long test, it's possible you might want to reset the list
+    // of expected requests after validating some.
+    function resetExpectations() {
+      this._wdajaxExpectations = [];
+    }
+
+    function getExpectations() {
+      return this._wdajaxExpectations;
     }
 
     async function getRequest(index) {
