@@ -92,6 +92,14 @@ Make expectations about the ajax requests that are going to be initiated during 
 * `url` (`String`|`RegExp`): exact URL that is called in the request as a string or RegExp to match
 * `statusCode` (`Number`): expected status code of the response
 
+### browser.getExpectations()
+
+Helper method. Returns all the expectations you've made up until that point
+
+### browser.resetExpectations()
+
+Helper method. Resets all the expectations you've made up until that point
+
 ### browser.assertRequests()
 
 Call this method when all expected ajax requests are finished. It compares the expectations to the actual requests made and asserts the following:
@@ -99,6 +107,10 @@ Call this method when all expected ajax requests are finished. It compares the e
 - Count of the requests that were made
 - The order of the requests
 - The method, the URL and the statusCode should match for every request made
+
+### browser.assertExpectedRequestsOnly()
+
+Similar to `browser.assertRequests`, but validates only the requests you specify in your `expectRequest` directives, without having to map out all the network requests that might happen around that.
 
 ### browser.getRequest(index)
 

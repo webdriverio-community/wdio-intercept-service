@@ -1,5 +1,8 @@
 ## wdio-intercept-service changelog
 
+### [ [>](https://github.com/chmanie/wdio-intercept-service/tree/v3.1.0) ] 3.1.0 / 08.01.2020
+* Add option to validate only expected requests (thanks @chrisdraycott)
+
 ### [ [>](https://github.com/chmanie/wdio-intercept-service/tree/v3.0.3) ] 3.0.3 / 05.12.2019
 * Fix issues with IE11 (thanks @vrockai)
 * Fix undefined init values in `fetch` requests (thanks @lacell75)
