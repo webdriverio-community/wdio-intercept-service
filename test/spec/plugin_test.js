@@ -291,6 +291,20 @@ describe('webdriverajax', function testSuite() {
         browser.assertRequests();
       }, /Expected\s\d\srequests\sbut\swas\s\d/);
     });
+
+      it('can validate only the expected requests, in any order, and fail when urls do not match', () => {
+          browser.url('/multiple_methods.html');
+          browser.setupInterceptor();
+          browser.expectRequest('GET', '/get.json', 200);
+          browser.expectRequest('POST', '/invalid.json', 200);
+          $('#getbutton').click();
+          browser.pause(wait);
+          $('#postbutton').click();
+          browser.pause(wait);
+          assert.throws(() => {
+              browser.assertExpectedRequestsOnly(false);
+          }, /Expected request was not found. method: POST url: \/invalid.json statusCode: 200/);
+      });
   });
 
   describe('fetch API', () => {
