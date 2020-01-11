@@ -161,7 +161,7 @@ class WebdriverAjax {
             return true;
           });
 
-          if (matchingRequestIndex !== undefined) {
+          if (matchingRequestIndex !== -1) {
             matchedRequestIndexes.push(matchingRequestIndex);
             delete clonedRequests[matchingRequestIndex];
           } else {
