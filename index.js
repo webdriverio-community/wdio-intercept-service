@@ -1,18 +1,18 @@
-'use strict';
+'use strict'
 
-const interceptor = require('./lib/interceptor');
+const interceptor = require('./lib/interceptor')
 
 class WebdriverAjax {
   constructor() {
-    this._wdajaxExpectations = null;
+    this._wdajaxExpectations = null
   }
 
   beforeTest() {
-    this._wdajaxExpectations = [];
+    this._wdajaxExpectations = []
   }
 
   beforeScenario() {
-    this._wdajaxExpectations = [];
+    this._wdajaxExpectations = []
   }
 
   before() {
@@ -21,42 +21,42 @@ class WebdriverAjax {
      */
     if (typeof browser.addCommand !== 'function') {
       throw new Error(
-        "you can't use WebdriverAjax with this version of WebdriverIO"
-      );
+        "you can't use WebdriverAjax with this version of WebdriverIO",
+      )
     }
 
-    browser.addCommand('setupInterceptor', setup.bind(this));
-    browser.addCommand('getExpectations', getExpectations.bind(this));
-    browser.addCommand('resetExpectations', resetExpectations.bind(this));
-    browser.addCommand('expectRequest', expectRequest.bind(this));
-    browser.addCommand('assertRequests', assertRequests.bind(this));
+    browser.addCommand('setupInterceptor', setup.bind(this))
+    browser.addCommand('getExpectations', getExpectations.bind(this))
+    browser.addCommand('resetExpectations', resetExpectations.bind(this))
+    browser.addCommand('expectRequest', expectRequest.bind(this))
+    browser.addCommand('assertRequests', assertRequests.bind(this))
     browser.addCommand(
       'assertExpectedRequestsOnly',
-      assertExpectedRequestsOnly.bind(this)
-    );
-    browser.addCommand('getRequest', getRequest);
-    browser.addCommand('getRequests', getRequest);
+      assertExpectedRequestsOnly.bind(this),
+    )
+    browser.addCommand('getRequest', getRequest)
+    browser.addCommand('getRequests', getRequest)
 
     function setup() {
-      return browser.executeAsync(interceptor.setup);
+      return browser.executeAsync(interceptor.setup)
     }
 
     function expectRequest(method, url, statusCode) {
       this._wdajaxExpectations.push({
         method: method.toUpperCase(),
         url: url,
-        statusCode: statusCode
-      });
-      return {};
+        statusCode: statusCode,
+      })
+      return {}
     }
 
     function assertRequests() {
-      const expectations = this._wdajaxExpectations;
+      const expectations = this._wdajaxExpectations
 
       if (!expectations.length) {
         return Promise.reject(
-          new Error('No expectations found. Call .expectRequest() first')
-        );
+          new Error('No expectations found. Call .expectRequest() first'),
+        )
       }
       return getRequest().then(requests => {
         if (expectations.length !== requests.length) {
@@ -65,14 +65,14 @@ class WebdriverAjax {
               'Expected ' +
                 expectations.length +
                 ' requests but was ' +
-                requests.length
-            )
-          );
+                requests.length,
+            ),
+          )
         }
 
         for (let i = 0; i < expectations.length; i++) {
-          const ex = expectations[i];
-          const request = requests[i];
+          const ex = expectations[i]
+          const request = requests[i]
 
           if (request.method !== ex.method) {
             return Promise.reject(
@@ -82,9 +82,9 @@ class WebdriverAjax {
                   ' to have method ' +
                   ex.method +
                   ' but was ' +
-                  request.method
-              )
-            );
+                  request.method,
+              ),
+            )
           }
 
           if (
@@ -99,9 +99,9 @@ class WebdriverAjax {
                   ' to match ' +
                   ex.url.toString() +
                   ' but was ' +
-                  request.url
-              )
-            );
+                  request.url,
+              ),
+            )
           }
 
           if (typeof ex.url == 'string' && request.url !== ex.url) {
@@ -112,9 +112,9 @@ class WebdriverAjax {
                   ' to have URL ' +
                   ex.url +
                   ' but was ' +
-                  request.url
-              )
-            );
+                  request.url,
+              ),
+            )
           }
 
           if (request.response.statusCode !== ex.statusCode) {
@@ -125,25 +125,25 @@ class WebdriverAjax {
                   ' to have status ' +
                   ex.statusCode +
                   ' but was ' +
-                  request.response.statusCode
-              )
-            );
+                  request.response.statusCode,
+              ),
+            )
           }
         }
 
-        return browser;
-      });
+        return browser
+      })
     }
 
     function assertExpectedRequestsOnly(inOrder = true) {
-      const expectations = this._wdajaxExpectations;
+      const expectations = this._wdajaxExpectations
 
       return getRequest().then(requests => {
-        const clonedRequests = [...requests];
+        const clonedRequests = [...requests]
 
-        let matchedRequestIndexes = [];
+        let matchedRequestIndexes = []
         for (let i = 0; i < expectations.length; i++) {
-          const ex = expectations[i];
+          const ex = expectations[i]
 
           const matchingRequestIndex = clonedRequests.findIndex(request => {
             if (
@@ -155,15 +155,15 @@ class WebdriverAjax {
               (typeof ex.url == 'string' && request.url !== ex.url) ||
               request.response.statusCode !== ex.statusCode
             ) {
-              return false;
+              return false
             }
 
-            return true;
-          });
+            return true
+          })
 
           if (matchingRequestIndex !== -1) {
-            matchedRequestIndexes.push(matchingRequestIndex);
-            delete clonedRequests[matchingRequestIndex];
+            matchedRequestIndexes.push(matchingRequestIndex)
+            delete clonedRequests[matchingRequestIndex]
           } else {
             return Promise.reject(
               new Error(
@@ -173,9 +173,9 @@ class WebdriverAjax {
                   ' url: ' +
                   ex.url +
                   ' statusCode: ' +
-                  ex.statusCode
-              )
-            );
+                  ex.statusCode,
+              ),
+            )
           }
         }
 
@@ -186,61 +186,61 @@ class WebdriverAjax {
                 expectations.length +
                 ' requests but found ' +
                 matchedRequestIndexes.length +
-                ' matching requests'
-            )
-          );
+                ' matching requests',
+            ),
+          )
         } else if (
           inOrder &&
           JSON.stringify(matchedRequestIndexes) !==
             JSON.stringify(matchedRequestIndexes.concat().sort())
         ) {
           return Promise.reject(
-            new Error('Requests not received in the expected order')
-          );
+            new Error('Requests not received in the expected order'),
+          )
         }
 
-        return browser;
-      });
+        return browser
+      })
     }
 
     // In a long test, it's possible you might want to reset the list
     // of expected requests after validating some.
     function resetExpectations() {
-      this._wdajaxExpectations = [];
+      this._wdajaxExpectations = []
     }
 
     function getExpectations() {
-      return this._wdajaxExpectations;
+      return this._wdajaxExpectations
     }
 
     async function getRequest(index) {
-      let request;
+      let request
       if (index > -1) {
-        request = await browser.execute(interceptor.getRequest, index);
+        request = await browser.execute(interceptor.getRequest, index)
       } else {
-        request = await browser.execute(interceptor.getRequest);
+        request = await browser.execute(interceptor.getRequest)
       }
       if (!request) {
         if (index != null) {
           return Promise.reject(
-            new Error('Could not find request with index ' + index)
-          );
+            new Error('Could not find request with index ' + index),
+          )
         }
-        return [];
+        return []
       }
       if (Array.isArray(request)) {
-        return request.map(transformRequest);
+        return request.map(transformRequest)
       }
       // The edge driver does not seem to typecast arrays correctly
       if (typeof request[0] == 'object') {
-        return mapIndexed(request, transformRequest);
+        return mapIndexed(request, transformRequest)
       }
-      return transformRequest(request);
+      return transformRequest(request)
     }
 
     function transformRequest(req) {
       if (!req) {
-        return;
+        return
       }
 
       return {
@@ -251,57 +251,57 @@ class WebdriverAjax {
         response: {
           headers: parseResponseHeaders(req.headers),
           body: parseBody(req.body),
-          statusCode: req.statusCode
-        }
-      };
+          statusCode: req.statusCode,
+        },
+      }
     }
 
     function normalizeRequestHeaders(headers) {
-      const normalized = {};
+      const normalized = {}
       Object.keys(headers).forEach(key => {
-        normalized[key.toLowerCase()] = headers[key];
-      });
-      return normalized;
+        normalized[key.toLowerCase()] = headers[key]
+      })
+      return normalized
     }
 
     function parseResponseHeaders(stringOrObject) {
       if (typeof stringOrObject == 'object') {
-        return stringOrObject;
+        return stringOrObject
       }
-      const headers = {};
+      const headers = {}
       const arr = stringOrObject
         .trim()
         .replace(/\r/g, '')
-        .split('\n');
+        .split('\n')
       arr.forEach(header => {
-        const match = header.match(/^(.+)?:\s?(.+)$/);
+        const match = header.match(/^(.+)?:\s?(.+)$/)
         if (match) {
-          headers[match[1].toLowerCase()] = match[2];
+          headers[match[1].toLowerCase()] = match[2]
         }
-      });
-      return headers;
+      })
+      return headers
     }
 
     function parseBody(str) {
-      let body;
+      let body
       try {
-        body = JSON.parse(str);
+        body = JSON.parse(str)
       } catch (e) {
-        body = str;
+        body = str
       }
-      return body;
+      return body
     }
 
     // maps an 'array-like' object. returns proper array
     function mapIndexed(obj, fn) {
-      const arr = [];
-      const max = Math.max.apply(Math, Object.keys(obj).map(Number));
+      const arr = []
+      const max = Math.max.apply(Math, Object.keys(obj).map(Number))
       for (let i = 0; i <= max; i++) {
-        arr.push(fn(obj[i], i));
+        arr.push(fn(obj[i], i))
       }
-      return arr;
+      return arr
     }
   }
 }
 
-exports.default = WebdriverAjax;
+exports.default = WebdriverAjax
