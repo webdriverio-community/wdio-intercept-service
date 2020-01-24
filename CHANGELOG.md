@@ -2,6 +2,7 @@
 
 ### [ [>](https://github.com/chmanie/wdio-intercept-service/tree/vnext) ] next / xx.xx.xxxx
 * Add full typescript support for the plugin
+* Drop Node v8 support (out of LTS)
 
 ### [ [>](https://github.com/chmanie/wdio-intercept-service/tree/v3.1.1) ] 3.1.1 / 11.01.2020
 * Fix incorrect check for assertExpectedRequestsOnly (thanks @chrisdraycott)
