@@ -84,7 +84,7 @@ It should work with somewhat newer versions of all browsers. Please report an is
 
 Captures ajax calls in the browser. You always have to call the setup function in order to assess requests later.
 
-### browser.expectRequest(method, url, statusCode)
+### browser.expectRequest(method: string, url: string, statusCode: number)
 
 Make expectations about the ajax requests that are going to be initiated during the test. Can (and should) be chained. The order of the expectations should map to the order of the requests being made.
 
@@ -108,11 +108,11 @@ Call this method when all expected ajax requests are finished. It compares the e
 - The order of the requests
 - The method, the URL and the statusCode should match for every request made
 
-### browser.assertExpectedRequestsOnly()
+### browser.assertExpectedRequestsOnly(inOrder?: boolean)
 
-Similar to `browser.assertRequests`, but validates only the requests you specify in your `expectRequest` directives, without having to map out all the network requests that might happen around that.
+Similar to `browser.assertRequests`, but validates only the requests you specify in your `expectRequest` directives, without having to map out all the network requests that might happen around that. If `inOrder` equals to `true` (default), the requests are expected to be made in the same order as they were setup with `expectRequest`.
 
-### browser.getRequest(index)
+### browser.getRequest(index: number)
 
 To make more sophisticated assertions about a specific request you can get details for a specific request after it is finished. You have to provide the index of the request you want to access in the order the requests were initiated (starting with 0).
 
@@ -146,7 +146,7 @@ Get all captured requests as an array.
 
 ## TypeScript support
 
-This plugin has provides its own TS types. Just point your tsconfig to the type extensions like mentioned [here](https://webdriver.io/docs/typescript.html#framework-types):
+This plugin provides its own TS types. Just point your tsconfig to the type extensions like mentioned [here](https://webdriver.io/docs/typescript.html#framework-types):
 
 ```
 "compilerOptions": {
