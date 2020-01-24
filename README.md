@@ -144,6 +144,17 @@ Get all captured requests as an array.
 
 **Returns** array of `request` objects.
 
+## TypeScript support
+
+This plugin has provides its own TS types. Just point your tsconfig to the type extensions like mentioned [here](https://webdriver.io/docs/typescript.html#framework-types):
+
+```
+"compilerOptions": {
+    // ..
+    "types": ["node", "webdriverio", "wdio-intercept-service"]
+},
+```
+
 ## Running the tests
 
 A compatible browser (Firefox, Chrome) has to be installed. Also install selenium standalone via:

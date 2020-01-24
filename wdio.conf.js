@@ -1,8 +1,8 @@
-const path = require('path');
+const path = require('path')
 
-const utils = require('./test/utils');
+const utils = require('./test/utils')
 
-const plugin = require('./index.js').default;
+const plugin = require('./index.js').default
 
 exports.config = {
   //
@@ -54,9 +54,9 @@ exports.config = {
     {
       browserName: 'chrome',
       'goog:chromeOptions': {
-        args: ['--headless', '--disable-gpu']
-      }
-    }
+        args: ['--headless', '--disable-gpu'],
+      },
+    },
   ],
   //
   // ===================
@@ -113,7 +113,7 @@ exports.config = {
   // See the full list at http://mochajs.org/
   mochaOpts: {
     ui: 'bdd',
-    timeout: 60000
+    timeout: 60000,
   },
   // Services to use
   services: [[plugin, {}]],
@@ -131,8 +131,8 @@ exports.config = {
    * @param {Array.<Object>} capabilities list of capabilities details
    */
   onPrepare() {
-    const jobs = [utils.startStaticServer(), utils.startSelenium()];
-    return Promise.all(jobs);
+    const jobs = [utils.startStaticServer(), utils.startSelenium()]
+    return Promise.all(jobs)
   },
   /**
    * Gets executed just before initialising the webdriver session and test framework. It allows you
@@ -230,9 +230,9 @@ exports.config = {
    * @param {<Object>} results object containing test results
    */
   onComplete() {
-    const jobs = [utils.stopStaticServer(), utils.stopSelenium()];
-    return Promise.all(jobs);
-  }
+    const jobs = [utils.stopStaticServer(), utils.stopSelenium()]
+    return Promise.all(jobs)
+  },
   /**
    * Gets executed when a refresh happens.
    * @param {String} oldSessionId session ID of the old session
@@ -240,4 +240,4 @@ exports.config = {
    */
   //onReload: function(oldSessionId, newSessionId) {
   //}
-};
+}
