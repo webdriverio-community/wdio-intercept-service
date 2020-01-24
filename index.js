@@ -38,7 +38,7 @@ class WebdriverAjax {
     browser.addCommand('getRequests', getRequest)
 
     function setup() {
-      return browser.executeAsync(interceptor.setup).then(() => browser)
+      return browser.executeAsync(interceptor.setup)
     }
 
     function expectRequest(method, url, statusCode) {

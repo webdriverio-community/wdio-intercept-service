@@ -31,7 +31,7 @@ declare namespace WdioInterceptorService {
 
 declare module WebdriverIO {
   interface Browser {
-    setupInterceptor: () => BrowserObject
+    setupInterceptor: () => void
     expectRequest: (
       method: WdioInterceptorService.HTTPMethod,
       url: string | RegExp,
