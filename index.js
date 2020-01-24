@@ -38,7 +38,7 @@ class WebdriverAjax {
     browser.addCommand('getRequests', getRequest)
 
     function setup() {
-      return browser.executeAsync(interceptor.setup)
+      return browser.executeAsync(interceptor.setup).then(() => browser)
     }
 
     function expectRequest(method, url, statusCode) {
@@ -47,7 +47,7 @@ class WebdriverAjax {
         url: url,
         statusCode: statusCode,
       })
-      return {}
+      return browser
     }
 
     function assertRequests() {
@@ -207,6 +207,7 @@ class WebdriverAjax {
     // of expected requests after validating some.
     function resetExpectations() {
       this._wdajaxExpectations = []
+      return browser
     }
 
     function getExpectations() {
