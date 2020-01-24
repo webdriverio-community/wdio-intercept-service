@@ -4,10 +4,11 @@
   "description": "Capture and assert HTTP ajax calls in webdriver.io 🕸",
   "main": "index.js",
   "scripts": {
-    "fix": "prettier --write '{**/*.js,}'",
+    "fix": "prettier --write '{**/*.js,**/*.ts}'",
     "test": "wdio",
     "pretest": "selenium-standalone install"
   },
+  "types": "./types/wdio-intercept-service.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/chmanie/wdio-intercept-service.git"
@@ -45,7 +46,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn fix && git add \\*.js"
+      "pre-commit": "yarn fix && git add \\*.js && git add \\*.ts"
     }
   }
 }
