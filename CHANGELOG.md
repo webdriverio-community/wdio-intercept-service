@@ -1,6 +1,6 @@
 ## wdio-intercept-service changelog
 
-### [ [>](https://github.com/chmanie/wdio-intercept-service/tree/vnext) ] next / xx.xx.xxxx
+### [ [>](https://github.com/chmanie/wdio-intercept-service/tree/v4.0.0) ] 4.0.0 / 24.01.2020
 * Add full typescript support for the plugin
 * Drop Node v8 support (out of LTS)
 
