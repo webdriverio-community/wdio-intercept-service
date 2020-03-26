@@ -42,7 +42,7 @@
     "node-static": "^0.7.10",
     "prettier": "^1.19.1",
     "selenium-standalone": "^6.17.0",
-    "webdriverio": "^5.16.12"
+    "webdriverio": "^6.0.1"
   },
   "husky": {
     "hooks": {
