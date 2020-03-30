@@ -34,7 +34,7 @@
   "devDependencies": {
     "@wdio/cli": "^5.16.12",
     "@wdio/local-runner": "^5.16.12",
-    "@wdio/mocha-framework": "^5.16.12",
+    "@wdio/mocha-framework": "^6.0.7",
     "@wdio/spec-reporter": "^5.16.11",
     "@wdio/sync": "^5.16.12",
     "husky": "^4.2.1",
