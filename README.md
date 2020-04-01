@@ -18,14 +18,6 @@ There's one catch though: you can't intercept HTTP calls that are initiated on p
 
 ## Installation
 
-Use [yarn](https://yarnpkg.com):
-
-```
-yarn add wdio-intercept-service -D
-```
-
-[npm](https://npmjs.org) works as well:
-
 ```
 npm install wdio-intercept-service -D
 ```
