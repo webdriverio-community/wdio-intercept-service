@@ -28,21 +28,25 @@ declare namespace WdioInterceptorService {
     }
   }
 }
+/**
+ * Convert T to T or Promise<T> depending if `@wdio/sync` is being used or not.
+ */
+type AsyncSync<T> = WebdriverIO.BrowserObject extends WebDriver.Client ? T : Promise<T>
 
 declare module WebdriverIO {
   interface Browser {
-    setupInterceptor: () => Promise<void>
+    setupInterceptor: () => AsyncSync<void>
     expectRequest: (
       method: WdioInterceptorService.HTTPMethod,
       url: string | RegExp,
       statusCode: number,
-    ) => Promise<BrowserObject>
-    assertRequests: () => Promise<BrowserObject>
-    assertExpectedRequestsOnly: (inOrder?: boolean) => Promise<BrowserObject>
-    resetExpectations: () => Promise<BrowserObject>
-    getExpectations: () => Promise<WdioInterceptorService.ExpectedRequest[]>
-    getRequest: (index: number) => Promise<WdioInterceptorService.InterceptedRequest>
-    getRequests: () => Promise<WdioInterceptorService.InterceptedRequest[]>
+    ) => AsyncSync<BrowserObject>
+    assertRequests: () => AsyncSync<BrowserObject>
+    assertExpectedRequestsOnly: (inOrder?: boolean) => AsyncSync<BrowserObject>
+    resetExpectations: () => AsyncSync<BrowserObject>
+    getExpectations: () => AsyncSync<WdioInterceptorService.InterceptedRequest[]>
+    getRequest: (index: number) => AsyncSync<WdioInterceptorService.InterceptedRequest>
+    getRequests: () => AsyncSync<WdioInterceptorService.InterceptedRequest[]>
   }
 }
 
