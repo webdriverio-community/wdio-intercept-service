@@ -31,18 +31,18 @@ declare namespace WdioInterceptorService {
 
 declare module WebdriverIO {
   interface Browser {
-    setupInterceptor: () => void
+    setupInterceptor: () => Promise<void>
     expectRequest: (
       method: WdioInterceptorService.HTTPMethod,
       url: string | RegExp,
       statusCode: number,
-    ) => BrowserObject
-    assertRequests: () => BrowserObject
-    assertExpectedRequestsOnly: (inOrder?: boolean) => BrowserObject
-    resetExpectations: () => BrowserObject
-    getExpectations: () => WdioInterceptorService.ExpectedRequest[]
-    getRequest: (index: number) => WdioInterceptorService.InterceptedRequest
-    getRequests: () => WdioInterceptorService.InterceptedRequest[]
+    ) => Promise<BrowserObject>
+    assertRequests: () => Promise<BrowserObject>
+    assertExpectedRequestsOnly: (inOrder?: boolean) => Promise<BrowserObject>
+    resetExpectations: () => Promise<BrowserObject>
+    getExpectations: () => Promise<WdioInterceptorService.ExpectedRequest[]>
+    getRequest: (index: number) => Promise<WdioInterceptorService.InterceptedRequest>
+    getRequests: () => Promise<WdioInterceptorService.InterceptedRequest[]>
   }
 }
 
