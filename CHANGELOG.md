@@ -1,5 +1,8 @@
 ## wdio-intercept-service changelog
 
+### [ [>](https://github.com/chmanie/wdio-intercept-service/tree/v4.1.1) ] 4.1.1 / 04.04.2020
+* Fix plugin TypeScript types for async mode (thanks @louis-bompart)
+
 ### [ [>](https://github.com/chmanie/wdio-intercept-service/tree/v4.1.0) ] 4.1.0 / 01.04.2020
 * Update webdriverio dependencies
 * Fix undefined array returned from interceptor bug
