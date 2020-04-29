@@ -8,24 +8,24 @@ declare namespace WdioInterceptorService {
     | 'CONNECT'
     | 'OPTIONS'
     | 'TRACE'
-    | 'PATCH'
+    | 'PATCH';
 
   interface ExpectedRequest {
-    method: HTTPMethod
-    url: string
-    statusCode: number
+    method: HTTPMethod;
+    url: string;
+    statusCode: number;
   }
 
   interface InterceptedRequest {
-    url: string
-    method: HTTPMethod
-    body: string | object
-    headers: object
+    url: string;
+    method: HTTPMethod;
+    body: string | object;
+    headers: object;
     response: {
-      headers: object
-      body: string | object
-      statusCode: number
-    }
+      headers: object;
+      body: string | object;
+      statusCode: number;
+    };
   }
 }
 /**
@@ -33,29 +33,29 @@ declare namespace WdioInterceptorService {
  */
 type AsyncSync<T> = WebdriverIO.BrowserObject extends WebDriver.Client
   ? T
-  : Promise<T>
+  : Promise<T>;
 
 declare module WebdriverIO {
   interface Browser {
-    setupInterceptor: () => AsyncSync<void>
+    setupInterceptor: () => AsyncSync<void>;
     expectRequest: (
       method: WdioInterceptorService.HTTPMethod,
       url: string | RegExp,
-      statusCode: number,
-    ) => AsyncSync<BrowserObject>
-    assertRequests: () => AsyncSync<BrowserObject>
-    assertExpectedRequestsOnly: (inOrder?: boolean) => AsyncSync<BrowserObject>
-    resetExpectations: () => AsyncSync<BrowserObject>
+      statusCode: number
+    ) => AsyncSync<BrowserObject>;
+    assertRequests: () => AsyncSync<BrowserObject>;
+    assertExpectedRequestsOnly: (inOrder?: boolean) => AsyncSync<BrowserObject>;
+    resetExpectations: () => AsyncSync<BrowserObject>;
     getExpectations: () => AsyncSync<
       WdioInterceptorService.InterceptedRequest[]
-    >
+    >;
     getRequest: (
-      index: number,
-    ) => AsyncSync<WdioInterceptorService.InterceptedRequest>
-    getRequests: () => AsyncSync<WdioInterceptorService.InterceptedRequest[]>
+      index: number
+    ) => AsyncSync<WdioInterceptorService.InterceptedRequest>;
+    getRequests: () => AsyncSync<WdioInterceptorService.InterceptedRequest[]>;
   }
 }
 
 declare module 'wdio-intercept-service' {
-  export = WdioInterceptorService
+  export = WdioInterceptorService;
 }

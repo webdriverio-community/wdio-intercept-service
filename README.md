@@ -2,7 +2,7 @@
 
 🕸 Capture and assert HTTP ajax calls in [webdriver.io](http://webdriver.io/)
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/chmanie/wdio-intercept-service.svg)](https://greenkeeper.io/) [![Build Status](https://travis-ci.org/chmanie/wdio-intercept-service.svg?branch=master)](https://travis-ci.org/chmanie/wdio-intercept-service) [![Join the chat at https://gitter.im/wdio-intercept-service/community](https://badges.gitter.im/chmanie/wdio-intercept-service.svg)](https://gitter.im/wdio-intercept-service/community)
+[![Renovate](https://img.shields.io/badge/renovate-enabled-brightgreen.svg)](https://renovatebot.com) [![Build Status](https://travis-ci.org/chmanie/wdio-intercept-service.svg?branch=master)](https://travis-ci.org/chmanie/wdio-intercept-service) [![Join the chat at https://gitter.im/wdio-intercept-service/community](https://badges.gitter.im/chmanie/wdio-intercept-service.svg)](https://gitter.im/wdio-intercept-service/community)
 
 This is a plugin for [webdriver.io](http://webdriver.io/). If you don't know it yet, check it out, it's pretty cool.
 
