@@ -37,7 +37,7 @@
     "@wdio/mocha-framework": "6.1.6",
     "@wdio/spec-reporter": "6.1.5",
     "@wdio/sync": "6.1.5",
-    "husky": "4.2.3",
+    "husky": "4.2.5",
     "mocha": "7.1.1",
     "node-static": "0.7.11",
     "prettier": "2.0.5",
