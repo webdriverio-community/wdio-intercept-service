@@ -1,6 +1,6 @@
 ## Looking for a maintainer!
 
-I sadly don't have time to maintain this project anymore. If you're interested in keeping it up-to-date and improving it, please get in touch.
+I sadly don't have time to maintain this project anymore. If you're interested in keeping it up-to-date and improving it, [please get in touch](mailto:code@chmanie.com).
 
 # wdio-intercept-service
 
