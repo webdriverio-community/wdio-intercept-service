@@ -1,3 +1,7 @@
+## Looking for a maintainer!
+
+I sadly don't have time to maintain this project anymore. If you're interested in keeping it up-to-date and improving it, please get in touch.
+
 # wdio-intercept-service
 
 🕸 Capture and assert HTTP ajax calls in [webdriver.io](http://webdriver.io/)
