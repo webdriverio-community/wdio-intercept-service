@@ -5,14 +5,17 @@ const interceptor = require('./lib/interceptor');
 class WebdriverAjax {
   constructor() {
     this._wdajaxExpectations = null;
+    this._wdajaxRedirects = null;
   }
 
   beforeTest() {
     this._wdajaxExpectations = [];
+    this._wdajaxRedirects = [];
   }
 
   beforeScenario() {
     this._wdajaxExpectations = [];
+    this._wdajaxRedirects = [];
   }
 
   before() {
@@ -36,6 +39,9 @@ class WebdriverAjax {
     );
     browser.addCommand('getRequest', getRequest);
     browser.addCommand('getRequests', getRequest);
+    browser.addCommand('getRedirections', getRedirections.bind(this));
+    browser.addCommand('resetRedirections', resetRedirections.bind(this));
+    browser.addCommand('setRedirection', setRedirection.bind(this));
 
     function setup() {
       return browser.executeAsync(interceptor.setup);
@@ -48,6 +54,14 @@ class WebdriverAjax {
         statusCode: statusCode
       });
       return browser;
+    }
+
+    function setRedirection(patt, newUrl) {
+      this._wdajaxRedirects.push({
+        patt: patt,
+        newUrl: newUrl
+      });
+      browser.executeAsync(interceptor.setRedirections, this._wdajaxRedirects);
     }
 
     function assertRequests() {
@@ -210,8 +224,18 @@ class WebdriverAjax {
       return browser;
     }
 
+    function resetRedirections() {
+      this._wdajaxRedirects = [];
+      browser.executeAsync(interceptor.resetRedirections);
+      return browser;
+    }
+
     function getExpectations() {
       return this._wdajaxExpectations;
+    }
+
+    function getRedirections() {
+      return this._wdajaxRedirects;
     }
 
     async function getRequest(index) {
