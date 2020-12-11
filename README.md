@@ -96,6 +96,21 @@ Helper method. Returns all the expectations you've made up until that point
 
 Helper method. Resets all the expectations you've made up until that point
 
+### browser.setRedirection(pattern: string, newUrl: string)
+
+Set an object with a regex pattern and a replacement value to intercept and redirect url requests before they are sent.
+
+* `pattern` (`String`|`RegExp`): pattern to match as RegExp.
+* `newUrl` (`String`): text to replace the original URL.
+
+### browser.resetRedirections()
+
+Helper method. Resets all the redirections you've made up until that point
+
+### browser.getRedirections()
+
+Helper method. Returns all the redirections you've made up until that point
+
 ### browser.assertRequests()
 
 Call this method when all expected ajax requests are finished. It compares the expectations to the actual requests made and asserts the following:
