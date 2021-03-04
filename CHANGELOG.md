@@ -1,5 +1,11 @@
 ## wdio-intercept-service changelog
 
+### [ [>](https://github.com/chmanie/wdio-intercept-service/tree/v4.1.3) ] 4.1.3 / 04.03.2021
+Support ArrayBuffer decoding @cesar-rivera
+
+### [ [>](https://github.com/chmanie/wdio-intercept-service/tree/v4.1.2) ] 4.1.2 / 30.04.2020
+* Maintenance upgrade (package upgrades and spring cleaning)
+
 ### [ [>](https://github.com/chmanie/wdio-intercept-service/tree/v4.1.1) ] 4.1.1 / 04.04.2020
 * Fix plugin TypeScript types for async mode (thanks @louis-bompart)
 
