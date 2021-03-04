@@ -11,7 +11,7 @@ module.exports = {
   startStaticServer,
   stopStaticServer,
   startSelenium,
-  stopSelenium
+  stopSelenium,
 };
 
 function startStaticServer() {
@@ -25,7 +25,7 @@ function startStaticServer() {
           })
           .resume();
       })
-      .listen(8080, err => {
+      .listen(8080, (err) => {
         if (err) {
           return reject(err);
         }
