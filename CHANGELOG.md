@@ -1,7 +1,10 @@
 ## wdio-intercept-service changelog
 
+### [ [>](https://github.com/chmanie/wdio-intercept-service/tree/v4.1.4) ] 4.1.4 / 19.04.2021
+Improved support for parallelization (thanks @RaulGDMM)
+
 ### [ [>](https://github.com/chmanie/wdio-intercept-service/tree/v4.1.3) ] 4.1.3 / 04.03.2021
-Support ArrayBuffer decoding @cesar-rivera
+Support ArrayBuffer decoding (thanks @cesar-rivera)
 
 ### [ [>](https://github.com/chmanie/wdio-intercept-service/tree/v4.1.2) ] 4.1.2 / 30.04.2020
 * Maintenance upgrade (package upgrades and spring cleaning)

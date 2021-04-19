@@ -46,7 +46,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn fix && git add \\*.js && git add \\*.ts"
+      "pre-commit": "npm run fix && git add \\*.js && git add \\*.ts"
     }
   }
 }
