@@ -32,17 +32,17 @@
   },
   "homepage": "https://github.com/chmanie/wdio-intercept-service#readme",
   "devDependencies": {
-    "@wdio/cli": "6.1.5",
-    "@wdio/local-runner": "6.1.6",
-    "@wdio/mocha-framework": "6.1.6",
-    "@wdio/spec-reporter": "6.1.5",
-    "@wdio/sync": "6.1.5",
+    "@wdio/cli": "6.12.1",
+    "@wdio/local-runner": "6.12.1",
+    "@wdio/mocha-framework": "6.11.0",
+    "@wdio/spec-reporter": "6.11.0",
+    "@wdio/sync": "6.11.0",
     "husky": "4.2.5",
     "mocha": "7.1.2",
     "node-static": "0.7.11",
     "prettier": "2.0.5",
     "selenium-standalone": "6.17.0",
-    "webdriverio": "6.1.5"
+    "webdriverio": "6.12.1"
   },
   "husky": {
     "hooks": {
