@@ -41,7 +41,7 @@
     "mocha": "7.1.2",
     "node-static": "0.7.11",
     "prettier": "2.0.5",
-    "selenium-standalone": "6.17.0",
+    "selenium-standalone": "6.23.0",
     "webdriverio": "6.1.5"
   },
   "husky": {
