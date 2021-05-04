@@ -38,7 +38,7 @@
     "@wdio/spec-reporter": "6.1.5",
     "@wdio/sync": "6.1.5",
     "husky": "4.2.5",
-    "mocha": "7.1.2",
+    "mocha": "7.2.0",
     "node-static": "0.7.11",
     "prettier": "2.0.5",
     "selenium-standalone": "6.17.0",
