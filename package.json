@@ -5,8 +5,12 @@
   "main": "index.js",
   "scripts": {
     "fix": "prettier --write '{**/*.js,**/*.ts}'",
-    "test": "wdio",
-    "pretest": "selenium-standalone install"
+    "pretest": "selenium-standalone install",
+    "release:ci": "npm run release -- --ci --npm.skipChecks --no-git.requireCleanWorkingDir",
+    "release:patch": "npm run release -- patch",
+    "release:minor": "npm run release -- minor",
+    "release:major": "npm run release -- major",
+    "test": "wdio"
   },
   "types": "./types/wdio-intercept-service.d.ts",
   "repository": {
