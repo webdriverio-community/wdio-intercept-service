@@ -1,12 +1,9 @@
-## Looking for a maintainer!
-
-I sadly don't have time to maintain this project anymore. If you're interested in keeping it up-to-date and improving it, [please get in touch](mailto:code@chmanie.com).
-
-# wdio-intercept-service
+WebdriverIO Intercept Service
+=============================
 
 🕸 Capture and assert HTTP ajax calls in [webdriver.io](http://webdriver.io/)
 
-[![Renovate](https://img.shields.io/badge/renovate-enabled-brightgreen.svg)](https://renovatebot.com) [![Build Status](https://travis-ci.org/chmanie/wdio-intercept-service.svg?branch=master)](https://travis-ci.org/chmanie/wdio-intercept-service) [![Join the chat at https://gitter.im/wdio-intercept-service/community](https://badges.gitter.im/chmanie/wdio-intercept-service.svg)](https://gitter.im/wdio-intercept-service/community)
+[![Renovate](https://img.shields.io/badge/renovate-enabled-brightgreen.svg)](https://renovatebot.com) [![Tests](https://github.com/webdriverio-community/wdio-intercept-service/actions/workflows/test.yaml/badge.svg)](https://github.com/webdriverio-community/wdio-intercept-service/actions/workflows/test.yaml) [![Join the chat at https://gitter.im/wdio-intercept-service/community](https://badges.gitter.im/chmanie/wdio-intercept-service.svg)](https://gitter.im/wdio-intercept-service/community)
 
 This is a plugin for [webdriver.io](http://webdriver.io/). If you don't know it yet, check it out, it's pretty cool.
 
