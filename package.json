@@ -6,6 +6,7 @@
   "scripts": {
     "fix": "prettier --write '{**/*.js,**/*.ts}'",
     "pretest": "selenium-standalone install",
+    "release": "release-it --github.release",
     "release:ci": "npm run release -- --ci --npm.skipChecks --no-git.requireCleanWorkingDir",
     "release:patch": "npm run release -- patch",
     "release:minor": "npm run release -- minor",
