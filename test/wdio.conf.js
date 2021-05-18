@@ -1,8 +1,4 @@
-const path = require('path');
-
-const utils = require('./test/utils');
-
-const plugin = require('./index.js').default;
+const plugin = require('../index.js').default;
 
 exports.config = {
   //
@@ -23,7 +19,7 @@ exports.config = {
   // NPM script (see https://docs.npmjs.com/cli/run-script) then the current working
   // directory is where your package.json resides, so `wdio` will be called from there.
   //
-  specs: ['./test/spec/plugin_test.js'],
+  specs: [__dirname + '/spec/plugin_test.js'],
   // Patterns to exclude.
   exclude: [
     // 'path/to/excluded/files'
@@ -54,9 +50,9 @@ exports.config = {
     {
       browserName: 'chrome',
       'goog:chromeOptions': {
-        args: ['--headless', '--disable-gpu']
-      }
-    }
+        args: ['--headless', '--disable-gpu'],
+      },
+    },
   ],
   //
   // ===================
@@ -65,7 +61,8 @@ exports.config = {
   // Define all options that are relevant for the WebdriverIO instance here
   //
   // Level of logging verbosity: trace | debug | info | warn | error
-  logLevel: 'error',
+  logLevel: 'trace',
+  outputDir: __dirname + '/logs',
   //
   // Warns when a deprecated command is used
   deprecationWarnings: true,
@@ -113,10 +110,28 @@ exports.config = {
   // See the full list at http://mochajs.org/
   mochaOpts: {
     ui: 'bdd',
-    timeout: 60000
+    timeout: 60000,
   },
   // Services to use
-  services: [[plugin, {}]],
+  services: [
+    'chromedriver',
+    [
+      'static-server',
+      {
+        folders: [{ mount: '/', path: `${__dirname}/site` }],
+        middleware: [
+          {
+            mount: '/',
+            middleware: (req, res) => {
+              res.sendFile(`${__dirname}/site${req.path}`);
+            },
+          },
+        ],
+        port: 8080,
+      },
+    ],
+    [plugin, {}],
+  ],
   //
   // =====
   // Hooks
@@ -130,10 +145,8 @@ exports.config = {
    * @param {Object} config wdio configuration object
    * @param {Array.<Object>} capabilities list of capabilities details
    */
-  onPrepare() {
-    const jobs = [utils.startStaticServer(), utils.startSelenium()];
-    return Promise.all(jobs);
-  },
+  // onPrepare() {
+  // },
   /**
    * Gets executed just before initialising the webdriver session and test framework. It allows you
    * to manipulate configurations depending on the capability or spec.
@@ -229,10 +242,8 @@ exports.config = {
    * @param {Array.<Object>} capabilities list of capabilities details
    * @param {<Object>} results object containing test results
    */
-  onComplete() {
-    const jobs = [utils.stopStaticServer(), utils.stopSelenium()];
-    return Promise.all(jobs);
-  }
+  // onComplete() {
+  // }
   /**
    * Gets executed when a refresh happens.
    * @param {String} oldSessionId session ID of the old session
