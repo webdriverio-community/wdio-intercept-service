@@ -45,7 +45,7 @@ When using WebdriverIO Standalone, the `before` and `beforeTest` / `beforeScenar
 
 ```javascript
 import { remote } from 'webdriverio';
-import { WebdriverAjax } from 'wdio-intercept-service-main'
+import WebdriverAjax from 'wdio-intercept-service'
 
 const WDIO_OPTIONS = {
   port: 9515,

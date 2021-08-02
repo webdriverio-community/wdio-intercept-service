@@ -2,7 +2,7 @@
 
 const assert = require('assert');
 const { remote } = require('webdriverio');
-const { WebdriverAjax } = require('../../index');
+const WebdriverAjax = require('../../index').default;
 
 describe('webdriverajax', function testSuite() {
   this.timeout(process.env.CI ? 100000 : 10000);
