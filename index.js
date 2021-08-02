@@ -15,7 +15,7 @@ class WebdriverAjax {
     this._wdajaxExpectations = [];
   }
 
-  before() {
+  before(_, __, browser) {
     /**
      * instance need to have addCommand method
      */
