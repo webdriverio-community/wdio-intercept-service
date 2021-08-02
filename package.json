@@ -44,7 +44,7 @@
     "@wdio/spec-reporter": "^7.6.0",
     "@wdio/static-server-service": "^7.6.0",
     "@wdio/sync": "^7.6.0",
-    "chromedriver": "^90.0.0",
+    "chromedriver": "^92.0.0",
     "husky": "4.2.5",
     "prettier": "2.3.0",
     "release-it": "^14.6.2",
