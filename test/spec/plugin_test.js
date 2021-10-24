@@ -6,7 +6,8 @@ const WebdriverAjax = require('../../index').default;
 // Since we serve the content from a file, the content-length depends on if the host is
 // Windows (CRLF) or not (LF).
 const contentLength = require('fs')
-  .readFileSync(`${__dirname}/../site/get.json`, 'utf-8').length.toString();
+  .readFileSync(`${__dirname}/../site/get.json`, 'utf-8')
+  .length.toString();
 
 describe('webdriverajax', function testSuite() {
   this.timeout(process.env.CI ? 100000 : 10000);
