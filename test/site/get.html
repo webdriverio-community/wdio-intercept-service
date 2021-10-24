@@ -6,9 +6,10 @@
   <title>Simple get</title>
 </head>
 <body>
-  <p id="text">This file makes an ajax GET request to /get.json</p>
+  <p id="text">This file makes various GET requests to /get.json</p>
   <button id="button">Press me</button>
   <button id="fetchbutton">No, press me!</button>
+  <button id="blobbutton">You should really press me!</button>
   <script>
     'use strict';
 
@@ -17,6 +18,14 @@
       var button = document.querySelector('#button');
       button.addEventListener('click', function (evt) {
         var xhr = new XMLHttpRequest();
+        xhr.open('GET', '/get.json');
+        xhr.send();
+      });
+
+      var blobButton = document.querySelector('#blobbutton');
+      blobButton.addEventListener('click', function (evt) {
+        var xhr = new XMLHttpRequest();
+        xhr.responseType = 'blob';
         xhr.open('GET', '/get.json');
         xhr.send();
       });

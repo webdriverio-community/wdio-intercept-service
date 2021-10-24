@@ -329,6 +329,19 @@ describe('webdriverajax', function testSuite() {
         browser.assertExpectedRequestsOnly(false);
       }, /Expected request was not found. method: POST url: \/invalid.json statusCode: 200/);
     });
+
+    it('converts Blob response types', () => {
+      browser.url('/get.html');
+      browser.setupInterceptor();
+      $('#blobbutton').click();
+      browser.pause(wait);
+      const request = browser.getRequest(0);
+      assert.equal(request.method, 'GET');
+      assert.equal(request.url, '/get.json');
+      assert.equal(request.response.statusCode, 200);
+      assert.equal(request.response.headers['content-length'], contentLength);
+      assert.deepEqual(request.response.body, { OK: true });
+    });
   });
 
   describe('fetch API', () => {
