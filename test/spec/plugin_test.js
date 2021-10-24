@@ -3,6 +3,10 @@
 const assert = require('assert');
 const { remote } = require('webdriverio');
 const WebdriverAjax = require('../../index').default;
+// Since we serve the content from a file, the content-length depends on if the host is
+// Windows (CRLF) or not (LF).
+const contentLength = require('fs')
+  .readFileSync(`${__dirname}/../site/get.json`, 'utf-8').length.toString();
 
 describe('webdriverajax', function testSuite() {
   this.timeout(process.env.CI ? 100000 : 10000);
@@ -135,7 +139,7 @@ describe('webdriverajax', function testSuite() {
       assert.equal(request.url, '/get.json');
       assert.deepEqual(request.response.body, { OK: true });
       assert.equal(request.response.statusCode, 200);
-      assert.equal(request.response.headers['content-length'], '15');
+      assert.equal(request.response.headers['content-length'], contentLength);
     });
 
     it('can get multiple requests at once', () => {
@@ -348,7 +352,7 @@ describe('webdriverajax', function testSuite() {
       assert.equal(request.url, '/get.json');
       assert.deepEqual(request.response.body, { OK: true });
       assert.equal(request.response.statusCode, 200);
-      assert.equal(request.response.headers['content-length'], '15');
+      assert.equal(request.response.headers['content-length'], contentLength);
     });
 
     it('can assess the request body using string data', () => {
