@@ -1,13 +1,9 @@
-name: Tests
+name: Lint
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
+on: push
 
 jobs:
-  test:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -17,5 +13,5 @@ jobs:
           cache: 'npm'
       - name: Install Dependencies
         run: npm install
-      - name: Run Tests
-        run: npm test
+      - name: Lint
+        run: npm run lint
