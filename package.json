@@ -11,7 +11,8 @@
     "release:patch": "npm run release -- patch",
     "release:minor": "npm run release -- minor",
     "release:major": "npm run release -- major",
-    "test": "wdio run ./test/wdio.conf.js"
+    "test": "wdio run ./test/wdio.conf.js",
+    "prepare": "husky install"
   },
   "types": "./types/wdio-intercept-service.d.ts",
   "repository": {
@@ -50,15 +51,10 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-wdio": "^7.4.2",
-    "husky": "4.2.5",
-    "prettier": "2.3.0",
+    "husky": "^7.0.0",
+    "prettier": "^2.4.1",
     "release-it": "^14.6.2",
     "wdio-chromedriver-service": "^7.1.0",
     "webdriverio": "^7.6.0"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run fix && git add \\*.js && git add \\*.ts"
-    }
   }
 }
