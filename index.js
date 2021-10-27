@@ -45,7 +45,7 @@ class WebdriverAjax {
       this._wdajaxExpectations.push({
         method: method.toUpperCase(),
         url: url,
-        statusCode: statusCode
+        statusCode: statusCode,
       });
       return browser;
     }
@@ -58,7 +58,7 @@ class WebdriverAjax {
           new Error('No expectations found. Call .expectRequest() first')
         );
       }
-      return getRequest().then(requests => {
+      return getRequest().then((requests) => {
         if (expectations.length !== requests.length) {
           return Promise.reject(
             new Error(
@@ -138,14 +138,14 @@ class WebdriverAjax {
     function assertExpectedRequestsOnly(inOrder = true) {
       const expectations = this._wdajaxExpectations;
 
-      return getRequest().then(requests => {
+      return getRequest().then((requests) => {
         const clonedRequests = [...requests];
 
         let matchedRequestIndexes = [];
         for (let i = 0; i < expectations.length; i++) {
           const ex = expectations[i];
 
-          const matchingRequestIndex = clonedRequests.findIndex(request => {
+          const matchingRequestIndex = clonedRequests.findIndex((request) => {
             if (
               !request ||
               request.method !== ex.method ||
@@ -252,14 +252,14 @@ class WebdriverAjax {
         response: {
           headers: parseResponseHeaders(req.headers),
           body: parseBody(req.body),
-          statusCode: req.statusCode
-        }
+          statusCode: req.statusCode,
+        },
       };
     }
 
     function normalizeRequestHeaders(headers) {
       const normalized = {};
-      Object.keys(headers).forEach(key => {
+      Object.keys(headers).forEach((key) => {
         normalized[key.toLowerCase()] = headers[key];
       });
       return normalized;
@@ -270,11 +270,8 @@ class WebdriverAjax {
         return stringOrObject;
       }
       const headers = {};
-      const arr = stringOrObject
-        .trim()
-        .replace(/\r/g, '')
-        .split('\n');
-      arr.forEach(header => {
+      const arr = stringOrObject.trim().replace(/\r/g, '').split('\n');
+      arr.forEach((header) => {
         const match = header.match(/^(.+)?:\s?(.+)$/);
         if (match) {
           headers[match[1].toLowerCase()] = match[2];
