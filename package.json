@@ -54,7 +54,7 @@
     "husky": "^7.0.0",
     "prettier": "^2.4.1",
     "release-it": "^14.6.2",
-    "wdio-chromedriver-service": "^7.1.0",
+    "wdio-chromedriver-service": "^7.2.2",
     "webdriverio": "^7.6.0"
   }
 }
