@@ -1,4 +1,20 @@
+const path = require('path');
 const plugin = require('../index.js').default;
+
+// To support testing in both GitHub Actions and locally, configure
+// `wdio-chromedriver-service` based on environment variables.
+// Ref: https://github.com/actions/virtual-environments/blob/main/images/linux/Ubuntu2004-README.md#browsers-and-drivers
+const chromedriver = !process.env.CHROMEWEBDRIVER
+  ? 'chromedriver' // running locally
+  : [
+      'chromedriver',
+      {
+        chromedriverCustomPath: path.join(
+          process.env.CHROMEWEBDRIVER,
+          process.platform === 'win32' ? 'chromedriver.exe' : 'chromedriver'
+        ),
+      },
+    ];
 
 exports.config = {
   //
@@ -114,7 +130,7 @@ exports.config = {
   },
   // Services to use
   services: [
-    'chromedriver',
+    chromedriver,
     [
       'static-server',
       {

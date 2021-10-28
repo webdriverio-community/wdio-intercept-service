@@ -4,13 +4,15 @@
   "description": "Capture and assert HTTP ajax calls in webdriver.io 🕸",
   "main": "index.js",
   "scripts": {
-    "fix": "prettier --write '{**/*.js,**/*.ts}'",
+    "fix": "prettier --write **/*.js **/*.ts",
+    "lint": "eslint --fix .",
     "release": "release-it --github.release",
     "release:ci": "npm run release -- --ci --npm.skipChecks --no-git.requireCleanWorkingDir",
     "release:patch": "npm run release -- patch",
     "release:minor": "npm run release -- minor",
     "release:major": "npm run release -- major",
-    "test": "wdio run ./test/wdio.conf.js"
+    "test": "wdio run ./test/wdio.conf.js",
+    "prepare": "husky install"
   },
   "types": "./types/wdio-intercept-service.d.ts",
   "repository": {
@@ -44,16 +46,15 @@
     "@wdio/spec-reporter": "^7.6.0",
     "@wdio/static-server-service": "^7.6.0",
     "@wdio/sync": "^7.6.0",
-    "chromedriver": "^92.0.0",
-    "husky": "4.2.5",
-    "prettier": "2.3.0",
+    "chromedriver": "^95.0.0",
+    "eslint": "^8.1.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-wdio": "^7.4.2",
+    "husky": "^7.0.0",
+    "prettier": "^2.4.1",
     "release-it": "^14.6.2",
-    "wdio-chromedriver-service": "^7.1.0",
+    "wdio-chromedriver-service": "^7.2.2",
     "webdriverio": "^7.6.0"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run fix && git add \\*.js && git add \\*.ts"
-    }
   }
 }

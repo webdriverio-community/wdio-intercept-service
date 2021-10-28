@@ -7,15 +7,23 @@ on:
   pull_request:
 
 jobs:
-  build:
-    runs-on: macos-latest
-
+  test:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v2
         with:
-          node-version: 14
+          node-version: '14'
+          cache: 'npm'
       - name: Install Dependencies
         run: npm install
       - name: Run Tests
         run: npm test
+      - name: Upload WDIO logs
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: wdio-logs
+          path: ${{ github.workspace }}/test/logs/
+          if-no-files-found: ignore
+          retention-days: 7
