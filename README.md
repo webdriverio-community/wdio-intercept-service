@@ -189,21 +189,16 @@ This plugin provides its own TS types. Just point your tsconfig to the type exte
 
 ## Running the tests
 
-A compatible browser (Firefox, Chrome) has to be installed. Also install selenium standalone via:
+A recent version of Chrome is required to run the tests locally. You may need to update the `chromedriver` dependency to match the version installed on your system.
 
 ```shell
-node_modules/.bin/selenium-standalone install
-```
-
-then
-
-```shell
-yarn test # npm test works as well :)
+npm test
 ```
 
 ## Contributing
 
-I'm happy for every contribution. Just open an issue or directly file a PR.
+I'm happy for every contribution. Just open an issue or directly file a PR.  
+Please note that this interceptor library is written to work with legacy browsers such as Internet Explorer. As such, any code used in `lib/interceptor.js` must at least be parseable by Internet Explorer's JavaScript runtime.
 
 ## License
 
