@@ -50,10 +50,12 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-wdio": "^7.4.2",
+    "geckodriver": "^2.0.4",
     "husky": "^7.0.4",
     "prettier": "^2.4.1",
     "release-it": "^14.11.6",
     "wdio-chromedriver-service": "^7.2.2",
+    "wdio-geckodriver-service": "^2.0.3",
     "webdriverio": "^7.16.3"
   }
 }

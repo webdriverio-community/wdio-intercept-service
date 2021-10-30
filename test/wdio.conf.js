@@ -16,6 +16,20 @@ const chromedriver = !process.env.CHROMEWEBDRIVER
       },
     ];
 
+const geckodriver = !process.env.GECKOWEBDRIVER
+  ? 'geckodriver' // running locally
+  : [
+      'geckodriver',
+      {
+        args: [
+          `--binary=${path.join(
+            process.env.GECKOWEBDRIVER,
+            process.platform === 'win32' ? 'geckodriver.exe' : 'geckodriver'
+          )}`,
+        ],
+      },
+    ];
+
 exports.config = {
   //
   // ====================
@@ -67,6 +81,12 @@ exports.config = {
       browserName: 'chrome',
       'goog:chromeOptions': {
         args: ['--headless', '--disable-gpu'],
+      },
+    },
+    {
+      browserName: 'firefox',
+      'moz:firefoxOptions': {
+        args: ['-headless'],
       },
     },
   ],
@@ -131,6 +151,7 @@ exports.config = {
   // Services to use
   services: [
     chromedriver,
+    geckodriver,
     [
       'static-server',
       {
