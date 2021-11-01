@@ -318,12 +318,12 @@ describe('webdriverajax', function testSuite() {
       );
     });
 
-    it('converts Blob response types', () => {
-      browser.url('/get.html');
-      browser.setupInterceptor();
-      $('#blobbutton').click();
-      browser.pause(wait);
-      const request = browser.getRequest(0);
+    it('converts Blob response types', async function () {
+      await browser.url('/get.html');
+      await browser.setupInterceptor();
+      await $('#blobbutton').click();
+      await browser.pause(wait);
+      const request = await browser.getRequest(0);
       assert.equal(request.method, 'GET');
       assert.equal(request.url, '/get.json');
       assert.equal(request.response.statusCode, 200);

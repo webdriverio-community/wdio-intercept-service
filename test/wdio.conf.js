@@ -16,6 +16,8 @@ const chromedriver = !process.env.CHROMEWEBDRIVER
       },
     ];
 
+const geckodriver = 'geckodriver'; // running locally, or in CI.
+
 exports.config = {
   //
   // ====================
@@ -67,6 +69,12 @@ exports.config = {
       browserName: 'chrome',
       'goog:chromeOptions': {
         args: ['--headless', '--disable-gpu'],
+      },
+    },
+    {
+      browserName: 'firefox',
+      'moz:firefoxOptions': {
+        args: ['-headless'],
       },
     },
   ],
@@ -131,6 +139,7 @@ exports.config = {
   // Services to use
   services: [
     chromedriver,
+    geckodriver,
     [
       'static-server',
       {
