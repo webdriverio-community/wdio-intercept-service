@@ -25,7 +25,7 @@ describe('webdriverajax', function testSuite() {
       async function () {
         return (await this.getText()) !== initial;
       },
-      { timeout: wait }
+      { timeout: wait, interval: 5 }
     );
   };
 
