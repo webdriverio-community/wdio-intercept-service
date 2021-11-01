@@ -16,19 +16,7 @@ const chromedriver = !process.env.CHROMEWEBDRIVER
       },
     ];
 
-const geckodriver = !process.env.GECKOWEBDRIVER
-  ? 'geckodriver' // running locally
-  : [
-      'geckodriver',
-      {
-        args: [
-          `--binary=${path.join(
-            process.env.GECKOWEBDRIVER,
-            process.platform === 'win32' ? 'geckodriver.exe' : 'geckodriver'
-          )}`,
-        ],
-      },
-    ];
+const geckodriver = 'geckodriver'; // running locally, or in CI.
 
 exports.config = {
   //
