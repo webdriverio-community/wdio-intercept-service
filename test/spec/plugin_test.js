@@ -14,6 +14,18 @@ describe('webdriverajax', function testSuite() {
 
   const wait = process.env.CI ? 10000 : 1000;
 
+  const completedRequest = async function (sel) {
+    const elem = await browser.$('#response');
+    const initial = await elem.getText();
+    $(sel).click();
+    return elem.waitUntil(
+      async function () {
+        return (await this.getText()) !== initial;
+      },
+      { timeout: wait }
+    );
+  };
+
   it('sets up the interceptor', async function () {
     assert.equal(typeof browser.setupInterceptor, 'function');
     await browser.url('/get.html');
@@ -56,8 +68,7 @@ describe('webdriverajax', function testSuite() {
       await browser.url('/get.html');
       await browser.setupInterceptor();
       await browser.expectRequest('GET', '/get.json', 200);
-      await $('#button').click();
-      await browser.pause(wait);
+      await completedRequest('#button');
       await browser.assertRequests();
       await browser.assertExpectedRequestsOnly();
     });
@@ -66,8 +77,7 @@ describe('webdriverajax', function testSuite() {
       await browser.url('/get.html');
       await browser.setupInterceptor();
       await browser.expectRequest('GET', /get\.json/, 200);
-      await $('#button').click();
-      await browser.pause(wait);
+      await completedRequest('#button');
       await browser.assertRequests();
       await browser.assertExpectedRequestsOnly();
     });
@@ -77,8 +87,7 @@ describe('webdriverajax', function testSuite() {
       await browser.setupInterceptor();
       await browser.expectRequest('GET', '/get.json', 200);
       await browser.expectRequest('GET', '/get.json', 200);
-      await $('#button').click();
-      await browser.pause(wait);
+      await completedRequest('#button');
       assert.rejects(() => browser.assertRequests(), /Expected/);
     });
 
@@ -86,8 +95,7 @@ describe('webdriverajax', function testSuite() {
       await browser.url('/get.html');
       await browser.setupInterceptor();
       await browser.expectRequest('PUT', '/get.json', 200);
-      await $('#button').click();
-      await browser.pause(wait);
+      await completedRequest('#button');
       assert.rejects(() => browser.assertRequests(), /PUT/);
     });
 
@@ -95,8 +103,7 @@ describe('webdriverajax', function testSuite() {
       await browser.url('/get.html');
       await browser.setupInterceptor();
       await browser.expectRequest('GET', '/wrong.json', 200);
-      await $('#button').click();
-      await browser.pause(wait);
+      await completedRequest('#button');
       assert.rejects(() => browser.assertRequests(), /wrong\.json/);
     });
 
@@ -104,8 +111,7 @@ describe('webdriverajax', function testSuite() {
       await browser.url('/get.html');
       await browser.setupInterceptor();
       await browser.expectRequest('GET', /wrong\.json/, 200);
-      await $('#button').click();
-      await browser.pause(wait);
+      await completedRequest('#button');
       assert.rejects(() => browser.assertRequests(), /get\.json/);
     });
 
@@ -113,16 +119,14 @@ describe('webdriverajax', function testSuite() {
       await browser.url('/get.html');
       await browser.setupInterceptor();
       await browser.expectRequest('GET', '/get.json', 404);
-      await $('#button').click();
-      await browser.pause(wait);
+      await completedRequest('#button');
       assert.rejects(() => browser.assertRequests(), /404/);
     });
 
     it('can access a certain request', async function () {
       await browser.url('/get.html');
       await browser.setupInterceptor();
-      await $('#button').click();
-      await browser.pause(wait);
+      await completedRequest('#button');
       const request = await browser.getRequest(0);
       assert.equal(request.method, 'GET');
       assert.equal(request.url, '/get.json');
@@ -134,10 +138,8 @@ describe('webdriverajax', function testSuite() {
     it('can get multiple requests at once', async function () {
       await browser.url('/get.html');
       await browser.setupInterceptor();
-      await $('#button').click();
-      await browser.pause(wait);
-      await $('#button').click();
-      await browser.pause(wait);
+      await completedRequest('#button');
+      await completedRequest('#button');
       const requests = await browser.getRequests();
       assert(Array.isArray(requests));
       assert.equal(requests.length, 2);
@@ -148,10 +150,8 @@ describe('webdriverajax', function testSuite() {
     it('can get multiple request one by one', async function () {
       await browser.url('/get.html');
       await browser.setupInterceptor();
-      await $('#button').click();
-      await browser.pause(wait);
-      await $('#button').click();
-      await browser.pause(wait);
+      await completedRequest('#button');
+      await completedRequest('#button');
       const firstRequest = await browser.getRequest(0);
       assert.equal(firstRequest.method, 'GET');
       const secondRequest = await browser.getRequest(1);
@@ -321,8 +321,7 @@ describe('webdriverajax', function testSuite() {
     it('converts Blob response types', async function () {
       await browser.url('/get.html');
       await browser.setupInterceptor();
-      await $('#blobbutton').click();
-      await browser.pause(wait);
+      await completedRequest('#blobbutton');
       const request = await browser.getRequest(0);
       assert.equal(request.method, 'GET');
       assert.equal(request.url, '/get.json');
@@ -337,8 +336,7 @@ describe('webdriverajax', function testSuite() {
       await browser.url('/get.html');
       await browser.setupInterceptor();
       await browser.expectRequest('GET', '/get.json', 200);
-      await $('#fetchbutton').click();
-      await browser.pause(wait);
+      await completedRequest('#fetchbutton');
       await browser.assertRequests();
       await browser.assertExpectedRequestsOnly();
     });
@@ -346,8 +344,7 @@ describe('webdriverajax', function testSuite() {
     it('can access a certain request', async function () {
       await browser.url('/get.html');
       await browser.setupInterceptor();
-      await $('#fetchbutton').click();
-      await browser.pause(wait);
+      await completedRequest('#fetchbutton');
       const request = await browser.getRequest(0);
       assert.equal(request.method, 'GET');
       assert.equal(request.url, '/get.json');
