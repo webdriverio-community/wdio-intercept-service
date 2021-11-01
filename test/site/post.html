@@ -10,6 +10,7 @@
   <button id="buttonstring">Press me for string data</button>
   <button id="buttonjson">Press me for JSON data</button>
   <button id="buttonform">Press me for form data</button>
+  <div id="response"></div>
   <script>
     'use strict';
 
@@ -21,6 +22,7 @@
         var xhr = new XMLHttpRequest();
         xhr.open('POST', '/post.json');
         var payload = 'foobar';
+        xhr.addEventListener('load', () => document.querySelector('#response').textContent += "XHR response type: " + xhr.responseType);
         xhr.send(payload);
       });
 
@@ -31,6 +33,7 @@
         xhr.open('POST', '/post.json');
         xhr.setRequestHeader('Content-Type', 'application/json');
         var payload = JSON.stringify({ foo: 'bar' });
+        xhr.addEventListener('load', () => document.querySelector('#response').textContent += "XHR response type: " + xhr.responseType);
         xhr.send(payload);
       });
 
@@ -42,6 +45,7 @@
         form.append('foo', 'bar');
         xhr.open('POST', '/post.json');
         var payload = form;
+        xhr.addEventListener('load', () => document.querySelector('#response').textContent += "XHR response type: " + xhr.responseType);
         xhr.send(payload);
       });
 

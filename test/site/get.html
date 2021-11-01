@@ -10,6 +10,7 @@
   <button id="button">Press me</button>
   <button id="fetchbutton">No, press me!</button>
   <button id="blobbutton">You should really press me!</button>
+  <div id="response"></div>
   <script>
     'use strict';
 
@@ -19,6 +20,7 @@
       button.addEventListener('click', function (evt) {
         var xhr = new XMLHttpRequest();
         xhr.open('GET', '/get.json');
+        xhr.addEventListener('load', () => document.querySelector('#response').textContent += "XHR response type: " + xhr.responseType);
         xhr.send();
       });
 
@@ -27,12 +29,13 @@
         var xhr = new XMLHttpRequest();
         xhr.responseType = 'blob';
         xhr.open('GET', '/get.json');
+        xhr.addEventListener('load', () => document.querySelector('#response').textContent += "XHR Blob response\n" + xhr.responseType);
         xhr.send();
       });
 
       var fetchButton = document.querySelector('#fetchbutton');
       fetchButton.addEventListener('click', function (evt) {
-        fetch('/get.json');
+        fetch('/get.json').then(() => document.querySelector('#response').textContent += "Fetched\n");
       });
 
     })(window, window.document);
