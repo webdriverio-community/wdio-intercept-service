@@ -9,6 +9,7 @@
 <p id="text">This file makes ajax requests to different endpoints</p>
 <button id="getbutton">Press me for GET!</button>
 <button id="postbutton">Press me for POST!</button>
+<div id="response"></div>
 <script>
     'use strict';
 
@@ -18,6 +19,7 @@
         button.addEventListener('click', function (evt) {
             var xhr = new XMLHttpRequest();
             xhr.open('GET', '/get.json');
+            xhr.addEventListener('load', () => document.querySelector('#response').textContent += "XHR response type: " + xhr.responseType);
             xhr.send();
         });
 
@@ -28,6 +30,7 @@
             form.append('foo', 'bar');
             xhr.open('POST', '/post.json');
             var payload = form;
+            xhr.addEventListener('load', () => document.querySelector('#response').textContent += "XHR response type: " + xhr.responseType);
             xhr.send(payload);
         });
 

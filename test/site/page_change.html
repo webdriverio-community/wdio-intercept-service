@@ -9,20 +9,22 @@
   <p id="text">
     This file makes an ajax GET request to /get.json and changes the url to get.html
   </p>
-  <button id="button1">Press me</button>
-  <button id="button2">Press me already!</button>
+  <button id="stay">Press me</button>
+  <button id="redirect">Press me already!</button>
+  <div id="response">See you later!</div>
   <script>
     'use strict';
 
     (function (window, document) {
 
-      var button1 = document.querySelector('#button1');
-      var button2 = document.querySelector('#button2');
+      var button1 = document.querySelector('#stay');
+      var button2 = document.querySelector('#redirect');
 
       button1.addEventListener('click', function (evt) {
 
         var xhr = new XMLHttpRequest();
         xhr.open('GET', '/get.json');
+        xhr.addEventListener('load', () => document.querySelector('#response').textContent += "XHR response type: " + xhr.responseType);
         xhr.send();
 
       });

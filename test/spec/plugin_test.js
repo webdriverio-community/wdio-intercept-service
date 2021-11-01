@@ -14,10 +14,13 @@ describe('webdriverajax', function testSuite() {
 
   const wait = process.env.CI ? 10000 : 1000;
 
+  // Helper method to avoid waiting for the full timeout in order to have tests pass locally
+  // and on CI platforms in a reasonable time. Assumes the given selector can be clicked, and
+  // that the request initiated upon clicking will update the page text when it is done.
   const completedRequest = async function (sel) {
     const elem = await browser.$('#response');
     const initial = await elem.getText();
-    $(sel).click();
+    browser.$(sel).click();
     return elem.waitUntil(
       async function () {
         return (await this.getText()) !== initial;
@@ -161,8 +164,7 @@ describe('webdriverajax', function testSuite() {
     it('survives page changes', async function () {
       await browser.url('/page_change.html');
       await browser.setupInterceptor();
-      await $('#button1').click();
-      await browser.pause(wait);
+      await completedRequest('#redirect');
       const requests = await browser.getRequests();
       assert(Array.isArray(requests));
       assert.equal(requests.length, 1);
@@ -172,9 +174,8 @@ describe('webdriverajax', function testSuite() {
     it('survives page changes using multiple requests', async function () {
       await browser.url('/page_change.html');
       await browser.setupInterceptor();
-      await $('#button1').click();
-      await $('#button2').click();
-      await browser.pause(wait);
+      await completedRequest('#stay');
+      await completedRequest('#redirect');
       const requests = await browser.getRequests();
       assert(Array.isArray(requests));
       assert.equal(requests.length, 2);
@@ -185,8 +186,7 @@ describe('webdriverajax', function testSuite() {
     it('can assess the request body using string data', async function () {
       await browser.url('/post.html');
       await browser.setupInterceptor();
-      await $('#buttonstring').click();
-      await browser.pause(wait);
+      await completedRequest('#buttonstring');
       const request = await browser.getRequest(0);
       assert.equal(request.body, 'foobar');
     });
@@ -194,8 +194,7 @@ describe('webdriverajax', function testSuite() {
     it('can assess the request body using JSON data', async function () {
       await browser.url('/post.html');
       await browser.setupInterceptor();
-      await $('#buttonjson').click();
-      await browser.pause(wait);
+      await completedRequest('#buttonjson');
       const request = await browser.getRequest(0);
       assert.equal(request.headers['content-type'], 'application/json');
       assert.deepEqual(request.body, { foo: 'bar' });
@@ -204,8 +203,7 @@ describe('webdriverajax', function testSuite() {
     it('can assess the request body using form data', async function () {
       await browser.url('/post.html');
       await browser.setupInterceptor();
-      await $('#buttonform').click();
-      await browser.pause(wait);
+      await completedRequest('#buttonform');
       const request = await browser.getRequest(0);
       assert.deepEqual(request.body, { foo: ['bar'] });
     });
@@ -222,8 +220,7 @@ describe('webdriverajax', function testSuite() {
       const frameRet = await browser.execute(() => window.__webdriverajax);
       assert.deepEqual(frameRet, { requests: [] });
       await browser.expectRequest('GET', '/get.json', 200);
-      await $('#button').click();
-      await browser.pause(wait);
+      await completedRequest('#button');
       await browser.assertRequests();
       await browser.assertExpectedRequestsOnly();
     });
@@ -246,15 +243,11 @@ describe('webdriverajax', function testSuite() {
       await browser.setupInterceptor();
       await browser.expectRequest('GET', '/get.json', 200);
       await browser.expectRequest('POST', '/post.json', 200);
-      await $('#getbutton').click();
-      await browser.pause(wait);
-      await $('#postbutton').click();
-      await browser.pause(wait);
+      await completedRequest('#getbutton');
+      await completedRequest('#postbutton');
       // The next two are not needed, but adding extra clicks to prove we can validate partial set
-      await $('#getbutton').click();
-      await browser.pause(wait);
-      await $('#postbutton').click();
-      await browser.pause(wait);
+      await completedRequest('#getbutton');
+      await completedRequest('#postbutton');
       await browser.assertExpectedRequestsOnly();
       assert.rejects(
         () => browser.assertRequests(),
@@ -267,15 +260,11 @@ describe('webdriverajax', function testSuite() {
       await browser.setupInterceptor();
       await browser.expectRequest('GET', '/get.json', 200);
       await browser.expectRequest('POST', '/post.json', 200);
-      await $('#getbutton').click();
-      await browser.pause(wait);
-      await $('#postbutton').click();
-      await browser.pause(wait);
+      await completedRequest('#getbutton');
+      await completedRequest('#postbutton');
       // The next two are not needed, but adding extra clicks to prove we can validate partial set
-      await $('#getbutton').click();
-      await browser.pause(wait);
-      await $('#postbutton').click();
-      await browser.pause(wait);
+      await completedRequest('#getbutton');
+      await completedRequest('#postbutton');
       await browser.assertExpectedRequestsOnly(true);
       assert.rejects(
         () => browser.assertRequests(),
@@ -288,14 +277,10 @@ describe('webdriverajax', function testSuite() {
       await browser.setupInterceptor();
       await browser.expectRequest('GET', '/get.json', 200);
       await browser.expectRequest('POST', '/post.json', 200);
-      await $('#postbutton').click();
-      await browser.pause(wait);
-      await $('#postbutton').click();
-      await browser.pause(wait);
-      await $('#getbutton').click();
-      await browser.pause(wait);
-      await $('#getbutton').click();
-      await browser.pause(wait);
+      await completedRequest('#postbutton');
+      await completedRequest('#postbutton');
+      await completedRequest('#getbutton');
+      await completedRequest('#getbutton');
       await browser.assertExpectedRequestsOnly(false);
       assert.rejects(
         () => browser.assertRequests(),
@@ -308,10 +293,8 @@ describe('webdriverajax', function testSuite() {
       await browser.setupInterceptor();
       await browser.expectRequest('GET', '/get.json', 200);
       await browser.expectRequest('POST', '/invalid.json', 200);
-      await $('#getbutton').click();
-      await browser.pause(wait);
-      await $('#postbutton').click();
-      await browser.pause(wait);
+      await completedRequest('#getbutton');
+      await completedRequest('#postbutton');
       assert.rejects(
         () => browser.assertExpectedRequestsOnly(false),
         /Expected request was not found. method: POST url: \/invalid.json statusCode: 200/
@@ -356,8 +339,7 @@ describe('webdriverajax', function testSuite() {
     it('can assess the request body using string data', async function () {
       await browser.url('/postfetch.html');
       await browser.setupInterceptor();
-      await $('#buttonstring').click();
-      await browser.pause(wait);
+      await completedRequest('#buttonstring');
       const request = await browser.getRequest(0);
       assert.equal(request.body, 'foobar');
     });
@@ -365,8 +347,7 @@ describe('webdriverajax', function testSuite() {
     it('can assess the request body using JSON data', async function () {
       await browser.url('/postfetch.html');
       await browser.setupInterceptor();
-      await $('#buttonjson').click();
-      await browser.pause(wait);
+      await completedRequest('#buttonjson');
       const request = await browser.getRequest(0);
       assert.equal(request.headers['content-type'], 'application/json');
       assert.deepEqual(request.body, { foo: 'bar' });
