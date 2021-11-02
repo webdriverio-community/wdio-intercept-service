@@ -321,6 +321,17 @@ describe('webdriverajax', function testSuite() {
       assert.equal(request.response.headers['content-length'], contentLength);
       assert.deepEqual(request.response.body, { OK: true });
     });
+
+    it('can report pending requests', async function () {
+      await browser.url('/pending.html');
+      await browser.setupInterceptor();
+      await $('#slow').click();
+      const request = await browser.getRequest(0, { includePending: true });
+      assert.equal(request.method, 'POST');
+      assert.equal(request.url, '/post.json?slow=true');
+      assert.equal(typeof request.response, 'undefined');
+      assert.equal(request.pending, true);
+    });
   });
 
   describe('fetch API', async function () {
@@ -369,6 +380,17 @@ describe('webdriverajax', function testSuite() {
       const request = await browser.getRequest(0);
       assert.equal(request.headers['content-type'], 'application/json');
       assert.deepEqual(request.body, { foo: 'bar' });
+    });
+
+    it('can report pending requests', async function () {
+      await browser.url('/pending.html');
+      await browser.setupInterceptor();
+      await $('#fetchslow').click();
+      const request = await browser.getRequest(0, { includePending: true });
+      assert.equal(request.method, 'POST');
+      assert.equal(request.url, '/post.json?slow=true');
+      assert.equal(typeof request.response, 'undefined');
+      assert.equal(request.pending, true);
     });
   });
 });
