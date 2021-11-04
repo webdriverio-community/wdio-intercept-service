@@ -16,7 +16,15 @@ declare namespace WdioInterceptorService {
     statusCode: number;
   }
 
-  interface InterceptedRequest {
+  interface PendingRequest {
+    url: string;
+    method: HTTPMethod;
+    body: string | null | object;
+    headers: object;
+    pending: true;
+  }
+
+  interface CompletedRequest {
     url: string;
     method: HTTPMethod;
     body: string | null | object;
@@ -28,6 +36,14 @@ declare namespace WdioInterceptorService {
       statusCode: number;
     };
   }
+
+  type InterceptedRequest = PendingRequest | CompletedRequest;
+
+  interface GetRequestOptions {
+    includePending?: boolean;
+  }
+
+  type OnlyCompletedRequests = { includePending: false };
 }
 /**
  * Convert T to T or Promise<T> depending if `@wdio/sync` is being used or not.
@@ -47,13 +63,23 @@ declare module WebdriverIO {
     assertRequests: () => AsyncSync<BrowserObject>;
     assertExpectedRequestsOnly: (inOrder?: boolean) => AsyncSync<BrowserObject>;
     resetExpectations: () => AsyncSync<BrowserObject>;
-    getExpectations: () => AsyncSync<
-      WdioInterceptorService.ExpectedRequest[]
-    >;
-    getRequest: (
-      index: number
-    ) => AsyncSync<WdioInterceptorService.InterceptedRequest>;
-    getRequests: () => AsyncSync<WdioInterceptorService.InterceptedRequest[]>;
+    getExpectations: () => AsyncSync<WdioInterceptorService.ExpectedRequest[]>;
+    getRequest(
+      index: number,
+      options?: WdioInterceptorService.GetRequestOptions &
+        WdioInterceptorService.OnlyCompletedRequests
+    ): AsyncSync<WdioInterceptorService.CompletedRequest>;
+    getRequest(
+      index: number,
+      options: WdioInterceptorService.GetRequestOptions
+    ): AsyncSync<WdioInterceptorService.InterceptedRequest>;
+    getRequests(
+      options?: WdioInterceptorService.GetRequestOptions &
+        WdioInterceptorService.OnlyCompletedRequests
+    ): AsyncSync<WdioInterceptorService.CompletedRequest[]>;
+    getRequests(
+      options: WdioInterceptorService.GetRequestOptions
+    ): AsyncSync<WdioInterceptorService.InterceptedRequest[]>;
   }
 }
 
