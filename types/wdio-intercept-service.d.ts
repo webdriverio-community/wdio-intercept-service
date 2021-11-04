@@ -19,11 +19,12 @@ declare namespace WdioInterceptorService {
   interface InterceptedRequest {
     url: string;
     method: HTTPMethod;
-    body: string | object;
+    body: string | null | object;
+    pending: false;
     headers: object;
     response: {
       headers: object;
-      body: string | object;
+      body: string | null | object;
       statusCode: number;
     };
   }
