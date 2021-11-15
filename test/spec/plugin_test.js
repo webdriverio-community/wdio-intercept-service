@@ -321,17 +321,6 @@ describe('webdriverajax', function testSuite() {
       assert.equal(request.response.headers['content-length'], contentLength);
       assert.deepEqual(request.response.body, { OK: true });
     });
-
-    it('can report pending requests', async function () {
-      await browser.url('/pending.html');
-      await browser.setupInterceptor();
-      await $('#slow').click();
-      const request = await browser.getRequest(0, { includePending: true });
-      assert.equal(request.method, 'POST');
-      assert.equal(request.url, '/post.json?slow=true');
-      assert.equal(typeof request.response, 'undefined');
-      assert.equal(request.pending, true);
-    });
   });
 
   describe('fetch API', async function () {
@@ -381,16 +370,49 @@ describe('webdriverajax', function testSuite() {
       assert.equal(request.headers['content-type'], 'application/json');
       assert.deepEqual(request.body, { foo: 'bar' });
     });
+  });
 
-    it('can report pending requests', async function () {
-      await browser.url('/pending.html');
-      await browser.setupInterceptor();
-      await $('#fetchslow').click();
-      const request = await browser.getRequest(0, { includePending: true });
-      assert.equal(request.method, 'POST');
-      assert.equal(request.url, '/post.json?slow=true');
-      assert.equal(typeof request.response, 'undefined');
-      assert.equal(request.pending, true);
+  describe('pending requests', function () {
+    // Ensure we have waited for the requests to have completed before starting the next test.
+    afterEach(async function () {
+      await browser.pause(wait);
+    });
+    [
+      { api: 'XHR', button: '#slow' },
+      { api: 'Fetch', button: '#fetchslow' },
+    ].forEach(({ api, button }) => {
+      it(`can report pending ${api} requests`, async function () {
+        await browser.url('/pending.html');
+        await browser.setupInterceptor();
+        await $(button).click();
+        const request = await browser.getRequest(0, { includePending: true });
+        assert.equal(request.method, 'POST');
+        assert.equal(request.url, '/post.json?slow=true');
+        assert.equal(typeof request.response, 'undefined');
+        assert.equal(request.pending, true);
+      });
+
+      it(`can indicate if ${api} requests are pending`, async function () {
+        await browser.url('/pending.html');
+        await browser.setupInterceptor();
+        assert.equal(
+          await browser.hasPendingRequests(),
+          false,
+          'should be false with no requests'
+        );
+        await $(button).click();
+        assert.equal(
+          await browser.hasPendingRequests(),
+          true,
+          'should be true after clicking'
+        );
+        await browser.pause(wait);
+        assert.equal(
+          await browser.hasPendingRequests(),
+          false,
+          'should be false after request completion'
+        );
+      });
     });
   });
 });

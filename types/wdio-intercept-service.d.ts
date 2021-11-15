@@ -60,6 +60,7 @@ declare module WebdriverIO {
       url: string | RegExp,
       statusCode: number
     ) => AsyncSync<BrowserObject>;
+    hasPendingRequests(): AsyncSync<boolean>;
     assertRequests: () => AsyncSync<BrowserObject>;
     assertExpectedRequestsOnly: (inOrder?: boolean) => AsyncSync<BrowserObject>;
     resetExpectations: () => AsyncSync<BrowserObject>;

@@ -34,6 +34,7 @@ class WebdriverAjax {
       'assertExpectedRequestsOnly',
       assertExpectedRequestsOnly.bind(this)
     );
+    browser.addCommand('hasPendingRequests', hasPendingRequests);
     browser.addCommand('getRequest', getRequest);
     browser.addCommand('getRequests', getRequest);
 
@@ -237,6 +238,11 @@ class WebdriverAjax {
         return mapIndexed(request, transformRequest);
       }
       return transformRequest(request);
+    }
+
+    async function hasPendingRequests() {
+      const requests = await this.getRequest();
+      return requests.some((r) => r.pending === true);
     }
 
     function transformRequest(req) {
