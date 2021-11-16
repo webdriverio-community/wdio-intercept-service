@@ -47,7 +47,7 @@ declare module WebdriverIO {
     assertExpectedRequestsOnly: (inOrder?: boolean) => AsyncSync<BrowserObject>;
     resetExpectations: () => AsyncSync<BrowserObject>;
     getExpectations: () => AsyncSync<
-      WdioInterceptorService.InterceptedRequest[]
+      WdioInterceptorService.ExpectedRequest[]
     >;
     getRequest: (
       index: number

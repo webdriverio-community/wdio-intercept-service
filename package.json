@@ -57,5 +57,12 @@
     "wdio-chromedriver-service": "^7.2.2",
     "wdio-geckodriver-service": "^2.0.3",
     "webdriverio": "^7.16.3"
-  }
+  },
+  "files": [
+    "lib/",
+    "types/",
+    "index.js",
+    "LICENSE",
+    "*.md"
+  ]
 }

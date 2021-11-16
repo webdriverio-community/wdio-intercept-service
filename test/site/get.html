@@ -10,6 +10,8 @@
   <button id="button">Press me</button>
   <button id="fetchbutton">No, press me!</button>
   <button id="blobbutton">You should really press me!</button>
+  <button id="urlbutton">URL input!</button>
+  <button id="urlfetchbutton">URL input!</button>
   <div id="response"></div>
   <script>
     'use strict';
@@ -33,9 +35,21 @@
         xhr.send();
       });
 
+      document.querySelector('#urlbutton').addEventListener('click', function (evt) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', new URL('/get.json', window.location.origin));
+        xhr.addEventListener('load', () => document.querySelector('#response').textContent += "XHR opened with URL\n");
+        xhr.send();
+      });
+
       var fetchButton = document.querySelector('#fetchbutton');
       fetchButton.addEventListener('click', function (evt) {
         fetch('/get.json').then(() => document.querySelector('#response').textContent += "Fetched\n");
+      });
+
+      document.querySelector('#urlfetchbutton').addEventListener('click', function (evt) {
+        fetch(new URL('/get.json', window.location.origin))
+          .then(() => document.querySelector('#response').textContent += 'Fetched URL input\n');
       });
 
     })(window, window.document);

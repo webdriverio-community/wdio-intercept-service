@@ -76,6 +76,15 @@ describe('webdriverajax', function testSuite() {
       await browser.assertExpectedRequestsOnly();
     });
 
+    it('can intercept requests opened with URL objects', async function () {
+      await browser.url('/get.html');
+      await browser.setupInterceptor();
+      await browser.expectRequest('GET', /\/get\.json/, 200);
+      await completedRequest('#urlbutton');
+      await browser.assertRequests();
+      await browser.assertExpectedRequestsOnly();
+    });
+
     it('can use regular expressions for urls', async function () {
       await browser.url('/get.html');
       await browser.setupInterceptor();
@@ -320,6 +329,15 @@ describe('webdriverajax', function testSuite() {
       await browser.setupInterceptor();
       await browser.expectRequest('GET', '/get.json', 200);
       await completedRequest('#fetchbutton');
+      await browser.assertRequests();
+      await browser.assertExpectedRequestsOnly();
+    });
+
+    it('can intercept when input is URL object', async function () {
+      await browser.url('/get.html');
+      await browser.setupInterceptor();
+      await browser.expectRequest('GET', /\/get\.json/, 200);
+      await completedRequest('#urlfetchbutton');
       await browser.assertRequests();
       await browser.assertExpectedRequestsOnly();
     });
