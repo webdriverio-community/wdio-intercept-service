@@ -250,17 +250,26 @@ class WebdriverAjax {
         return;
       }
 
-      return {
+      const transformed = {
         url: req.url,
         method: req.method && req.method.toUpperCase(),
-        body: parseBody(req.requestBody),
         headers: normalizeRequestHeaders(req.requestHeaders),
-        response: {
+        body: parseBody(req.requestBody),
+        pending: true,
+      };
+      // Check for a '__fulfilled' property on the retrieved request, which is
+      // set by the interceptor only when the response completes. Before this
+      // flag is set, the request is still being processed (e.g. a large response
+      // body is downloading) and therefore is pending.
+      if (req.__fulfilled) {
+        transformed.pending = false;
+        transformed.response = {
           headers: parseResponseHeaders(req.headers),
           body: parseBody(req.body),
           statusCode: req.statusCode,
-        },
-      };
+        };
+      }
+      return transformed;
     }
 
     function normalizeRequestHeaders(headers) {
