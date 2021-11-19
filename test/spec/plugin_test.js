@@ -100,7 +100,10 @@ describe('webdriverajax', function testSuite() {
       await browser.expectRequest('GET', '/get.json', 200);
       await browser.expectRequest('GET', '/get.json', 200);
       await completedRequest('#button');
-      assert.rejects(() => browser.assertRequests(), /Expected/);
+      await assert.rejects(
+        () => browser.assertRequests(),
+        /Expected 2 requests but was 1/
+      );
     });
 
     it('errors on wrong method', async function () {
@@ -108,7 +111,10 @@ describe('webdriverajax', function testSuite() {
       await browser.setupInterceptor();
       await browser.expectRequest('PUT', '/get.json', 200);
       await completedRequest('#button');
-      assert.rejects(() => browser.assertRequests(), /PUT/);
+      await assert.rejects(
+        () => browser.assertRequests(),
+        /method PUT but was GET/
+      );
     });
 
     it('errors on wrong URL', async function () {
@@ -116,7 +122,10 @@ describe('webdriverajax', function testSuite() {
       await browser.setupInterceptor();
       await browser.expectRequest('GET', '/wrong.json', 200);
       await completedRequest('#button');
-      assert.rejects(() => browser.assertRequests(), /wrong\.json/);
+      await assert.rejects(
+        () => browser.assertRequests(),
+        /to have URL \/wrong\.json but was/
+      );
     });
 
     it("errors if regex doesn't match URL", async function () {
@@ -124,7 +133,13 @@ describe('webdriverajax', function testSuite() {
       await browser.setupInterceptor();
       await browser.expectRequest('GET', /wrong\.json/, 200);
       await completedRequest('#button');
-      assert.rejects(() => browser.assertRequests(), /get\.json/);
+      await assert.rejects(
+        () => browser.assertRequests(),
+        (err) => {
+          assert.match(err.message, /to match \/wrong\\.json\/ but was/);
+          return true;
+        }
+      );
     });
 
     it('errors on wrong status code', async function () {
@@ -132,7 +147,10 @@ describe('webdriverajax', function testSuite() {
       await browser.setupInterceptor();
       await browser.expectRequest('GET', '/get.json', 404);
       await completedRequest('#button');
-      assert.rejects(() => browser.assertRequests(), /404/);
+      await assert.rejects(
+        () => browser.assertRequests(),
+        /status 404 but was 200/
+      );
     });
 
     it('can access a certain request', async function () {
@@ -237,7 +255,10 @@ describe('webdriverajax', function testSuite() {
     it('errors with no requests set up', async function () {
       await browser.url('/get.html');
       await browser.setupInterceptor();
-      assert.rejects(() => browser.assertRequests(), /No\sexpectations\sfound/);
+      await assert.rejects(
+        () => browser.assertRequests(),
+        /No\sexpectations\sfound/
+      );
     });
 
     it('returns an empty array for no captured requests', async function () {
@@ -258,7 +279,7 @@ describe('webdriverajax', function testSuite() {
       await completedRequest('#getbutton');
       await completedRequest('#postbutton');
       await browser.assertExpectedRequestsOnly();
-      assert.rejects(
+      await assert.rejects(
         () => browser.assertRequests(),
         /Expected\s\d\srequests\sbut\swas\s\d/
       );
@@ -275,7 +296,7 @@ describe('webdriverajax', function testSuite() {
       await completedRequest('#getbutton');
       await completedRequest('#postbutton');
       await browser.assertExpectedRequestsOnly(true);
-      assert.rejects(
+      await assert.rejects(
         () => browser.assertRequests(),
         /Expected\s\d\srequests\sbut\swas\s\d/
       );
@@ -291,7 +312,7 @@ describe('webdriverajax', function testSuite() {
       await completedRequest('#getbutton');
       await completedRequest('#getbutton');
       await browser.assertExpectedRequestsOnly(false);
-      assert.rejects(
+      await assert.rejects(
         () => browser.assertRequests(),
         /Expected\s\d\srequests\sbut\swas\s\d/
       );
@@ -304,7 +325,7 @@ describe('webdriverajax', function testSuite() {
       await browser.expectRequest('POST', '/invalid.json', 200);
       await completedRequest('#getbutton');
       await completedRequest('#postbutton');
-      assert.rejects(
+      await assert.rejects(
         () => browser.assertExpectedRequestsOnly(false),
         /Expected request was not found. method: POST url: \/invalid.json statusCode: 200/
       );
