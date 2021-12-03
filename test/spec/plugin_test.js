@@ -177,7 +177,7 @@ describe('webdriverajax', function testSuite() {
       assert.equal(requests[1].method, 'GET');
     });
 
-    it('can get multiple request one by one', async function () {
+    it('can get multiple requests one by one', async function () {
       await browser.url('/get.html');
       await browser.setupInterceptor();
       await completedRequest('#button');
@@ -186,6 +186,34 @@ describe('webdriverajax', function testSuite() {
       assert.equal(firstRequest.method, 'GET');
       const secondRequest = await browser.getRequest(1);
       assert.equal(secondRequest.method, 'GET');
+    });
+
+    it('orders requests by time of completion by default', async function () {
+      await browser.url('/pending.html');
+      await browser.setupInterceptor();
+      await $('#slow')
+        .click()
+        .then(() => completedRequest('#fast'));
+      await browser.pause(wait);
+      const requests = await browser.getRequests();
+      assert(Array.isArray(requests));
+      assert.equal(requests.length, 2);
+      assert.equal(requests[0].body, 'fast');
+      assert.equal(requests[1].body, 'slow');
+    });
+
+    it('can order requests by time of initiation', async function () {
+      await browser.url('/pending.html');
+      await browser.setupInterceptor();
+      await $('#slow')
+        .click()
+        .then(() => completedRequest('#fast'));
+      await browser.pause(wait);
+      const requests = await browser.getRequests({ orderBy: 'START' });
+      assert(Array.isArray(requests));
+      assert.equal(requests.length, 2);
+      assert.equal(requests[0].body, 'slow');
+      assert.equal(requests[1].body, 'fast');
     });
 
     it('survives page changes', async function () {
@@ -408,7 +436,7 @@ describe('webdriverajax', function testSuite() {
         await $(button).click();
         const request = await browser.getRequest(0, { includePending: true });
         assert.equal(request.method, 'POST');
-        assert.equal(request.url, '/post.json?slow=true');
+        assert.match(request.url, /post\.json\?slow=true/);
         assert.equal(typeof request.response, 'undefined');
         assert.equal(request.pending, true);
       });
@@ -462,6 +490,100 @@ describe('webdriverajax', function testSuite() {
           'should retrieve completed request'
         );
       });
+    });
+
+    it('orders pending requests at the end by default', async function () {
+      await browser.url('/pending.html');
+      await browser.setupInterceptor();
+      await $('#slow')
+        .click()
+        .then(() => completedRequest('#fast'))
+        .then(() => $('#fetchslow').click())
+        .then(() => completedRequest('#fetchfast'));
+      const requests = await browser.getRequests({ includePending: true });
+      assert(Array.isArray(requests));
+      assert.equal(requests.length, 4);
+      assert.equal(
+        requests[0].pending,
+        false,
+        'completed requests should come first by default'
+      );
+      assert.equal(
+        requests[1].pending,
+        false,
+        'completed requests should come first by default'
+      );
+      assert.equal(
+        requests[2].pending,
+        true,
+        'pending requests should come last by default'
+      );
+      assert.equal(
+        requests[3].pending,
+        true,
+        'pending requests should come last by default'
+      );
+      // Default sort should be stable.
+      assert.match(requests[0].url, /\?type=xhr/, 'fast XHR should come first');
+      assert.match(
+        requests[1].url,
+        /\?type=fetch/,
+        'fast Fetch should come 2nd'
+      );
+      assert.match(
+        requests[2].url,
+        /\?slow=true&type=xhr/,
+        'slow XHR should be 3rd'
+      );
+      assert.match(
+        requests[3].url,
+        /\?slow=true&type=fetch/,
+        'slow Fetch should be last'
+      );
+    });
+
+    it('preserves click order when ordering by initiation time', async function () {
+      await browser.url('/pending.html');
+      await browser.setupInterceptor();
+      await $('#slow')
+        .click()
+        .then(() => completedRequest('#fast'))
+        .then(() => $('#fetchslow').click())
+        .then(() => completedRequest('#fetchfast'));
+      const requests = await browser.getRequests({
+        includePending: true,
+        orderBy: 'START',
+      });
+      assert(Array.isArray(requests));
+      assert.equal(requests.length, 4);
+      assert.equal(requests[0].pending, true, '1st request should be pending');
+      assert.equal(
+        requests[1].pending,
+        false,
+        '2nd request should be completed'
+      );
+      assert.equal(requests[2].pending, true, '3rd request should be pending');
+      assert.equal(
+        requests[3].pending,
+        false,
+        '4th request should be complete'
+      );
+      assert.match(
+        requests[0].url,
+        /\?slow=true&type=xhr/,
+        'slow XHR should be 1st'
+      );
+      assert.match(requests[1].url, /\?type=xhr/, 'fast XHR should be 2nd');
+      assert.match(
+        requests[2].url,
+        /\?slow=true&type=fetch/,
+        'slow Fetch should be 3rd'
+      );
+      assert.match(
+        requests[3].url,
+        /\?type=fetch/,
+        'fast Fetch should be last'
+      );
     });
   });
 });

@@ -40,7 +40,10 @@ declare namespace WdioInterceptorService {
   type InterceptedRequest = PendingRequest | CompletedRequest;
 
   interface GetRequestOptions {
+    /** Whether pending requests will be included in the response */
     includePending?: boolean;
+    /** Whether requests are ordered by time of initiation, or fulfillment */
+    orderBy?: 'START' | 'END';
   }
 
   type OnlyCompletedRequests = { includePending: false };

@@ -22,25 +22,25 @@
 
       document.querySelector('#fast').addEventListener('click', function (evt) {
         var xhr = new XMLHttpRequest();
-        xhr.open('POST', '/post.json');
+        xhr.open('POST', '/post.json?type=xhr');
         xhr.addEventListener('load', () => update("Speedy XHR"));
         xhr.send('fast');
       });
 
       document.querySelector('#slow').addEventListener('click', function (evt) {
         var xhr = new XMLHttpRequest();
-        xhr.open('POST', '/post.json?slow=true');
+        xhr.open('POST', '/post.json?slow=true&type=xhr');
         xhr.addEventListener('load', () => update("Slow XHR"));
         xhr.send('slow');
       });
 
       document.querySelector('#fetchfast').addEventListener('click', function (evt) {
-        fetch('/post.json', { method: 'POST', body: 'fast' })
+        fetch('/post.json?type=fetch', { method: 'POST', body: 'fast' })
           .then(() => update("Fetched\n"));
       });
 
       document.querySelector('#fetchslow').addEventListener('click', function (evt) {
-        fetch('/post.json?slow=true', { method: 'POST', body: 'slow' })
+        fetch('/post.json?slow=true&type=fetch', { method: 'POST', body: 'slow' })
           .then(() => update("Fetched after a while\n"));
       });
 
