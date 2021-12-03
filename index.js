@@ -36,7 +36,7 @@ class WebdriverAjax {
     );
     browser.addCommand('hasPendingRequests', hasPendingRequests);
     browser.addCommand('getRequest', getRequest);
-    browser.addCommand('getRequests', getRequest);
+    browser.addCommand('getRequests', getRequests);
 
     function setup() {
       return browser.executeAsync(interceptor.setup);
@@ -59,7 +59,7 @@ class WebdriverAjax {
           new Error('No expectations found. Call .expectRequest() first')
         );
       }
-      return getRequest().then((requests) => {
+      return getRequests().then((requests) => {
         if (expectations.length !== requests.length) {
           return Promise.reject(
             new Error(
@@ -139,7 +139,7 @@ class WebdriverAjax {
     function assertExpectedRequestsOnly(inOrder = true) {
       const expectations = this._wdajaxExpectations;
 
-      return getRequest().then((requests) => {
+      return getRequests().then((requests) => {
         const clonedRequests = [...requests];
 
         let matchedRequestIndexes = [];
@@ -215,13 +215,16 @@ class WebdriverAjax {
       return this._wdajaxExpectations;
     }
 
-    async function getRequest(index) {
-      let request;
-      if (index > -1) {
-        request = await browser.execute(interceptor.getRequest, index);
-      } else {
-        request = await browser.execute(interceptor.getRequest);
-      }
+    function getRequests(options = {}) {
+      return getRequest(undefined, options);
+    }
+
+    async function getRequest(index, options = {}) {
+      const request = await browser.execute(
+        interceptor.getRequest,
+        index > -1 ? index : undefined,
+        options
+      );
       if (!request) {
         if (index != null) {
           return Promise.reject(
@@ -241,7 +244,7 @@ class WebdriverAjax {
     }
 
     async function hasPendingRequests() {
-      const requests = await this.getRequest();
+      const requests = await this.getRequests({ includePending: true });
       return requests.some((r) => r.pending === true);
     }
 
