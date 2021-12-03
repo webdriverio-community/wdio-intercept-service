@@ -399,9 +399,9 @@ describe('webdriverajax', function testSuite() {
       await browser.pause(wait);
     });
     [
-      { api: 'XHR', button: '#slow' },
-      { api: 'Fetch', button: '#fetchslow' },
-    ].forEach(({ api, button }) => {
+      { api: 'XHR', button: '#slow', fastButton: '#fast' },
+      { api: 'Fetch', button: '#fetchslow', fastButton: '#fetchfast' },
+    ].forEach(({ api, button, fastButton }) => {
       it(`can report pending ${api} requests`, async function () {
         await browser.url('/pending.html');
         await browser.setupInterceptor();
@@ -432,6 +432,34 @@ describe('webdriverajax', function testSuite() {
           await browser.hasPendingRequests(),
           false,
           'should be false after request completion'
+        );
+      });
+
+      it(`can ignore pending ${api} requests`, async function () {
+        await browser.url('/pending.html');
+        await browser.setupInterceptor();
+        // Initiate the slow request, then the fast request, and wait for the fast request to complete.
+        await $(button)
+          .click()
+          .then(() => completedRequest(fastButton));
+        const completedOnly = await browser.getRequests({
+          includePending: false,
+        });
+        assert.equal(
+          completedOnly.length,
+          1,
+          '"includePending: false" should ignore pending requests'
+        );
+        const request = completedOnly[0];
+        assert.equal(
+          request.pending,
+          false,
+          'should retrieve completed request only'
+        );
+        assert.notEqual(
+          typeof request.response,
+          'undefined',
+          'should retrieve completed request'
         );
       });
     });

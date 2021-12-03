@@ -7,7 +7,7 @@
 </head>
 <body>
   <p id="text">This file makes various GET requests to /get.json</p>
-  <button id="instant">Press me</button>
+  <button id="fast">Press me</button>
   <button id="slow">No, press me!</button>
   <button id="fetchfast">Press me</button>
   <button id="fetchslow">No, press me!</button>
@@ -20,7 +20,7 @@
         document.querySelector('#response').textContent += msg;
       };
 
-      document.querySelector('#instant').addEventListener('click', function (evt) {
+      document.querySelector('#fast').addEventListener('click', function (evt) {
         var xhr = new XMLHttpRequest();
         xhr.open('POST', '/post.json');
         xhr.addEventListener('load', () => update("Speedy XHR"));
