@@ -243,9 +243,8 @@ class WebdriverAjax {
       return transformRequest(request);
     }
 
-    async function hasPendingRequests() {
-      const requests = await this.getRequests({ includePending: true });
-      return requests.some((r) => r.pending === true);
+    function hasPendingRequests() {
+      return browser.execute(interceptor.hasPending);
     }
 
     function transformRequest(req) {
