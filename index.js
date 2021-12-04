@@ -2,9 +2,19 @@
 
 const interceptor = require('./lib/interceptor');
 
+const issueDeprecation = (map, key, what) => {
+  if (!map[key]) {
+    console.warn(
+      `[wdio-intercept-service]: ${what} is deprecated and will no longer work in v5`
+    );
+    map[key] = true;
+  }
+};
+
 class WebdriverAjax {
   constructor() {
     this._wdajaxExpectations = null;
+    this._deprecations = {};
   }
 
   beforeTest() {
@@ -51,7 +61,7 @@ class WebdriverAjax {
       return browser;
     }
 
-    function assertRequests() {
+    function assertRequests(options = {}) {
       const expectations = this._wdajaxExpectations;
 
       if (!expectations.length) {
@@ -59,7 +69,14 @@ class WebdriverAjax {
           new Error('No expectations found. Call .expectRequest() first')
         );
       }
-      return getRequests().then((requests) => {
+
+      // Don't let users request pending requests:
+      if (options.includePending) {
+        throw new Error(
+          '[wdio-intercept-service]: passing `includePending` option to `assertRequests` is not supported!'
+        );
+      }
+      return getRequests(options).then((requests) => {
         if (expectations.length !== requests.length) {
           return Promise.reject(
             new Error(
@@ -136,13 +153,33 @@ class WebdriverAjax {
       });
     }
 
-    function assertExpectedRequestsOnly(inOrder = true) {
+    function assertExpectedRequestsOnly(orderOrOptions) {
       const expectations = this._wdajaxExpectations;
+      let inOrder = true;
+      let options = {};
+      if (typeof orderOrOptions === 'boolean') {
+        issueDeprecation(
+          this._deprecations,
+          'inOrder',
+          'Calling `assertExpectedRequestsOnly` with a boolean parameter'
+        );
+        inOrder = orderOrOptions;
+      } else if (orderOrOptions && typeof orderOrOptions === 'object') {
+        options = orderOrOptions;
+        inOrder = 'inOrder' in orderOrOptions ? orderOrOptions.inOrder : true;
+        delete options.inOrder;
+      }
 
-      return getRequests().then((requests) => {
-        const clonedRequests = [...requests];
+      // Don't let users request pending requests:
+      if (options.includePending) {
+        throw new Error(
+          '[wdio-intercept-service]: passing `includePending` option to `assertExpectedRequestsOnly` is not supported!'
+        );
+      }
+      return getRequests(options).then((requests) => {
+        const clonedRequests = requests.slice();
 
-        let matchedRequestIndexes = [];
+        const matchedRequestIndexes = [];
         for (let i = 0; i < expectations.length; i++) {
           const ex = expectations[i];
 
@@ -193,7 +230,7 @@ class WebdriverAjax {
         } else if (
           inOrder &&
           JSON.stringify(matchedRequestIndexes) !==
-            JSON.stringify(matchedRequestIndexes.concat().sort())
+            JSON.stringify(matchedRequestIndexes.slice().sort())
         ) {
           return Promise.reject(
             new Error('Requests not received in the expected order')

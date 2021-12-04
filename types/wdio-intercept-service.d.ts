@@ -39,13 +39,19 @@ declare namespace WdioInterceptorService {
 
   type InterceptedRequest = PendingRequest | CompletedRequest;
 
-  interface GetRequestOptions {
-    /** Whether pending requests will be included in the response */
-    includePending?: boolean;
+  interface OrderingStrategy {
     /** Whether requests are ordered by time of initiation, or fulfillment */
     orderBy?: 'START' | 'END';
   }
+  interface AssertionRequestOrderStrategy extends OrderingStrategy {
+    /** Whether the intercepted request order must match the order in which expectations were set */
+    inOrder?: boolean;
+  }
 
+  interface GetRequestOptions extends OrderingStrategy {
+    /** Whether pending requests will be included in the response */
+    includePending?: boolean;
+  }
   type OnlyCompletedRequests = { includePending: false };
 }
 /**
@@ -64,8 +70,13 @@ declare module WebdriverIO {
       statusCode: number
     ): AsyncSync<Browser>;
     hasPendingRequests(): AsyncSync<boolean>;
-    assertRequests(): AsyncSync<Browser>;
+    assertRequests(
+      options?: WdioInterceptorService.OrderingStrategy
+    ): AsyncSync<Browser>;
     assertExpectedRequestsOnly(inOrder?: boolean): AsyncSync<Browser>;
+    assertExpectedRequestsOnly(
+      options?: WdioInterceptorService.AssertionRequestOrderStrategy
+    ): AsyncSync<Browser>;
     resetExpectations(): AsyncSync<Browser>;
     getExpectations(): AsyncSync<WdioInterceptorService.ExpectedRequest[]>;
     getRequest(

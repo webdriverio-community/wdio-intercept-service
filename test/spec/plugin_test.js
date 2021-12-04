@@ -296,67 +296,64 @@ describe('webdriverajax', function testSuite() {
       assert.deepEqual(count, []);
     });
 
-    it('can validate only the expected requests, in order (implicit)', async function () {
-      await browser.url('/multiple_methods.html');
-      await browser.setupInterceptor();
-      await browser.expectRequest('GET', '/get.json', 200);
-      await browser.expectRequest('POST', '/post.json', 200);
-      await completedRequest('#getbutton');
-      await completedRequest('#postbutton');
-      // The next two are not needed, but adding extra clicks to prove we can validate partial set
-      await completedRequest('#getbutton');
-      await completedRequest('#postbutton');
-      await browser.assertExpectedRequestsOnly();
-      await assert.rejects(
-        () => browser.assertRequests(),
-        /Expected\s\d\srequests\sbut\swas\s\d/
-      );
+    [
+      { kind: 'implicit', args: undefined },
+      { kind: 'explicit', args: { inOrder: true } },
+      { kind: 'legacy syntax', args: true },
+    ].forEach(({ kind, args }) => {
+      it(`can validate only the expected requests, in order (${kind})`, async function () {
+        await browser.url('/multiple_methods.html');
+        await browser.setupInterceptor();
+        await browser.expectRequest('GET', '/get.json', 200);
+        await browser.expectRequest('POST', '/post.json', 200);
+        await completedRequest('#getbutton');
+        await completedRequest('#postbutton');
+        // The next two are not needed, but adding extra clicks to prove we can validate partial set
+        await completedRequest('#getbutton');
+        await completedRequest('#postbutton');
+        await browser.assertExpectedRequestsOnly(args);
+        await assert.rejects(
+          () => browser.assertRequests(),
+          /Expected\s\d\srequests\sbut\swas\s\d/
+        );
+      });
     });
 
-    it('can validate only the expected requests, in order (explicit)', async function () {
-      await browser.url('/multiple_methods.html');
-      await browser.setupInterceptor();
-      await browser.expectRequest('GET', '/get.json', 200);
-      await browser.expectRequest('POST', '/post.json', 200);
-      await completedRequest('#getbutton');
-      await completedRequest('#postbutton');
-      // The next two are not needed, but adding extra clicks to prove we can validate partial set
-      await completedRequest('#getbutton');
-      await completedRequest('#postbutton');
-      await browser.assertExpectedRequestsOnly(true);
-      await assert.rejects(
-        () => browser.assertRequests(),
-        /Expected\s\d\srequests\sbut\swas\s\d/
-      );
-    });
-
-    it('can validate only the expected requests, in any order', async function () {
-      await browser.url('/multiple_methods.html');
-      await browser.setupInterceptor();
-      await browser.expectRequest('GET', '/get.json', 200);
-      await browser.expectRequest('POST', '/post.json', 200);
-      await completedRequest('#postbutton');
-      await completedRequest('#postbutton');
-      await completedRequest('#getbutton');
-      await completedRequest('#getbutton');
-      await browser.assertExpectedRequestsOnly(false);
-      await assert.rejects(
-        () => browser.assertRequests(),
-        /Expected\s\d\srequests\sbut\swas\s\d/
-      );
-    });
-
-    it('can validate only the expected requests, in any order, and fail when urls do not match', async function () {
-      await browser.url('/multiple_methods.html');
-      await browser.setupInterceptor();
-      await browser.expectRequest('GET', '/get.json', 200);
-      await browser.expectRequest('POST', '/invalid.json', 200);
-      await completedRequest('#getbutton');
-      await completedRequest('#postbutton');
-      await assert.rejects(
-        () => browser.assertExpectedRequestsOnly(false),
-        /Expected request was not found. method: POST url: \/invalid.json statusCode: 200/
-      );
+    [
+      { kind: '', args: { inOrder: false } },
+      { kind: ' with legacy syntax', args: false },
+    ].forEach(({ kind, args }) => {
+      it(`can validate only the expected requests, in any order${
+        kind || ''
+      }`, async function () {
+        await browser.url('/multiple_methods.html');
+        await browser.setupInterceptor();
+        await browser.expectRequest('GET', '/get.json', 200);
+        await browser.expectRequest('POST', '/post.json', 200);
+        await completedRequest('#postbutton');
+        await completedRequest('#postbutton');
+        await completedRequest('#getbutton');
+        await completedRequest('#getbutton');
+        await browser.assertExpectedRequestsOnly(args);
+        await assert.rejects(
+          () => browser.assertRequests(),
+          /Expected\s\d\srequests\sbut\swas\s\d/
+        );
+      });
+      it(`can validate only the expected requests, in any order${
+        kind || ''
+      }, and fail when urls do not match`, async function () {
+        await browser.url('/multiple_methods.html');
+        await browser.setupInterceptor();
+        await browser.expectRequest('GET', '/get.json', 200);
+        await browser.expectRequest('POST', '/invalid.json', 200);
+        await completedRequest('#getbutton');
+        await completedRequest('#postbutton');
+        await assert.rejects(
+          () => browser.assertExpectedRequestsOnly(args),
+          /Expected request was not found. method: POST url: \/invalid.json statusCode: 200/
+        );
+      });
     });
 
     it('converts Blob response types', async function () {
@@ -504,24 +501,14 @@ describe('webdriverajax', function testSuite() {
       assert(Array.isArray(requests));
       assert.equal(requests.length, 4);
       assert.equal(
-        requests[0].pending,
+        requests[0].pending || requests[1].pending,
         false,
-        'completed requests should come first by default'
+        '1st and 2nd requests should be completed'
       );
       assert.equal(
-        requests[1].pending,
-        false,
-        'completed requests should come first by default'
-      );
-      assert.equal(
-        requests[2].pending,
+        requests[2].pending && requests[3].pending,
         true,
-        'pending requests should come last by default'
-      );
-      assert.equal(
-        requests[3].pending,
-        true,
-        'pending requests should come last by default'
+        '3rd & 4th requests should be pending'
       );
       // Default sort should be stable.
       assert.match(requests[0].url, /\?type=xhr/, 'fast XHR should come first');
@@ -556,17 +543,15 @@ describe('webdriverajax', function testSuite() {
       });
       assert(Array.isArray(requests));
       assert.equal(requests.length, 4);
-      assert.equal(requests[0].pending, true, '1st request should be pending');
       assert.equal(
-        requests[1].pending,
-        false,
-        '2nd request should be completed'
+        requests[0].pending && requests[2].pending,
+        true,
+        '1st & 3rd requests should be pending'
       );
-      assert.equal(requests[2].pending, true, '3rd request should be pending');
       assert.equal(
-        requests[3].pending,
+        requests[1].pending || requests[3].pending,
         false,
-        '4th request should be complete'
+        '2nd & 4th requests should be completed'
       );
       assert.match(
         requests[0].url,
@@ -583,6 +568,16 @@ describe('webdriverajax', function testSuite() {
         requests[3].url,
         /\?type=fetch/,
         'fast Fetch should be last'
+      );
+    });
+
+    it('cannot assert on pending requests', async function () {
+      await browser.url('/pending.html');
+      await browser.setupInterceptor();
+      await browser.expectRequest('POST', /post\.json\?slow=true/, null);
+      await $('#slow').click();
+      await assert.rejects(() =>
+        browser.assertRequests({ includePending: true })
       );
     });
   });
