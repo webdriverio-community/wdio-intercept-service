@@ -13,7 +13,7 @@ There's one catch though: you can't intercept HTTP calls that are initiated on p
 
 ## Prerequisites
 
-* webdriver.io **v5.x**.
+* webdriver.io **v5.x** or newer.
 
 **Heads up! If you're still using webdriver.io v4, please use the v2.x branch of this plugin!**
 
@@ -132,23 +132,26 @@ Helper method. Returns all the expectations you've made up until that point
 
 Helper method. Resets all the expectations you've made up until that point
 
-### browser.assertRequests()
+### browser.assertRequests({ orderBy?: 'START' | 'END' })
 
 Call this method when all expected ajax requests are finished. It compares the expectations to the actual requests made and asserts the following:
 
 - Count of the requests that were made
-- The order of the requests
+- The order of the requests (defaults to `orderBy: 'END'`, i.e. when the requests were completed)
 - The method, the URL and the statusCode should match for every request made
 
-### browser.assertExpectedRequestsOnly(inOrder?: boolean)
+### browser.assertExpectedRequestsOnly({ inOrder?: boolean, orderBy?: 'START' | 'END' })
 
-Similar to `browser.assertRequests`, but validates only the requests you specify in your `expectRequest` directives, without having to map out all the network requests that might happen around that. If `inOrder` equals to `true` (default), the requests are expected to be made in the same order as they were setup with `expectRequest`.
+Similar to `browser.assertRequests`, but validates only the requests you specify in your `expectRequest` directives, without having to map out all the network requests that might happen around that. If `inOrder` option is `true` (default), the requests are expected to be found in the same order as they were setup with `expectRequest`.
 
-### browser.getRequest(index: number)
+### browser.getRequest(index: number, { includePending?: boolean, orderBy?: 'START' | 'END' })
 
-To make more sophisticated assertions about a specific request you can get details for a specific request after it is finished. You have to provide the index of the request you want to access in the order the requests were initiated (starting with 0).
+To make more sophisticated assertions about a specific request you can get details for a specific request. You have to provide the 0-based index of the request you want to access, in the order the requests were completed (default), or initiated (by passing the `orderBy: 'START'` option).
 
 * `index` (`Number`): number of the request you want to access
+* `options` (`object`): Request options
+* `options.includePending` (`boolean`): Whether not-yet-completed requests should be returned. By default, this is false, to match the behavior of the library in v4.1.10 and earlier.
+* `options.orderBy` (`'START' | 'END'`): How the requests should be ordered. By default, this is `'END'`, to match the behavior of the library in v4.1.10 and earlier. If `'START'`, the requests will be ordered by the time of initiation, rather than the time of request completion. (Since a pending request has not yet completed, when ordering by `'END'` all pending requests will come after all completed requests.)
 
 **Returns** `request` object:
 
@@ -156,9 +159,10 @@ To make more sophisticated assertions about a specific request you can get detai
 * `request.method`: used HTTP method
 * `request.body`: payload/body data used in request
 * `request.headers`: request http headers as JS object
-* `request.response.headers`: response http headers as JS object
-* `request.response.body`: response body (will be parsed as JSON if possible)
-* `request.response.statusCode`: response status code
+* `request.pending`: boolean flag for whether this request is complete (i.e. has a `response` property), or in-flight.
+* `request.response?.headers`: response http headers as JS object
+* `request.response?.body`: response body (will be parsed as JSON if possible)
+* `request.response?.statusCode`: response status code
 
 **A note on `request.body`:** wdio-intercept-service will try to parse the request body as follows:
 
@@ -170,12 +174,18 @@ To make more sophisticated assertions about a specific request you can get detai
 
 **For the `fetch` API, we only support string and JSON data!**
 
-### browser.getRequests()
+### browser.getRequests(options)
 
-Get all captured requests as an array.
+Get all captured requests as an array, supporting the same options as `getRequest`.
 
 **Returns** array of `request` objects.
 
+
+### browser.hasPendingRequests()
+
+A utility method that checks whether any HTTP requests are still pending. Can be used by tests to ensure all requests have completed within a reasonable amount of time, or to verify that a call to `getRequests()` or `assertRequests()` will include all of the desired HTTP requests.
+
+**Returns** boolean
 ## TypeScript support
 
 This plugin provides its own TS types. Just point your tsconfig to the type extensions like mentioned [here](https://webdriver.io/docs/typescript.html#framework-types):
@@ -189,7 +199,7 @@ This plugin provides its own TS types. Just point your tsconfig to the type exte
 
 ## Running the tests
 
-A recent version of Chrome is required to run the tests locally. You may need to update the `chromedriver` dependency to match the version installed on your system.
+Recent versions of Chrome and Firefox are required to run the tests locally. You may need to update the `chromedriver` and `geckodriver` dependencies to match the version installed on your system.
 
 ```shell
 npm test
