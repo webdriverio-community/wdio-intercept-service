@@ -127,7 +127,7 @@ exports.config = {
           {
             mount: '/',
             middleware: (req, res) => {
-              const delay = req.query.slow === 'true' ? 500 : 0;
+              const delay = req.query.slow === 'true' ? 1000 : 0;
               setTimeout(
                 () => res.sendFile(`${__dirname}/site${req.path}`),
                 delay
