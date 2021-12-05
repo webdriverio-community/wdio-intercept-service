@@ -176,16 +176,16 @@ To make more sophisticated assertions about a specific request you can get detai
 
 ### browser.getRequests(options)
 
-Get all captured requests as an array, supporting the same options as `getRequest`.
+Get all captured requests as an array, supporting the same optional options as `getRequest`.
 
 **Returns** array of `request` objects.
-
 
 ### browser.hasPendingRequests()
 
 A utility method that checks whether any HTTP requests are still pending. Can be used by tests to ensure all requests have completed within a reasonable amount of time, or to verify that a call to `getRequests()` or `assertRequests()` will include all of the desired HTTP requests.
 
 **Returns** boolean
+
 ## TypeScript support
 
 This plugin provides its own TS types. Just point your tsconfig to the type extensions like mentioned [here](https://webdriver.io/docs/typescript.html#framework-types):
