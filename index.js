@@ -1,11 +1,17 @@
 'use strict';
 
 const interceptor = require('./lib/interceptor');
+const PKG_PREFIX = '[wdio-intercept-service]: ';
+class InterceptServiceError extends Error {
+  constructor(message, ...args) {
+    super(PKG_PREFIX + message, ...args);
+  }
+}
 
 const issueDeprecation = (map, key, what) => {
   if (!map[key]) {
     console.warn(
-      `[wdio-intercept-service]: ${what} is deprecated and will no longer work in v5`
+      `${PKG_PREFIX}${what} is deprecated and will no longer work in v5`
     );
     map[key] = true;
   }
@@ -72,8 +78,8 @@ class WebdriverAjax {
 
       // Don't let users request pending requests:
       if (options.includePending) {
-        throw new Error(
-          '[wdio-intercept-service]: passing `includePending` option to `assertRequests` is not supported!'
+        throw new InterceptServiceError(
+          'passing `includePending` option to `assertRequests` is not supported!'
         );
       }
       return getRequests(options).then((requests) => {
@@ -172,8 +178,8 @@ class WebdriverAjax {
 
       // Don't let users request pending requests:
       if (options.includePending) {
-        throw new Error(
-          '[wdio-intercept-service]: passing `includePending` option to `assertExpectedRequestsOnly` is not supported!'
+        throw new InterceptServiceError(
+          'passing `includePending` option to `assertExpectedRequestsOnly` is not supported!'
         );
       }
       return getRequests(options).then((requests) => {
