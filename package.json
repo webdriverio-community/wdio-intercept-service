@@ -1,6 +1,6 @@
 {
   "name": "wdio-intercept-service",
-  "version": "4.1.10",
+  "version": "4.2.0",
   "description": "Capture and assert HTTP ajax calls in webdriver.io 🕸",
   "main": "index.js",
   "scripts": {
