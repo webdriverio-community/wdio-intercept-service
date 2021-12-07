@@ -1,3 +1,4 @@
 errorShots
 node_modules
-test/logs
+test/**/logs
+test/**/dist

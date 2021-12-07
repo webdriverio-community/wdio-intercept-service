@@ -1,5 +1,26 @@
 ## wdio-intercept-service changelog
 
+### [ [>](https://github.com/webdriverio-community/wdio-intercept-service/tree/v.next) ] v.next / <DATE>
+- Intercept HTTP requests upon initiation, rather than completion (thanks @tehhowch)
+
+### [ [>](https://github.com/webdriverio-community/wdio-intercept-service/tree/v4.1.10) ] 4.1.10 / 16.11.2021
+* Support fetch requests opened with `URL` objects (thanks @tehhowch)
+* Fix return type for `browser.getExpectations()` (thanks @tehhowch)
+
+### [ [>](https://github.com/webdriverio-community/wdio-intercept-service/tree/v4.1.9) ] 4.1.9 / 03.11.2021
+* Run e2e tests in async mode (thanks @tehhowch)
+* Support 'blob' response types in XHR requests (thanks @tehhowch)
+* Run e2e tests for Firefox, too (thanks @tehhowch)
+
+### [ [>](https://github.com/webdriverio-community/wdio-intercept-service/tree/v4.1.8) ] 4.1.8 / 28.10.2021
+* Maintenance upgrade to help enforce IE compatability (thanks @tehhowch)
+
+### [ [>](https://github.com/webdriverio-community/wdio-intercept-service/tree/v4.1.7) ] 4.1.7 / 04.08.2021
+* Add support for WebdriverIO standalone mode (thanks @juenobueno)
+
+### [ [>](https://github.com/webdriverio-community/wdio-intercept-service/tree/v4.1.6) ] 4.1.6 / 19.05.2021
+* Maintenance upgrades (thanks @christian-bromann)
+
 ### [ [>](https://github.com/chmanie/wdio-intercept-service/tree/v4.1.4) ] 4.1.4 / 19.04.2021
 Improved support for parallelization (thanks @RaulGDMM)
 

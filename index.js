@@ -1,10 +1,26 @@
 'use strict';
 
 const interceptor = require('./lib/interceptor');
+const PKG_PREFIX = '[wdio-intercept-service]: ';
+class InterceptServiceError extends Error {
+  constructor(message, ...args) {
+    super(PKG_PREFIX + message, ...args);
+  }
+}
+
+const issueDeprecation = (map, key, what) => {
+  if (!map[key]) {
+    console.warn(
+      `${PKG_PREFIX}${what} is deprecated and will no longer work in v5`
+    );
+    map[key] = true;
+  }
+};
 
 class WebdriverAjax {
   constructor() {
     this._wdajaxExpectations = null;
+    this._deprecations = {};
   }
 
   beforeTest() {
@@ -34,8 +50,9 @@ class WebdriverAjax {
       'assertExpectedRequestsOnly',
       assertExpectedRequestsOnly.bind(this)
     );
+    browser.addCommand('hasPendingRequests', hasPendingRequests);
     browser.addCommand('getRequest', getRequest);
-    browser.addCommand('getRequests', getRequest);
+    browser.addCommand('getRequests', getRequests);
 
     function setup() {
       return browser.executeAsync(interceptor.setup);
@@ -50,7 +67,7 @@ class WebdriverAjax {
       return browser;
     }
 
-    function assertRequests() {
+    function assertRequests(options = {}) {
       const expectations = this._wdajaxExpectations;
 
       if (!expectations.length) {
@@ -58,7 +75,14 @@ class WebdriverAjax {
           new Error('No expectations found. Call .expectRequest() first')
         );
       }
-      return getRequest().then((requests) => {
+
+      // Don't let users request pending requests:
+      if (options.includePending) {
+        throw new InterceptServiceError(
+          'passing `includePending` option to `assertRequests` is not supported!'
+        );
+      }
+      return getRequests(options).then((requests) => {
         if (expectations.length !== requests.length) {
           return Promise.reject(
             new Error(
@@ -135,13 +159,33 @@ class WebdriverAjax {
       });
     }
 
-    function assertExpectedRequestsOnly(inOrder = true) {
+    function assertExpectedRequestsOnly(orderOrOptions) {
       const expectations = this._wdajaxExpectations;
+      let inOrder = true;
+      let options = {};
+      if (typeof orderOrOptions === 'boolean') {
+        issueDeprecation(
+          this._deprecations,
+          'inOrder',
+          'Calling `assertExpectedRequestsOnly` with a boolean parameter'
+        );
+        inOrder = orderOrOptions;
+      } else if (orderOrOptions && typeof orderOrOptions === 'object') {
+        options = orderOrOptions;
+        inOrder = 'inOrder' in orderOrOptions ? orderOrOptions.inOrder : true;
+        delete options.inOrder;
+      }
 
-      return getRequest().then((requests) => {
-        const clonedRequests = [...requests];
+      // Don't let users request pending requests:
+      if (options.includePending) {
+        throw new InterceptServiceError(
+          'passing `includePending` option to `assertExpectedRequestsOnly` is not supported!'
+        );
+      }
+      return getRequests(options).then((requests) => {
+        const clonedRequests = requests.slice();
 
-        let matchedRequestIndexes = [];
+        const matchedRequestIndexes = [];
         for (let i = 0; i < expectations.length; i++) {
           const ex = expectations[i];
 
@@ -192,7 +236,7 @@ class WebdriverAjax {
         } else if (
           inOrder &&
           JSON.stringify(matchedRequestIndexes) !==
-            JSON.stringify(matchedRequestIndexes.concat().sort())
+            JSON.stringify(matchedRequestIndexes.slice().sort())
         ) {
           return Promise.reject(
             new Error('Requests not received in the expected order')
@@ -214,13 +258,16 @@ class WebdriverAjax {
       return this._wdajaxExpectations;
     }
 
-    async function getRequest(index) {
-      let request;
-      if (index > -1) {
-        request = await browser.execute(interceptor.getRequest, index);
-      } else {
-        request = await browser.execute(interceptor.getRequest);
-      }
+    function getRequests(options = {}) {
+      return getRequest(undefined, options);
+    }
+
+    async function getRequest(index, options = {}) {
+      const request = await browser.execute(
+        interceptor.getRequest,
+        index > -1 ? index : undefined,
+        options
+      );
       if (!request) {
         if (index != null) {
           return Promise.reject(
@@ -239,22 +286,35 @@ class WebdriverAjax {
       return transformRequest(request);
     }
 
+    function hasPendingRequests() {
+      return browser.execute(interceptor.hasPending);
+    }
+
     function transformRequest(req) {
       if (!req) {
         return;
       }
 
-      return {
+      const transformed = {
         url: req.url,
         method: req.method && req.method.toUpperCase(),
-        body: parseBody(req.requestBody),
         headers: normalizeRequestHeaders(req.requestHeaders),
-        response: {
+        body: parseBody(req.requestBody),
+        pending: true,
+      };
+      // Check for a '__fulfilled' property on the retrieved request, which is
+      // set by the interceptor only when the response completes. Before this
+      // flag is set, the request is still being processed (e.g. a large response
+      // body is downloading) and therefore is pending.
+      if (req.__fulfilled) {
+        transformed.pending = false;
+        transformed.response = {
           headers: parseResponseHeaders(req.headers),
           body: parseBody(req.body),
           statusCode: req.statusCode,
-        },
-      };
+        };
+      }
+      return transformed;
     }
 
     function normalizeRequestHeaders(headers) {

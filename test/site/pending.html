@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Fast and Slow GETs</title>
+</head>
+<body>
+  <p id="text">This file makes various GET requests to /get.json</p>
+  <button id="fast">Press me</button>
+  <button id="slow">No, press me!</button>
+  <button id="fetchfast">Press me</button>
+  <button id="fetchslow">No, press me!</button>
+  <div id="response"></div>
+  <script>
+    'use strict';
+
+    (function (window, document) {
+      var update = function (msg) {
+        document.querySelector('#response').textContent += msg;
+      };
+
+      document.querySelector('#fast').addEventListener('click', function (evt) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/post.json?type=xhr');
+        xhr.addEventListener('load', () => update("Speedy XHR"));
+        xhr.send('fast');
+      });
+
+      document.querySelector('#slow').addEventListener('click', function (evt) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/post.json?slow=true&type=xhr');
+        xhr.addEventListener('load', () => update("Slow XHR"));
+        xhr.send('slow');
+      });
+
+      document.querySelector('#fetchfast').addEventListener('click', function (evt) {
+        fetch('/post.json?type=fetch', { method: 'POST', body: 'fast' })
+          .then(() => update("Fetched\n"));
+      });
+
+      document.querySelector('#fetchslow').addEventListener('click', function (evt) {
+        fetch('/post.json?slow=true&type=fetch', { method: 'POST', body: 'slow' })
+          .then(() => update("Fetched after a while\n"));
+      });
+
+    })(window, window.document);
+  </script>
+</body>
+</html>

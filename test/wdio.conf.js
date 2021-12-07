@@ -123,10 +123,15 @@ exports.config = {
       {
         folders: [{ mount: '/', path: `${__dirname}/site` }],
         middleware: [
+          // Use a simple middleware to respond to non-GET requests:
           {
             mount: '/',
             middleware: (req, res) => {
-              res.sendFile(`${__dirname}/site${req.path}`);
+              const delay = req.query.slow === 'true' ? 1000 : 0;
+              setTimeout(
+                () => res.sendFile(`${__dirname}/site${req.path}`),
+                delay
+              );
             },
           },
         ],
