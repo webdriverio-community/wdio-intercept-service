@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Simple angular get</title>
+  </head>
+  <body>
+    <app-root></app-root>
+
+    <script src="https://cdn.jsdelivr.net/npm/zone.js@0.11.4/dist/zone.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reflect-metadata@0.1.13/Reflect.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/rxjs@7.5.2/dist/bundles/rxjs.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@angular/core@12.2.16/bundles/core.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@angular/common@12.2.16/bundles/common.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@angular/common@12.2.16/bundles/common-http.umd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@angular/compiler@12.2.16/bundles/compiler.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@angular/platform-browser@12.2.16/bundles/platform-browser.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@angular/platform-browser-dynamic@12.2.16/bundles/platform-browser-dynamic.umd.min.js"></script>
+
+    <script>
+      (function () {
+        const { ng } = window;
+        const { Component, NgModule } = ng.core;
+        const { HttpClient, HttpClientModule } = ng.common.http;
+
+        const AppComponent = function (httpClient) {
+          this.clickHandler = function () {
+            httpClient
+              .get('/get.json', { observe: 'response' })
+              .subscribe((resp) => {
+                document.querySelector('#response').textContent +=
+                  'XHR response type: ' + resp.type;
+              });
+          };
+        };
+
+        AppComponent.annotations = [
+          new ng.core.Component({
+            selector: 'app-root',
+            template: `
+            <p id="text">This file makes various GET requests to /get.json</p>
+            <button id="button" (click)="clickHandler()">Press me</button>
+            <div id="response"></div>
+            `,
+            providers: [HttpClient],
+          }),
+        ];
+
+        AppComponent.parameters = [[new ng.core.Inject(HttpClient)]];
+
+        const AppModule = function () {};
+
+        AppModule.annotations = [
+          new ng.core.NgModule({
+            imports: [ng.platformBrowser.BrowserModule, HttpClientModule],
+            declarations: [AppComponent],
+            bootstrap: [AppComponent],
+          }),
+        ];
+
+        document.addEventListener('DOMContentLoaded', function () {
+          ng.platformBrowserDynamic
+            .platformBrowserDynamic()
+            .bootstrapModule(AppModule);
+        });
+      })();
+    </script>
+  </body>
+</html>
