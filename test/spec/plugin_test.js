@@ -165,8 +165,20 @@ describe('webdriverajax', function testSuite() {
       assert.equal(request.response.headers['content-length'], contentLength);
     });
 
+    it('can access a certain angular 10 http client request', async function () {
+      await browser.url('/angular10.html');
+      await browser.setupInterceptor();
+      await completedRequest('#button');
+      const request = await browser.getRequest(0);
+      assert.equal(request.method, 'GET');
+      assert.equal(request.url, '/get.json');
+      assert.deepEqual(request.response.body, { OK: true });
+      assert.equal(request.response.statusCode, 200);
+      assert.equal(request.response.headers['content-length'], contentLength);
+    });
+
     it('can access a certain angular 12 http client request', async function () {
-      await browser.url('/angular.html');
+      await browser.url('/angular12.html');
       await browser.setupInterceptor();
       await completedRequest('#button');
       const request = await browser.getRequest(0);
