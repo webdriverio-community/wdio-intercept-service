@@ -165,30 +165,6 @@ describe('webdriverajax', function testSuite() {
       assert.equal(request.response.headers['content-length'], contentLength);
     });
 
-    it('can access a certain angular 10 http client request', async function () {
-      await browser.url('/angular10.html');
-      await browser.setupInterceptor();
-      await completedRequest('#button');
-      const request = await browser.getRequest(0);
-      assert.equal(request.method, 'GET');
-      assert.equal(request.url, '/get.json');
-      assert.deepEqual(request.response.body, { OK: true });
-      assert.equal(request.response.statusCode, 200);
-      assert.equal(request.response.headers['content-length'], contentLength);
-    });
-
-    it('can access a certain angular 12 http client request', async function () {
-      await browser.url('/angular12.html');
-      await browser.setupInterceptor();
-      await completedRequest('#button');
-      const request = await browser.getRequest(0);
-      assert.equal(request.method, 'GET');
-      assert.equal(request.url, '/get.json');
-      assert.deepEqual(request.response.body, { OK: true });
-      assert.equal(request.response.statusCode, 200);
-      assert.equal(request.response.headers['content-length'], contentLength);
-    });
-
     it('can get multiple requests at once', async function () {
       await browser.url('/get.html');
       await browser.setupInterceptor();
@@ -603,6 +579,34 @@ describe('webdriverajax', function testSuite() {
       await assert.rejects(() =>
         browser.assertRequests({ includePending: true })
       );
+    });
+  });
+
+  describe('Angular compatibility', function () {
+    [10, 12].forEach((version) => {
+      it(`can assess XHR calls made in Angular ${version}`, async function () {
+        await browser.url(`/angular${version}.html`);
+        await browser.setupInterceptor();
+        await completedRequest('#button');
+        const request = await browser.getRequest(0);
+        assert.equal(request.method, 'GET');
+        assert.equal(request.url, '/get.json');
+        assert.deepEqual(request.response.body, { OK: true });
+        assert.equal(request.response.statusCode, 200);
+        assert.equal(request.response.headers['content-length'], contentLength);
+      });
+
+      it(`can get multiple requests at once in Angular ${version}`, async function () {
+        await browser.url(`/angular${version}.html`);
+        await browser.setupInterceptor();
+        await completedRequest('#button');
+        await completedRequest('#button');
+        const requests = await browser.getRequests();
+        assert(Array.isArray(requests));
+        assert.equal(requests.length, 2);
+        assert.equal(requests[0].method, 'GET');
+        assert.equal(requests[1].method, 'GET');
+      });
     });
   });
 });
