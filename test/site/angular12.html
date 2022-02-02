@@ -35,6 +35,22 @@
                   'XHR response type: ' + resp.type;
               });
           };
+          this.fastClickHandler = function () {
+            httpClient
+              .post('/post.json?type=xhr', 'fast', { observe: 'response' })
+              .subscribe((resp) => {
+                document.querySelector('#response').textContent += 'Speedy XHR';
+              });
+          };
+          this.slowClickHandler = function () {
+            httpClient
+              .post('/post.json?slow=true&type=xhr', 'slow', {
+                observe: 'response',
+              })
+              .subscribe((resp) => {
+                document.querySelector('#response').textContent += 'Slow XHR';
+              });
+          };
         };
 
         AppComponent.annotations = [
@@ -43,6 +59,8 @@
             template: `
             <p id="text">This file makes various GET requests to /get.json</p>
             <button id="button" (click)="clickHandler()">Press me</button>
+            <button id="fast" (click)="fastClickHandler()">Press me</button>
+            <button id="slow" (click)="slowClickHandler()">No, press me!</button>
             <div id="response"></div>
             `,
             providers: [HttpClient],

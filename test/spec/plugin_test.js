@@ -596,16 +596,18 @@ describe('webdriverajax', function testSuite() {
         assert.equal(request.response.headers['content-length'], contentLength);
       });
 
-      it(`can get multiple requests at once in Angular ${version}`, async function () {
+      it(`can get simultaneous requests in Angular ${version}`, async function () {
         await browser.url(`/angular${version}.html`);
         await browser.setupInterceptor();
-        await completedRequest('#button');
-        await completedRequest('#button');
+        await $('#slow')
+          .click()
+          .then(() => completedRequest('#fast'));
+        await browser.pause(wait);
         const requests = await browser.getRequests();
         assert(Array.isArray(requests));
         assert.equal(requests.length, 2);
-        assert.equal(requests[0].method, 'GET');
-        assert.equal(requests[1].method, 'GET');
+        assert.equal(requests[0].body, 'fast');
+        assert.equal(requests[1].body, 'slow');
       });
     });
   });
