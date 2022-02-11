@@ -3,6 +3,9 @@
 ### [ [>](https://github.com/webdriverio-community/wdio-intercept-service/tree/v.next) ] v.next / <DATE>
 - Intercept HTTP requests upon initiation, rather than completion (thanks @tehhowch)
 
+### [ [>](https://github.com/webdriverio-community/wdio-intercept-service/tree/v4.1.11) ] 4.1.11 / 11/02/2022
+- Wrap xhr::abort and add tests for angular (thanks @lildesert)
+
 ### [ [>](https://github.com/webdriverio-community/wdio-intercept-service/tree/v4.1.10) ] 4.1.10 / 16.11.2021
 * Support fetch requests opened with `URL` objects (thanks @tehhowch)
 * Fix return type for `browser.getExpectations()` (thanks @tehhowch)
