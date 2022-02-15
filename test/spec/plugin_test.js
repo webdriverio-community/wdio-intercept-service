@@ -581,4 +581,34 @@ describe('webdriverajax', function testSuite() {
       );
     });
   });
+
+  describe('Angular compatibility', function () {
+    [10, 12].forEach((version) => {
+      it(`can assess XHR calls made in Angular ${version}`, async function () {
+        await browser.url(`/angular${version}.html`);
+        await browser.setupInterceptor();
+        await completedRequest('#button');
+        const request = await browser.getRequest(0);
+        assert.equal(request.method, 'GET');
+        assert.equal(request.url, '/get.json');
+        assert.deepEqual(request.response.body, { OK: true });
+        assert.equal(request.response.statusCode, 200);
+        assert.equal(request.response.headers['content-length'], contentLength);
+      });
+
+      it(`can get simultaneous requests in Angular ${version}`, async function () {
+        await browser.url(`/angular${version}.html`);
+        await browser.setupInterceptor();
+        await $('#slow')
+          .click()
+          .then(() => completedRequest('#fast'));
+        await browser.pause(wait);
+        const requests = await browser.getRequests();
+        assert(Array.isArray(requests));
+        assert.equal(requests.length, 2);
+        assert.equal(requests[0].body, 'fast');
+        assert.equal(requests[1].body, 'slow');
+      });
+    });
+  });
 });

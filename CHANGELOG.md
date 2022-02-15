@@ -1,6 +1,12 @@
 ## wdio-intercept-service changelog
 
 ### [ [>](https://github.com/webdriverio-community/wdio-intercept-service/tree/v.next) ] v.next / <DATE>
+- Wrap xhr::abort and add tests for angular (thanks @lildesert)
+
+### [ [>](https://github.com/webdriverio-community/wdio-intercept-service/tree/v4.2.1) ] 4.2.1 / 20.12.2021
+- fix(#196): requestBody are empty when doing a POST+URLSearchParams (thanks @Badisi)
+
+### [ [>](https://github.com/webdriverio-community/wdio-intercept-service/tree/v4.2.0) ] 4.2.0 / 07.12.2021
 - Intercept HTTP requests upon initiation, rather than completion (thanks @tehhowch)
 
 ### [ [>](https://github.com/webdriverio-community/wdio-intercept-service/tree/v4.1.10) ] 4.1.10 / 16.11.2021
