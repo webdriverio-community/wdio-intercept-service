@@ -327,20 +327,20 @@ class WebdriverAjax {
 
     // parses raw header to key-value objects
     // (best effort compliance with RFC)
-    function parseResponseHeaders(headers) {
-      const result = {};
-      headers = headers.trim().split(/[\r\n]+/);
-      for (const line of headers) {
+    function parseResponseHeaders(rawHeader) {
+      const headers = {};
+      rawHeader = rawHeader.trim().split(/[\r\n]+/);
+      for (const line of rawHeader) {
         const parts = line.split(/(?<=^[^:]*):/);
         const key = parts[0].trim().toLowerCase();
         const value = parts[1].trim();
-        if (typeof result[key] == 'undefined') {
-          result[key] = value;
-        } else if (typeof result[key] == 'string') {
-          result[key] = result[key] + ', ' + value;
+        if (typeof headers[key] == 'undefined') {
+          headers[key] = value;
+        } else if (typeof headers[key] == 'string') {
+          headers[key] = headers[key] + ', ' + value;
         }
       }
-      return result;
+      return headers;
     }
 
     function parseBody(str) {

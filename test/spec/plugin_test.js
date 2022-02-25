@@ -268,7 +268,7 @@ describe('webdriverajax', function testSuite() {
       { name: 'XHR', file: 'post.html' },
       { name: 'fetch', file: 'postfetch.html' },
     ]) {
-      it('can access reponse headers with ' + method.name, async function () {
+      it('can access response headers with ' + method.name, async function () {
         await browser.url(`/${method.file}`);
         await browser.setupInterceptor();
         await completedRequest('#buttonstring');
