@@ -325,19 +325,22 @@ class WebdriverAjax {
       return normalized;
     }
 
-    function parseResponseHeaders(stringOrObject) {
-      if (typeof stringOrObject == 'object') {
-        return stringOrObject;
-      }
-      const headers = {};
-      const arr = stringOrObject.trim().replace(/\r/g, '').split('\n');
-      arr.forEach((header) => {
-        const match = header.match(/^(.+)?:\s?(.+)$/);
-        if (match) {
-          headers[match[1].toLowerCase()] = match[2];
+    // parses raw header to key-value objects
+    // (best effort compliance with RFC)
+    function parseResponseHeaders(headers) {
+      const result = {};
+      headers = headers.trim().split(/[\r\n]+/);
+      for (const line of headers) {
+        const parts = line.split(/(?<=^[^:]*):/);
+        const key = parts[0].trim().toLowerCase();
+        const value = parts[1].trim();
+        if (typeof result[key] == 'undefined') {
+          result[key] = value;
+        } else if (typeof result[key] == 'string') {
+          result[key] = result[key] + ', ' + value;
         }
-      });
-      return headers;
+      }
+      return result;
     }
 
     function parseBody(str) {
