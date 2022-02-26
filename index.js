@@ -329,8 +329,8 @@ class WebdriverAjax {
     // (best effort compliance with RFC)
     function parseResponseHeaders(rawHeader) {
       const headers = {};
-      rawHeader = rawHeader.trim().split(/[\r\n]+/);
-      for (const line of rawHeader) {
+      const lines = rawHeader.trim().split(/(?:\r?\n)+/);
+      for (const line of lines) {
         const parts = line.split(/(?<=^[^:]*):/);
         const key = parts[0].trim().toLowerCase();
         const value = parts[1].trim();
