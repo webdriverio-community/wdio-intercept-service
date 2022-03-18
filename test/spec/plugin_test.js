@@ -34,7 +34,7 @@ describe('webdriverajax', function testSuite() {
     await browser.url('/get.html');
     await browser.setupInterceptor();
     const ret = await browser.execute(() => window.__webdriverajax);
-    assert.deepEqual(ret, { requests: [] });
+    assert.deepEqual(ret, { interceptorDisabled: false, requests: [] });
   });
 
   it('sets up the interceptor in standalone mode', async function () {
@@ -165,6 +165,33 @@ describe('webdriverajax', function testSuite() {
       assert.equal(request.response.headers['content-length'], contentLength);
     });
 
+    it('can stop and restart interceptor', async function () {
+      await browser.url('/get.html');
+      await browser.setupInterceptor();
+      await completedRequest('#button');
+      let requests = await browser.getRequests();      
+      assert.equal(requests.length, 1);
+      let ret = await browser.execute(() => window.__webdriverajax);
+      assert.equal(ret.interceptorDisabled, false);
+      
+      await browser.disableInterceptor();  
+      await completedRequest('#button');
+      await completedRequest('#button');
+      await completedRequest('#button');
+      requests = await browser.getRequests();
+      assert.equal(requests.length, 1);
+      ret = await browser.execute(() => window.__webdriverajax);
+      assert.equal(ret.interceptorDisabled, true);
+
+      await browser.setupInterceptor();
+      await completedRequest('#button');
+      requests = await browser.getRequests(); 
+      assert.equal(requests.length, 1);
+      ret = await browser.execute(() => window.__webdriverajax);
+      assert.equal(ret.interceptorDisabled, false);
+
+    });
+
     it('can get multiple requests at once', async function () {
       await browser.url('/get.html');
       await browser.setupInterceptor();
@@ -267,13 +294,13 @@ describe('webdriverajax', function testSuite() {
       await browser.url('/frame.html');
       await browser.setupInterceptor();
       const ret = await browser.execute(() => window.__webdriverajax);
-      assert.deepEqual(ret, { requests: [] });
+      assert.deepEqual(ret, { interceptorDisabled: false, requests: [] });
       const frame = await $('#getinframe');
       await frame.waitForExist();
       await browser.switchToFrame(frame);
       await browser.setupInterceptor();
       const frameRet = await browser.execute(() => window.__webdriverajax);
-      assert.deepEqual(frameRet, { requests: [] });
+      assert.deepEqual(frameRet, { interceptorDisabled: false, requests: [] });
       await browser.expectRequest('GET', '/get.json', 200);
       await completedRequest('#button');
       await browser.assertRequests();
