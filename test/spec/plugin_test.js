@@ -165,16 +165,22 @@ describe('webdriverajax', function testSuite() {
       assert.equal(request.response.headers['content-length'], contentLength);
     });
 
+    it('disabling does not throw error if interceptor is not set up', async function () {
+      await browser.url('/get.html');
+      assert.equal(await browser.disableInterceptor(), null);
+      assert.deepEqual(await browser.setupInterceptor(), { interceptorDisabled: false, requests: [] });
+    });
+
     it('can stop and restart interceptor', async function () {
       await browser.url('/get.html');
       await browser.setupInterceptor();
       await completedRequest('#button');
-      let requests = await browser.getRequests();      
+      let requests = await browser.getRequests();
       assert.equal(requests.length, 1);
       let ret = await browser.execute(() => window.__webdriverajax);
       assert.equal(ret.interceptorDisabled, false);
       
-      await browser.disableInterceptor();  
+      await browser.disableInterceptor();
       await completedRequest('#button');
       await completedRequest('#button');
       await completedRequest('#button');
@@ -185,7 +191,7 @@ describe('webdriverajax', function testSuite() {
 
       await browser.setupInterceptor();
       await completedRequest('#button');
-      requests = await browser.getRequests(); 
+      requests = await browser.getRequests();
       assert.equal(requests.length, 1);
       ret = await browser.execute(() => window.__webdriverajax);
       assert.equal(ret.interceptorDisabled, false);
