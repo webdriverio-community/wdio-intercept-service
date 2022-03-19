@@ -55,6 +55,14 @@ describe('webdriverajax', function testSuite() {
     assert.equal(typeof browser.setupInterceptor, 'function');
   });
 
+  it('disables and enables interceptor', async function () {
+    await browser.url('/get.html');
+    assert.equal(await browser.disableInterceptor(), null);
+    assert.deepEqual(await browser.setupInterceptor(), { interceptorDisabled: false, requests: [] });
+    assert.deepEqual(await browser.disableInterceptor(), { interceptorDisabled: true, requests: [] });
+    assert.deepEqual(await browser.setupInterceptor(), { interceptorDisabled: false, requests: [] });
+  });
+
   it('should reset expectations', async function () {
     assert.equal(typeof browser.setupInterceptor, 'function');
     await browser.url('/get.html');
@@ -163,39 +171,6 @@ describe('webdriverajax', function testSuite() {
       assert.deepEqual(request.response.body, { OK: true });
       assert.equal(request.response.statusCode, 200);
       assert.equal(request.response.headers['content-length'], contentLength);
-    });
-
-    it('disabling does not throw error if interceptor is not set up', async function () {
-      await browser.url('/get.html');
-      assert.equal(await browser.disableInterceptor(), null);
-      assert.deepEqual(await browser.setupInterceptor(), { interceptorDisabled: false, requests: [] });
-    });
-
-    it('can stop and restart interceptor', async function () {
-      await browser.url('/get.html');
-      await browser.setupInterceptor();
-      await completedRequest('#button');
-      let requests = await browser.getRequests();
-      assert.equal(requests.length, 1);
-      let ret = await browser.execute(() => window.__webdriverajax);
-      assert.equal(ret.interceptorDisabled, false);
-      
-      await browser.disableInterceptor();
-      await completedRequest('#button');
-      await completedRequest('#button');
-      await completedRequest('#button');
-      requests = await browser.getRequests();
-      assert.equal(requests.length, 1);
-      ret = await browser.execute(() => window.__webdriverajax);
-      assert.equal(ret.interceptorDisabled, true);
-
-      await browser.setupInterceptor();
-      await completedRequest('#button');
-      requests = await browser.getRequests();
-      assert.equal(requests.length, 1);
-      ret = await browser.execute(() => window.__webdriverajax);
-      assert.equal(ret.interceptorDisabled, false);
-
     });
 
     it('can get multiple requests at once', async function () {
@@ -399,6 +374,32 @@ describe('webdriverajax', function testSuite() {
       assert.equal(request.response.statusCode, 200);
       assert.equal(request.response.headers['content-length'], contentLength);
       assert.deepEqual(request.response.body, { OK: true });
+    });
+
+    it('can not log requests if disabled', async function () {
+      await browser.url('/get.html');
+      // Set up interceptor and fetch 1 request
+      await browser.setupInterceptor()
+      await completedRequest('#button');
+      let requests = await browser.getRequests();
+      assert.equal(requests.length, 1);
+      
+      // Disable interceptor and verify no further requests are stored
+      await browser.disableInterceptor();
+      await completedRequest('#button');
+      await completedRequest('#button');
+      await completedRequest('#button');
+      requests = await browser.getRequests();
+      assert.equal(requests.length, 1);
+
+      // Reset (/re-setup) interceptor and verify that requests are stored again
+      await browser.setupInterceptor()
+      requests = await browser.getRequests();
+      assert.equal(requests.length, 0);
+      await completedRequest('#button');
+      await completedRequest('#button');
+      requests = await browser.getRequests();
+      assert.equal(requests.length, 2);
     });
   });
 
