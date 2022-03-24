@@ -34,7 +34,7 @@ describe('webdriverajax', function testSuite() {
     await browser.url('/get.html');
     await browser.setupInterceptor();
     const ret = await browser.execute(() => window.__webdriverajax);
-    assert.deepEqual(ret, { requests: [] });
+    assert.deepEqual(ret, { interceptorDisabled: false, requests: [] });
   });
 
   it('sets up the interceptor in standalone mode', async function () {
@@ -53,6 +53,14 @@ describe('webdriverajax', function testSuite() {
     webdriverAjax.before(null, null, browser);
 
     assert.equal(typeof browser.setupInterceptor, 'function');
+  });
+
+  it('disables and enables interceptor', async function () {
+    await browser.url('/get.html');
+    assert.equal(await browser.disableInterceptor(), null);
+    assert.deepEqual(await browser.setupInterceptor(), { interceptorDisabled: false, requests: [] });
+    assert.deepEqual(await browser.disableInterceptor(), { interceptorDisabled: true, requests: [] });
+    assert.deepEqual(await browser.setupInterceptor(), { interceptorDisabled: false, requests: [] });
   });
 
   it('should reset expectations', async function () {
@@ -267,13 +275,13 @@ describe('webdriverajax', function testSuite() {
       await browser.url('/frame.html');
       await browser.setupInterceptor();
       const ret = await browser.execute(() => window.__webdriverajax);
-      assert.deepEqual(ret, { requests: [] });
+      assert.deepEqual(ret, { interceptorDisabled: false, requests: [] });
       const frame = await $('#getinframe');
       await frame.waitForExist();
       await browser.switchToFrame(frame);
       await browser.setupInterceptor();
       const frameRet = await browser.execute(() => window.__webdriverajax);
-      assert.deepEqual(frameRet, { requests: [] });
+      assert.deepEqual(frameRet, { interceptorDisabled: false, requests: [] });
       await browser.expectRequest('GET', '/get.json', 200);
       await completedRequest('#button');
       await browser.assertRequests();
@@ -366,6 +374,32 @@ describe('webdriverajax', function testSuite() {
       assert.equal(request.response.statusCode, 200);
       assert.equal(request.response.headers['content-length'], contentLength);
       assert.deepEqual(request.response.body, { OK: true });
+    });
+
+    it('can not log requests if disabled', async function () {
+      await browser.url('/get.html');
+      // Set up interceptor and fetch 1 request
+      await browser.setupInterceptor()
+      await completedRequest('#button');
+      let requests = await browser.getRequests();
+      assert.equal(requests.length, 1);
+      
+      // Disable interceptor and verify no further requests are stored
+      await browser.disableInterceptor();
+      await completedRequest('#button');
+      await completedRequest('#button');
+      await completedRequest('#button');
+      requests = await browser.getRequests();
+      assert.equal(requests.length, 1);
+
+      // Reset (/re-setup) interceptor and verify that requests are stored again
+      await browser.setupInterceptor()
+      requests = await browser.getRequests();
+      assert.equal(requests.length, 0);
+      await completedRequest('#button');
+      await completedRequest('#button');
+      requests = await browser.getRequests();
+      assert.equal(requests.length, 2);
     });
   });
 

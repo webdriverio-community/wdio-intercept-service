@@ -42,6 +42,7 @@ class WebdriverAjax {
     }
 
     browser.addCommand('setupInterceptor', setup.bind(this));
+    browser.addCommand('disableInterceptor', disableInterceptor.bind(this));
     browser.addCommand('getExpectations', getExpectations.bind(this));
     browser.addCommand('resetExpectations', resetExpectations.bind(this));
     browser.addCommand('expectRequest', expectRequest.bind(this));
@@ -53,7 +54,10 @@ class WebdriverAjax {
     browser.addCommand('hasPendingRequests', hasPendingRequests);
     browser.addCommand('getRequest', getRequest);
     browser.addCommand('getRequests', getRequests);
-
+    
+    function disableInterceptor() {
+      return browser.executeAsync(interceptor.disableInterceptor);
+    }
     function setup() {
       return browser.executeAsync(interceptor.setup);
     }
