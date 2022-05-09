@@ -53,7 +53,7 @@
     "geckodriver": "^2.0.4",
     "husky": "^8.0.0",
     "prettier": "^2.4.1",
-    "release-it": "^14.11.6",
+    "release-it": "^15.0.0",
     "wdio-chromedriver-service": "^7.2.2",
     "wdio-geckodriver-service": "^2.0.3",
     "webdriverio": "^7.16.3"
