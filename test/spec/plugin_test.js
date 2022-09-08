@@ -3,6 +3,7 @@
 const assert = require('assert');
 const { remote } = require('webdriverio');
 const WebdriverAjax = require('../../index').default;
+const { TestHeaders } = require('../utils/header');
 // Since we serve the content from a file, the content-length depends on if the host is
 // Windows (CRLF) or not (LF).
 const contentLength = require('fs')
@@ -270,6 +271,25 @@ describe('webdriverajax', function testSuite() {
       const request = await browser.getRequest(0);
       assert.deepEqual(request.body, { foo: ['bar'] });
     });
+
+    for (const method of [
+      { name: 'XHR', file: 'post.html' },
+      { name: 'fetch', file: 'postfetch.html' },
+    ]) {
+      it('can access response headers with ' + method.name, async function () {
+        await browser.url(`/${method.file}`);
+        await browser.setupInterceptor();
+        await completedRequest('#buttonstring');
+        const request = await browser.getRequest(0);
+        const headers = request.response.headers;
+        assert.equal(
+          headers[TestHeaders.simple.name],
+          TestHeaders.simple.value
+        );
+        assert.equal(headers[TestHeaders.colon.name], TestHeaders.colon.value);
+        assert.equal(headers[TestHeaders.csl.name], TestHeaders.csl.value);
+      });
+    }
 
     it('can get initialised inside an iframe', async function () {
       await browser.url('/frame.html');

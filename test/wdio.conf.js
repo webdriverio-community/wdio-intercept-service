@@ -1,5 +1,6 @@
 const path = require('path');
 const plugin = require('../index.js').default;
+const { injectTestHeaders } = require('./utils/header');
 
 // To support testing in both GitHub Actions and locally, configure
 // `wdio-chromedriver-service` based on environment variables.
@@ -127,6 +128,7 @@ exports.config = {
           {
             mount: '/',
             middleware: (req, res) => {
+              injectTestHeaders(res);
               const delay = req.query.slow === 'true' ? 1000 : 0;
               setTimeout(
                 () => res.sendFile(`${__dirname}/site${req.path}`),

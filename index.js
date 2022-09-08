@@ -329,18 +329,21 @@ class WebdriverAjax {
       return normalized;
     }
 
-    function parseResponseHeaders(stringOrObject) {
-      if (typeof stringOrObject == 'object') {
-        return stringOrObject;
-      }
+    // parses raw header to key-value objects
+    // (best effort compliance with RFC)
+    function parseResponseHeaders(rawHeader) {
       const headers = {};
-      const arr = stringOrObject.trim().replace(/\r/g, '').split('\n');
-      arr.forEach((header) => {
-        const match = header.match(/^(.+)?:\s?(.+)$/);
-        if (match) {
-          headers[match[1].toLowerCase()] = match[2];
+      const lines = rawHeader.trim().split(/(?:\r?\n)+/);
+      for (const line of lines) {
+        const parts = line.split(/(?<=^[^:]*):/);
+        const key = parts[0].trim().toLowerCase();
+        const value = parts[1].trim();
+        if (typeof headers[key] == 'undefined') {
+          headers[key] = value;
+        } else if (typeof headers[key] == 'string') {
+          headers[key] = headers[key] + ', ' + value;
         }
-      });
+      }
       return headers;
     }
 
