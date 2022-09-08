@@ -1,3 +1,4 @@
+/* eslint-disable wdio/no-pause */
 'use strict';
 
 const assert = require('assert');
