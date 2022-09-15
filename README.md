@@ -125,6 +125,10 @@ This library offers a small amount of configuration when issuing commands. Confi
 
 Captures ajax calls in the browser. You always have to call the setup function in order to assess requests later.
 
+### browser.disableInterceptor()
+
+Prevents further capture of ajax calls in the browser. All captured request information is removed. Most users will not need to disable the interceptor, but if a test is particularly long-running or exceeds the session storage capacity, then disabling the interceptor can be helpful.
+
 ### browser.expectRequest(method: string, url: string, statusCode: number)
 
 Make expectations about the ajax requests that are going to be initiated during the test. Can (and should) be chained. The order of the expectations should map to the order of the requests being made.
