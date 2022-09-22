@@ -43,6 +43,7 @@ class WebdriverAjax {
 
     browser.addCommand('setupInterceptor', setup.bind(this));
     browser.addCommand('disableInterceptor', disableInterceptor.bind(this));
+    browser.addCommand('excludeUrls', excludeUrls.bind(this))
     browser.addCommand('getExpectations', getExpectations.bind(this));
     browser.addCommand('resetExpectations', resetExpectations.bind(this));
     browser.addCommand('expectRequest', expectRequest.bind(this));
@@ -58,6 +59,11 @@ class WebdriverAjax {
     function disableInterceptor() {
       return browser.executeAsync(interceptor.disableInterceptor);
     }
+
+    function excludeUrls(urls) {
+      return browser.executeAsync(interceptor.excludeUrls, urls)
+    }
+
     function setup() {
       return browser.executeAsync(interceptor.setup);
     }

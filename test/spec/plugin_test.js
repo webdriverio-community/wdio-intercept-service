@@ -65,6 +65,18 @@ describe('webdriverajax', function testSuite() {
     assert.deepEqual(await browser.setupInterceptor(), { interceptorDisabled: false, requests: [] });
   });
 
+  it.only('can exclude urls from being stored', async function () {
+    await browser.url('/multiple_methods.html');
+    await browser.setupInterceptor();
+    await browser.excludeUrls(["ge.*js"])
+    await browser.expectRequest('POST', '/post.json', 200);
+    await completedRequest('#getbutton');
+    await completedRequest('#postbutton');
+    
+    await browser.assertRequests();
+    await browser.assertExpectedRequestsOnly();
+  });
+
   it('should reset expectations', async function () {
     assert.equal(typeof browser.setupInterceptor, 'function');
     await browser.url('/get.html');
