@@ -1,6 +1,9 @@
 ## wdio-intercept-service changelog
 
 ### [ [>](https://github.com/webdriverio-community/wdio-intercept-service/tree/v.next) ] v.next / <DATE>
+- Add new method to allow excluding urls from being saved to session storage
+
+### [ [>](https://github.com/webdriverio-community/wdio-intercept-service/tree/v.next) ] v.next / <DATE>
 - Fix header-parsing code to be RFC-compliant (thanks @jbebe)
 - Add new method to allow disabling request interception (thanks @muhserks)
 - Disable the wdio-pause lint rule (thanks @tehhowch)
