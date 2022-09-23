@@ -65,7 +65,7 @@ describe('webdriverajax', function testSuite() {
     assert.deepEqual(await browser.setupInterceptor(), { interceptorDisabled: false, requests: [] });
   });
 
-  it.only('can exclude urls from being stored', async function () {
+  it('can exclude urls from being stored', async function () {
     await browser.url('/multiple_methods.html');
     await browser.setupInterceptor();
     await browser.excludeUrls(["ge.*js"])
