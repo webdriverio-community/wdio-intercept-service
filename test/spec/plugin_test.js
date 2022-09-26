@@ -65,7 +65,7 @@ describe('webdriverajax', function testSuite() {
     assert.deepEqual(await browser.setupInterceptor(), { interceptorDisabled: false, excludedUrls: [], requests: [] });
   });
 
-  it('can exclude urls from being stored', async function () {
+  it('can exclude urls from being stored when passed a string', async function () {
     await browser.url('/multiple_methods.html');
     await browser.setupInterceptor();
     await browser.excludeUrls(["ge.*js"])
@@ -76,6 +76,35 @@ describe('webdriverajax', function testSuite() {
     await browser.assertRequests();
     await browser.assertExpectedRequestsOnly();
   });
+
+  it('can exclude urls from being stored when passed a regex', async function () {
+    await browser.url('/multiple_methods.html');
+    await browser.setupInterceptor();
+    const regex = /ge.*js/
+    await browser.excludeUrls([regex])
+    await completedRequest('#getbutton');
+    await completedRequest('#postbutton');
+    await browser.expectRequest('POST', '/post.json', 200);
+    
+    await browser.assertRequests();
+    await browser.assertExpectedRequestsOnly();
+  });  
+
+
+  it('can exclude urls from being stored when passed an array with regex and string', async function () {
+    await browser.url('/pending.html');
+    await browser.setupInterceptor();
+    await browser.excludeUrls([/\/post.json\?type=xhr/, ".*slow=true.*"])
+    await browser.expectRequest('POST', '/post.json?type=fetch', 200);
+    await $('#slow') /* /post.json?slow=true&type=xhr */
+    .click()
+    .then(() => completedRequest('#fast')); /* /post.json?type=xhr */
+    await completedRequest('#fetchfast'); /* /post.json?type=fetch */
+    
+
+    await browser.assertRequests();
+    await browser.assertExpectedRequestsOnly();
+  });    
 
   it('should reset expectations', async function () {
     assert.equal(typeof browser.setupInterceptor, 'function');

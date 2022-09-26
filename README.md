@@ -129,10 +129,10 @@ Captures ajax calls in the browser. You always have to call the setup function i
 
 Prevents further capture of ajax calls in the browser. All captured request information is removed. Most users will not need to disable the interceptor, but if a test is particularly long-running or exceeds the session storage capacity, then disabling the interceptor can be helpful.
 
-### browser.excludeUrls()
+### browser.excludeUrls((string | RegExp)[]: urlRegexes)
 
-Excludes requests from certain urls from being recorded. It takes an array of strings, they may be regular expressions, and before writing to storage,
-checks if the url of the request matches the regex. If it does, the request is not written to storage. Like disableInterceptor, this can be helpful 
+Excludes requests from certain urls from being recorded. It takes an array of strings or regular expressions. Before writing to storage,
+tests the url of the request against each string or regex. If it does, the request is not written to storage. Like disableInterceptor, this can be helpful 
 if running into problems with session storage exceeding capacity.
 
 ### browser.expectRequest(method: string, url: string, statusCode: number)
