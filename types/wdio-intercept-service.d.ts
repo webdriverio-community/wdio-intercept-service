@@ -64,6 +64,8 @@ type AsyncSync<T> = WebdriverIO.Browser extends WebDriver.Client
 declare module WebdriverIO {
   interface Browser {
     setupInterceptor(): AsyncSync<void>;
+    disableInterceptor(): AsyncSync<void>;
+    excludeUrls(urls: (string | RegExp)[]): AsyncSync<void>;
     expectRequest(
       method: WdioInterceptorService.HTTPMethod,
       url: string | RegExp,
