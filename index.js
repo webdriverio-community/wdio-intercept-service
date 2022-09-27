@@ -62,7 +62,9 @@ class WebdriverAjax {
 
     function excludeUrls(urls) {
       urls = urls.map(function(regex) {
-        return typeof regex === 'object' ? regex.source : regex
+        return typeof regex === 'object' ? 
+        {source: regex.source, flags: regex.flags} : 
+        {source: regex, flags: undefined}
       })
       return browser.executeAsync(interceptor.excludeUrls, urls)
     }

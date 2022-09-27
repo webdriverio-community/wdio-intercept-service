@@ -80,7 +80,7 @@ describe('webdriverajax', function testSuite() {
   it('can exclude urls from being stored when passed a regex', async function () {
     await browser.url('/multiple_methods.html');
     await browser.setupInterceptor();
-    const regex = /ge.*js/
+    const regex = /GE.*js/i
     await browser.excludeUrls([regex])
     await completedRequest('#getbutton');
     await completedRequest('#postbutton');
