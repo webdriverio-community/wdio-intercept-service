@@ -36,7 +36,11 @@ describe('webdriverajax', function testSuite() {
     await browser.url('/get.html');
     await browser.setupInterceptor();
     const ret = await browser.execute(() => window.__webdriverajax);
-    assert.deepEqual(ret, { interceptorDisabled: false, excludedUrls: [], requests: [] });
+    assert.deepEqual(ret, {
+      interceptorDisabled: false,
+      excludedUrls: [],
+      requests: [],
+    });
   });
 
   it('sets up the interceptor in standalone mode', async function () {
@@ -60,19 +64,31 @@ describe('webdriverajax', function testSuite() {
   it('disables and enables interceptor', async function () {
     await browser.url('/get.html');
     assert.equal(await browser.disableInterceptor(), null);
-    assert.deepEqual(await browser.setupInterceptor(), { interceptorDisabled: false, excludedUrls: [], requests: [] });
-    assert.deepEqual(await browser.disableInterceptor(), { interceptorDisabled: true, excludedUrls: [],requests: [] });
-    assert.deepEqual(await browser.setupInterceptor(), { interceptorDisabled: false, excludedUrls: [], requests: [] });
+    assert.deepEqual(await browser.setupInterceptor(), {
+      interceptorDisabled: false,
+      excludedUrls: [],
+      requests: [],
+    });
+    assert.deepEqual(await browser.disableInterceptor(), {
+      interceptorDisabled: true,
+      excludedUrls: [],
+      requests: [],
+    });
+    assert.deepEqual(await browser.setupInterceptor(), {
+      interceptorDisabled: false,
+      excludedUrls: [],
+      requests: [],
+    });
   });
 
   it('can exclude urls from being stored when passed a string', async function () {
     await browser.url('/multiple_methods.html');
     await browser.setupInterceptor();
-    await browser.excludeUrls(["ge.*js"])
+    await browser.excludeUrls(['ge.*js']);
     await browser.expectRequest('POST', '/post.json', 200);
     await completedRequest('#getbutton');
     await completedRequest('#postbutton');
-    
+
     await browser.assertRequests();
     await browser.assertExpectedRequestsOnly();
   });
@@ -80,31 +96,29 @@ describe('webdriverajax', function testSuite() {
   it('can exclude urls from being stored when passed a regex', async function () {
     await browser.url('/multiple_methods.html');
     await browser.setupInterceptor();
-    const regex = /GE.*js/i
-    await browser.excludeUrls([regex])
+    const regex = /GE.*js/i;
+    await browser.excludeUrls([regex]);
     await completedRequest('#getbutton');
     await completedRequest('#postbutton');
     await browser.expectRequest('POST', '/post.json', 200);
-    
+
     await browser.assertRequests();
     await browser.assertExpectedRequestsOnly();
-  });  
-
+  });
 
   it('can exclude urls from being stored when passed an array with regex and string', async function () {
     await browser.url('/pending.html');
     await browser.setupInterceptor();
-    await browser.excludeUrls([/\/post.json\?type=xhr/, ".*slow=true.*"])
+    await browser.excludeUrls([/\/post.json\?type=xhr/, '.*slow=true.*']);
     await browser.expectRequest('POST', '/post.json?type=fetch', 200);
     await $('#slow') /* /post.json?slow=true&type=xhr */
-    .click()
-    .then(() => completedRequest('#fast')); /* /post.json?type=xhr */
+      .click()
+      .then(() => completedRequest('#fast')); /* /post.json?type=xhr */
     await completedRequest('#fetchfast'); /* /post.json?type=fetch */
-    
 
     await browser.assertRequests();
     await browser.assertExpectedRequestsOnly();
-  });    
+  });
 
   it('should reset expectations', async function () {
     assert.equal(typeof browser.setupInterceptor, 'function');
@@ -337,13 +351,21 @@ describe('webdriverajax', function testSuite() {
       await browser.url('/frame.html');
       await browser.setupInterceptor();
       const ret = await browser.execute(() => window.__webdriverajax);
-      assert.deepEqual(ret, { interceptorDisabled: false, excludedUrls: [], requests: [] });
+      assert.deepEqual(ret, {
+        interceptorDisabled: false,
+        excludedUrls: [],
+        requests: [],
+      });
       const frame = await $('#getinframe');
       await frame.waitForExist();
       await browser.switchToFrame(frame);
       await browser.setupInterceptor();
       const frameRet = await browser.execute(() => window.__webdriverajax);
-      assert.deepEqual(frameRet, { interceptorDisabled: false, excludedUrls: [], requests: [] });
+      assert.deepEqual(frameRet, {
+        interceptorDisabled: false,
+        excludedUrls: [],
+        requests: [],
+      });
       await browser.expectRequest('GET', '/get.json', 200);
       await completedRequest('#button');
       await browser.assertRequests();
@@ -441,11 +463,11 @@ describe('webdriverajax', function testSuite() {
     it('can not log requests if disabled', async function () {
       await browser.url('/get.html');
       // Set up interceptor and fetch 1 request
-      await browser.setupInterceptor()
+      await browser.setupInterceptor();
       await completedRequest('#button');
       let requests = await browser.getRequests();
       assert.equal(requests.length, 1);
-      
+
       // Disable interceptor and verify no further requests are stored
       await browser.disableInterceptor();
       await completedRequest('#button');
@@ -455,7 +477,7 @@ describe('webdriverajax', function testSuite() {
       assert.equal(requests.length, 1);
 
       // Reset (/re-setup) interceptor and verify that requests are stored again
-      await browser.setupInterceptor()
+      await browser.setupInterceptor();
       requests = await browser.getRequests();
       assert.equal(requests.length, 0);
       await completedRequest('#button');
