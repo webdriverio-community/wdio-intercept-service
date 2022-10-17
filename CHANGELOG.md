@@ -4,6 +4,7 @@
 - Fix header-parsing code to be RFC-compliant (thanks @jbebe)
 - Add new method to allow disabling request interception (thanks @muhserks)
 - Disable the wdio-pause lint rule (thanks @tehhowch)
+- Add new method to allow excluding urls from being saved to session storage
 
 ### [ [>](https://github.com/webdriverio-community/wdio-intercept-service/tree/v4.2.2) ] 4.2.2 / 28.02.2022
 - Wrap xhr::abort and add tests for angular (thanks @lildesert)
