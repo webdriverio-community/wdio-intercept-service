@@ -328,6 +328,11 @@ class WebdriverAjax {
           body: parseBody(req.body),
           statusCode: req.statusCode,
         };
+        if (req.headers === '') {
+          console.warn(
+            `${transformed.method} request to ${req.url} (HTTP ${req.statusCode}) had no response headers!`
+          );
+        }
       }
       return transformed;
     }

@@ -365,9 +365,7 @@ describe('webdriverajax', function testSuite() {
       await $('#buttonform').click();
       mock.restore();
       const requests = await browser.getRequests();
-      expect(JSON.stringify(requests[0].response.headers)).toBe(
-        JSON.stringify({})
-      );
+      assert.deepEqual(requests[0].response.headers, {});
     });
 
     it('can get initialised inside an iframe', async function () {
