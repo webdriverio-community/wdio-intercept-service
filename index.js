@@ -328,7 +328,7 @@ class WebdriverAjax {
           body: parseBody(req.body),
           statusCode: req.statusCode,
         };
-        if (req.headers === '') {
+        if (!req.headers) {
           console.warn(
             `${transformed.method} request to ${req.url} (HTTP ${req.statusCode}) had no response headers!`
           );
@@ -349,7 +349,7 @@ class WebdriverAjax {
     // (best effort compliance with RFC)
     function parseResponseHeaders(rawHeader) {
       const headers = {};
-      if (rawHeader === '') {
+      if (!rawHeader) {
         return headers;
       }
       const lines = rawHeader.trim().split(/(?:\r?\n)+/);
