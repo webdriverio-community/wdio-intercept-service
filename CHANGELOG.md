@@ -3,11 +3,11 @@
 ### [ [>](https://github.com/webdriverio-community/wdio-intercept-service/tree/v.next) ] v.next / <DATE>
 - Handle responses with no headers (thanks @dragosMC91)
 
-### [ [>](https://github.com/webdriverio-community/wdio-intercept-service/tree/v.next) ] 4.3.0 / 17.10.2022
+### [ [>](https://github.com/webdriverio-community/wdio-intercept-service/tree/v4.3.0) ] 4.3.0 / 17.10.2022
 - Fix header-parsing code to be RFC-compliant (thanks @jbebe)
 - Add new method to allow disabling request interception (thanks @muhserks)
 - Disable the wdio-pause lint rule (thanks @tehhowch)
-- Add new method to allow excluding urls from being saved to session storage
+- Add new method to allow excluding urls from being saved to session storage (thanks @x3700x)
 
 ### [ [>](https://github.com/webdriverio-community/wdio-intercept-service/tree/v4.2.2) ] 4.2.2 / 28.02.2022
 - Wrap xhr::abort and add tests for angular (thanks @lildesert)
