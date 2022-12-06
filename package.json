@@ -56,7 +56,7 @@
     "release-it": "^15.5.1",
     "wdio-chromedriver-service": "^8.0.0",
     "wdio-geckodriver-service": "^4.0.0",
-    "webdriverio": "^7.27.0"
+    "webdriverio": "^8.0.6"
   },
   "files": [
     "lib/",
