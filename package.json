@@ -4,7 +4,7 @@
   "description": "Capture and assert HTTP ajax calls in webdriver.io 🕸",
   "main": "index.js",
   "scripts": {
-    "fix": "prettier --write \"**/*.{js,ts}\"",
+    "fix": "prettier --write \"**/*.{js,ts,yml,yaml}\"",
     "lint": "eslint --fix .",
     "release": "release-it --github.release",
     "release:ci": "npm run release -- --ci --npm.skipChecks --no-git.requireCleanWorkingDir",
