@@ -1,7 +1,7 @@
 ## wdio-intercept-service changelog
 
 ### [ [>](https://github.com/webdriverio-community/wdio-intercept-service/tree/v.next) ] v.next / <DATE>
-
+- Handle responses with no headers (thanks @dragosMC91)
 
 ### [ [>](https://github.com/webdriverio-community/wdio-intercept-service/tree/v4.3.0) ] 4.3.0 / 17.10.2022
 - Fix header-parsing code to be RFC-compliant (thanks @jbebe)

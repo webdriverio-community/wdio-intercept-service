@@ -347,6 +347,27 @@ describe('webdriverajax', function testSuite() {
       });
     }
 
+    it('can parse responses with empty headers', async function () {
+      // test is disabled on firefox since the mock service only works on chrome
+      if (browser.capabilities.browserName === 'firefox') {
+        this.skip();
+      }
+      await browser.url('/post.html');
+      const mock = await browser.mock('**' + '/post*');
+      mock.respond(
+        {},
+        {
+          fetchResponse: false,
+          headers: () => ({}),
+        }
+      );
+      await browser.setupInterceptor();
+      await $('#buttonform').click();
+      mock.restore();
+      const requests = await browser.getRequests();
+      assert.deepEqual(requests[0].response.headers, {});
+    });
+
     it('can get initialised inside an iframe', async function () {
       await browser.url('/frame.html');
       await browser.setupInterceptor();
