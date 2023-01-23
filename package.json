@@ -45,7 +45,7 @@
     "@wdio/mocha-framework": "^7.26.0",
     "@wdio/spec-reporter": "^7.26.0",
     "@wdio/static-server-service": "^7.26.0",
-    "chromedriver": "^108.0.0",
+    "chromedriver": "^109.0.0",
     "eslint": "^8.29.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
