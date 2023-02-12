@@ -4,7 +4,7 @@
 const assert = require('assert');
 const { remote } = require('webdriverio');
 const WebdriverAjax = require('../../index').default;
-const { TestHeaders } = require('../utils/header');
+const { TestHeaders } = require('../utils/header-parser');
 // Since we serve the content from a file, the content-length depends on if the host is
 // Windows (CRLF) or not (LF).
 const contentLength = require('fs')
@@ -13,6 +13,15 @@ const contentLength = require('fs')
 
 describe('webdriverajax', function testSuite() {
   this.timeout(process.env.CI ? 100000 : 10000);
+
+  this.afterEach(async function () {
+    if (this.currentTest.isFailed()) {
+      const logs = await browser.getLogs?.('browser');
+      if (logs) {
+        console.log('Browser Logs', logs);
+      }
+    }
+  });
 
   const wait = process.env.CI ? 10000 : 1000;
 
@@ -129,6 +138,51 @@ describe('webdriverajax', function testSuite() {
     assert.equal((await browser.getExpectations()).length, 2);
     await browser.resetExpectations();
     assert.equal((await browser.getExpectations()).length, 0);
+  });
+
+  for (const config of [
+    {
+      when: 'headers are simple',
+      buttonId: '#simple-headers-fetch',
+      header: TestHeaders.simple,
+    },
+    {
+      when: 'header value has colon',
+      buttonId: '#colon-headers-fetch',
+      header: TestHeaders.colon,
+    },
+    {
+      when: 'header value has comma',
+      buttonId: '#multivalue-headers-fetch',
+      header: TestHeaders.csl,
+    },
+  ]) {
+    it(
+      'can access response headers when response ' + config.when,
+      async function () {
+        await browser.url('/header-parsing.html');
+        await browser.setupInterceptor();
+        await completedRequest(config.buttonId);
+        const request = await browser.getRequest(0);
+        const headers = request.response.headers;
+
+        assert.strictEqual(headers[config.header.name], config.header.value);
+      }
+    );
+  }
+
+  it('can parse response when no headers', async function () {
+    await browser.url('/header-parsing.html');
+    await browser.setupInterceptor();
+    await completedRequest('#empty-headers-fetch');
+    const request = await browser.getRequest(0);
+    const headers = request.response.headers;
+
+    assert.deepEqual(
+      headers,
+      {},
+      'should parse empty headers into empty object'
+    );
   });
 
   describe('XHR API', async function () {
@@ -327,25 +381,6 @@ describe('webdriverajax', function testSuite() {
       const request = await browser.getRequest(0);
       assert.deepEqual(request.body, { foo: ['bar'] });
     });
-
-    for (const method of [
-      { name: 'XHR', file: 'post.html' },
-      { name: 'fetch', file: 'postfetch.html' },
-    ]) {
-      it('can access response headers with ' + method.name, async function () {
-        await browser.url(`/${method.file}`);
-        await browser.setupInterceptor();
-        await completedRequest('#buttonstring');
-        const request = await browser.getRequest(0);
-        const headers = request.response.headers;
-        assert.equal(
-          headers[TestHeaders.simple.name],
-          TestHeaders.simple.value
-        );
-        assert.equal(headers[TestHeaders.colon.name], TestHeaders.colon.value);
-        assert.equal(headers[TestHeaders.csl.name], TestHeaders.csl.value);
-      });
-    }
 
     it('can parse responses with empty headers', async function () {
       // test is disabled on firefox since the mock service only works on chrome

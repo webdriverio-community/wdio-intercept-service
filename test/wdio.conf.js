@@ -1,6 +1,6 @@
 const path = require('path');
 const plugin = require('../index.js').default;
-const { injectTestHeaders } = require('./utils/header');
+const { headerMiddleware } = require('./utils/header-parser');
 
 // To support testing in both GitHub Actions and locally, configure
 // `wdio-chromedriver-service` based on environment variables.
@@ -124,11 +124,14 @@ exports.config = {
       {
         folders: [{ mount: '/', path: `${__dirname}/site` }],
         middleware: [
+          {
+            mount: '*',
+            middleware: headerMiddleware,
+          },
           // Use a simple middleware to respond to non-GET requests:
           {
             mount: '/',
             middleware: (req, res) => {
-              injectTestHeaders(res);
               const delay = req.query.slow === 'true' ? 1000 : 0;
               setTimeout(
                 () => res.sendFile(`${__dirname}/site${req.path}`),
