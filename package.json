@@ -41,7 +41,7 @@
   "homepage": "https://github.com/webdriverio-community/wdio-intercept-service#readme",
   "devDependencies": {
     "@wdio/cli": "^7.27.0",
-    "@wdio/local-runner": "^7.27.0",
+    "@wdio/local-runner": "^8.3.5",
     "@wdio/mocha-framework": "^7.26.0",
     "@wdio/spec-reporter": "^7.26.0",
     "@wdio/static-server-service": "^7.26.0",
