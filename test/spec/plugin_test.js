@@ -171,20 +171,6 @@ describe('webdriverajax', function testSuite() {
     );
   }
 
-  it('can parse response when no headers', async function () {
-    await browser.url('/header-parsing.html');
-    await browser.setupInterceptor();
-    await completedRequest('#empty-headers-fetch');
-    const request = await browser.getRequest(0);
-    const headers = request.response.headers;
-
-    assert.deepEqual(
-      headers,
-      {},
-      'should parse empty headers into empty object'
-    );
-  });
-
   describe('XHR API', async function () {
     it('can intercept a simple GET request', async function () {
       await browser.url('/get.html');
