@@ -1,6 +1,6 @@
 const path = require('path');
 const plugin = require('../index.js').default;
-const { headerMiddleware } = require('./utils/header-parser');
+const localServer = require('./utils/express');
 
 // To support testing in both GitHub Actions and locally, configure
 // `wdio-chromedriver-service` based on environment variables.
@@ -116,35 +116,7 @@ exports.config = {
   // Services take over a specific job you don't want to take care of. They enhance
   // your test setup with almost no effort. Unlike plugins, they don't add new
   // commands. Instead, they hook themselves up into the test process.
-  services: [
-    chromedriver,
-    geckodriver,
-    [
-      'static-server',
-      {
-        folders: [{ mount: '/', path: `${__dirname}/site` }],
-        middleware: [
-          {
-            mount: '*',
-            middleware: headerMiddleware,
-          },
-          // Use a simple middleware to respond to non-GET requests:
-          {
-            mount: '/',
-            middleware: (req, res) => {
-              const delay = req.query.slow === 'true' ? 1000 : 0;
-              setTimeout(
-                () => res.sendFile(`${__dirname}/site${req.path}`),
-                delay
-              );
-            },
-          },
-        ],
-        port: 8080,
-      },
-    ],
-    [plugin, {}],
-  ],
+  services: [chromedriver, geckodriver, [plugin, {}]],
   // Framework you want to run your specs with.
   // The following are supported: Mocha, Jasmine, and Cucumber
   // see also: https://webdriver.io/docs/frameworks.html
@@ -163,5 +135,14 @@ exports.config = {
   mochaOpts: {
     ui: 'bdd',
     timeout: 60000,
+  },
+
+  onPrepare: function (/* config, capabilities */) {
+    // Start the express server and configure middleware. Inspired by wdio-static-server-service, but
+    // allows us to run middleware for HTTP GET requests, too.
+    return localServer.onPrepare(...arguments);
+  },
+  onComplete: function (/* exitCode, config, capabilities, results */) {
+    return localServer.onComplete(...arguments);
   },
 };

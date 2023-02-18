@@ -28,7 +28,7 @@ function headerMiddleware(req, resp, next) {
         console.log('removing header', name);
         resp.removeHeader(name);
       });
-      resp.send();
+      resp.status(204).end();
       return;
     case 'simple':
       resp.setHeader(TestHeaders.simple.name, TestHeaders.simple.value);
