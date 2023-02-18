@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Header Parsing Test requests</title>
+</head>
+<body>
+  <p id="text">This file makes requests that get various response headers</p>
+  <button id="empty-headers-fetch">Press me for a fetch response with no headers</button>
+  <button id="simple-headers-fetch">Press me for a fetch response with a simple header</button>
+  <button id="colon-headers-fetch">Press me for a fetch response with a response header with colons</button>
+  <button id="multivalue-headers-fetch">Press me for a fetch response with a a header with multiple values</button>
+  <button id="empty-headers-xhr">Press me for an XHR response with no headers</button>
+  <button id="simple-headers-xhr">Press me for a fetch response with a simple header</button>
+  <button id="colon-headers-xhr">Press me for an XHR response with a response header with colons</button>
+  <button id="multivalue-headers-xhr">Press me for an XHR response with a header with multiple values</button>
+  <div id="response"></div>
+  <script>
+    'use strict';
+    (function (window, document) {
+      var url = '/post.json';
+      var method = 'POST';
+      var payload = 'foobar';
+      function toQueryString(id) {
+        return '?responseHeaders=' + id.replace('#', '').split('-')[0];
+      }
+
+      ['#empty-headers-fetch','#simple-headers-fetch','#colon-headers-fetch','#multivalue-headers-fetch'].forEach(function (id) {
+        var btn = document.querySelector(id);
+        if (btn) {
+          btn.addEventListener('click', function (evt) {
+            fetch(url + toQueryString(id), {
+              method: method,
+              body: payload,
+            }).then(function () {
+              document.querySelector('#response').textContent += (id + '\n');
+            });
+          });
+        }
+      });
+      ['#empty-headers-xhr','#simple-headers-xhr','#colon-headers-xhr','#multivalue-headers-xhr'].forEach(function (id) {
+        var btn = document.querySelector(id);
+        if (btn) {
+          btn.addEventListener('click', function (evt) {
+            var xhr = new XMLHttpRequest();
+            xhr.open(method, url + toQueryString(id));
+            xhr.addEventListener('load', function () {
+              document.querySelector('#response').textContent += "XHR response type: " + xhr.responseType
+            });
+            xhr.send(payload);
+          });
+        }
+      });
+    })(window, window.document);
+  </script>
+</body>
+</html>
