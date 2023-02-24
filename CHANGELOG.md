@@ -1,8 +1,11 @@
 ## wdio-intercept-service changelog
 
 ### [ [>](https://github.com/webdriverio-community/wdio-intercept-service/tree/v.next) ] v.next / <DATE>
+
+### [ [>](https://github.com/webdriverio-community/wdio-intercept-service/tree/v4.3.0) ] 4.4.0 / 24.02.2023
 - Promptly throw if the user passes an invalid "index" parameter to `getRequest`
 - Use Express directly, rather than wdio-static-server-service
+- Upgrade WDIO dependencies to latest v8
 
 ### [ [>](https://github.com/webdriverio-community/wdio-intercept-service/tree/v4.3.0) ] 4.3.1 / 21.12.2022
 - Handle responses with no headers (thanks @dragosMC91)
