@@ -771,4 +771,20 @@ describe('webdriverajax', function testSuite() {
       });
     });
   });
+
+  describe('getRequest', function () {
+    it('throws a TypeError if the index is given and not a number', async function () {
+      await assert.rejects(
+        () => browser.getRequest({ includePending: true }),
+        /TypeError.+index.+non-negative integer/
+      );
+    });
+
+    it('throws a RangeError if the index is given but is negative', async function () {
+      await assert.rejects(
+        () => browser.getRequest(-1),
+        /RangeError.+index.+non-negative integer/
+      );
+    });
+  });
 });

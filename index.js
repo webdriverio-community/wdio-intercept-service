@@ -278,16 +278,25 @@ class WebdriverAjax {
     }
 
     async function getRequest(index, options = {}) {
+      const hasIndex = typeof index === 'number';
+      if (typeof index !== 'undefined' && !hasIndex) {
+        throw new TypeError(
+          `${PKG_PREFIX}the "index" property must be a non-negative integer`
+        );
+      }
+      if (hasIndex && index < 0) {
+        throw new RangeError(
+          `${PKG_PREFIX}the "index" property must be a non-negative integer`
+        );
+      }
       const request = await browser.execute(
         interceptor.getRequest,
-        index > -1 ? index : undefined,
+        hasIndex ? index : undefined,
         options
       );
       if (!request) {
-        if (index != null) {
-          return Promise.reject(
-            new Error('Could not find request with index ' + index)
-          );
+        if (hasIndex) {
+          throw new Error('Could not find request with index ' + index);
         }
         return [];
       }
