@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "fix": "prettier --write \"**/*.{js,ts,yml,yaml}\"",
+    "prettier:check": "prettier --check \"**/*.{js,ts,yml,yaml}\"",
     "lint": "eslint --fix .",
     "release": "release-it --github.release",
     "release:ci": "npm run release -- --ci --npm.skipChecks --no-git.requireCleanWorkingDir",
