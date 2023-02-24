@@ -1,7 +1,13 @@
 ## wdio-intercept-service changelog
 
 ### [ [>](https://github.com/webdriverio-community/wdio-intercept-service/tree/v.next) ] v.next / <DATE>
+- Promptly throw if the user passes an invalid "index" parameter to `getRequest`
+- Use Express directly, rather than wdio-static-server-service
+
+### [ [>](https://github.com/webdriverio-community/wdio-intercept-service/tree/v4.3.0) ] 4.3.1 / 21.12.2022
 - Handle responses with no headers (thanks @dragosMC91)
+- Update GitHub Actions workflows to enable auto-merged dependabot PRs
+- Upgrade WDIO dependencies to latest v7, lockfile v2
 
 ### [ [>](https://github.com/webdriverio-community/wdio-intercept-service/tree/v4.3.0) ] 4.3.0 / 17.10.2022
 - Fix header-parsing code to be RFC-compliant (thanks @jbebe)
