@@ -529,6 +529,58 @@ describe('webdriverajax', function testSuite() {
     });
   });
 
+  describe('sendBeacon API', async function () {
+    it('can intercept a simple POST request', async function () {
+      await browser.url('/sendBeacon.html');
+      await browser.setupInterceptor();
+      await browser.expectRequest('POST', '/post.json', 200);
+      await completedRequest('#buttonjson');
+      await browser.assertRequests();
+      await browser.assertExpectedRequestsOnly();
+    });
+
+    it('can intercept when target is URL object', async function () {
+      await browser.url('/sendBeacon.html');
+      await browser.setupInterceptor();
+      await browser.expectRequest('POST', /\/post\.json/, 200);
+      await completedRequest('#buttonstring');
+      await browser.assertRequests();
+      await browser.assertExpectedRequestsOnly();
+    });
+
+    it('can access a certain request', async function () {
+      await browser.url('/sendBeacon.html');
+      await browser.setupInterceptor();
+      await completedRequest('#buttonjson');
+      const request = await browser.getRequest(0);
+      assert.equal(request.method, 'POST');
+      assert.equal(request.url, '/post.json');
+      assert.equal(request.response.body, true);
+      assert.equal(request.response.statusCode, 200);
+      assert.deepEqual(request.response.headers, {});
+    });
+
+    it('can assess the request body using string data', async function () {
+      await browser.url('/sendBeacon.html');
+      await browser.setupInterceptor();
+      await completedRequest('#buttonstring');
+      const request = await browser.getRequest(0);
+      assert.equal(request.url, 'http://localhost:8080/post.json');
+      assert.equal(request.response.body, true);
+      assert.deepEqual(request.body, 'bar');
+    });
+
+    it('can assess the request body using JSON data as Blob', async function () {
+      await browser.url('/sendBeacon.html');
+      await browser.setupInterceptor();
+      await completedRequest('#buttonjson');
+      const request = await browser.getRequest(0);
+      assert.equal(request.url, '/post.json');
+      assert.equal(request.response.body, true);
+      assert.deepEqual(request.body, { foo: 'bar' });
+    });
+  });
+
   describe('fetch API', async function () {
     it('can intercept a simple GET request', async function () {
       await browser.url('/get.html');

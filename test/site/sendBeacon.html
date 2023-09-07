@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>sendBeacon request</title>
+</head>
+<body>
+  <p id="text">This file makes a sendBeacon request to /post.json</p>
+  <button id="buttonstring">Press me for string data</button>
+  <button id="buttonjson">Press me for JSON data as Blob</button>
+  <div id="response"></div>
+  <script>
+    'use strict';
+
+    (function (window, document) {
+      var buttonstring = document.querySelector('#buttonstring');
+      var buttonjson = document.querySelector('#buttonjson');
+
+      buttonstring.addEventListener('click', function (evt) {
+        var data = 'bar';
+        var isQueuedForDelivery = window.navigator.sendBeacon(new URL('/post.json', window.location.origin), data);
+
+        if(isQueuedForDelivery) {
+          document.querySelector('#response').textContent += "queued string for delivery\n";
+        }
+      });
+
+      buttonjson.addEventListener('click', function (evt) {
+        var data = new Blob([JSON.stringify({ foo: 'bar' })], { type: 'text/plain' });
+        var isQueuedForDelivery = window.navigator.sendBeacon('/post.json', data);
+
+        if(isQueuedForDelivery) {
+          document.querySelector('#response').textContent += "queued json for delivery\n";
+        }
+      });
+
+    })(window, window.document);
+  </script>
+</body>
+</html>
