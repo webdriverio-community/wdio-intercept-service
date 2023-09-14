@@ -69,33 +69,33 @@ declare module WebdriverIO {
     expectRequest(
       method: WdioInterceptorService.HTTPMethod,
       url: string | RegExp,
-      statusCode: number
+      statusCode: number,
     ): AsyncSync<Browser>;
     hasPendingRequests(): AsyncSync<boolean>;
     assertRequests(
-      options?: WdioInterceptorService.OrderingStrategy
+      options?: WdioInterceptorService.OrderingStrategy,
     ): AsyncSync<Browser>;
     assertExpectedRequestsOnly(inOrder?: boolean): AsyncSync<Browser>;
     assertExpectedRequestsOnly(
-      options?: WdioInterceptorService.AssertionRequestOrderStrategy
+      options?: WdioInterceptorService.AssertionRequestOrderStrategy,
     ): AsyncSync<Browser>;
     resetExpectations(): AsyncSync<Browser>;
     getExpectations(): AsyncSync<WdioInterceptorService.ExpectedRequest[]>;
     getRequest(
       index: number,
       options?: WdioInterceptorService.GetRequestOptions &
-        WdioInterceptorService.OnlyCompletedRequests
+        WdioInterceptorService.OnlyCompletedRequests,
     ): AsyncSync<WdioInterceptorService.CompletedRequest>;
     getRequest(
       index: number,
-      options: WdioInterceptorService.GetRequestOptions
+      options: WdioInterceptorService.GetRequestOptions,
     ): AsyncSync<WdioInterceptorService.InterceptedRequest>;
     getRequests(
       options?: WdioInterceptorService.GetRequestOptions &
-        WdioInterceptorService.OnlyCompletedRequests
+        WdioInterceptorService.OnlyCompletedRequests,
     ): AsyncSync<WdioInterceptorService.CompletedRequest[]>;
     getRequests(
-      options: WdioInterceptorService.GetRequestOptions
+      options: WdioInterceptorService.GetRequestOptions,
     ): AsyncSync<WdioInterceptorService.InterceptedRequest[]>;
   }
 }
