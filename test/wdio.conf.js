@@ -12,7 +12,7 @@ const chromedriver = !process.env.CHROMEWEBDRIVER
       {
         chromedriverCustomPath: path.join(
           process.env.CHROMEWEBDRIVER,
-          process.platform === 'win32' ? 'chromedriver.exe' : 'chromedriver'
+          process.platform === 'win32' ? 'chromedriver.exe' : 'chromedriver',
         ),
       },
     ];

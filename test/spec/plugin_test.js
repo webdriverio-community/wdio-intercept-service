@@ -36,7 +36,7 @@ describe('webdriverajax', function testSuite() {
       async function () {
         return (await this.getText()) !== initial;
       },
-      { timeout: wait, interval: 5 }
+      { timeout: wait, interval: 5 },
     );
   };
 
@@ -167,7 +167,7 @@ describe('webdriverajax', function testSuite() {
         const headers = request.response.headers;
 
         assert.strictEqual(headers[config.header.name], config.header.value);
-      }
+      },
     );
   }
 
@@ -207,7 +207,7 @@ describe('webdriverajax', function testSuite() {
       await completedRequest('#button');
       await assert.rejects(
         () => browser.assertRequests(),
-        /Expected 2 requests but was 1/
+        /Expected 2 requests but was 1/,
       );
     });
 
@@ -218,7 +218,7 @@ describe('webdriverajax', function testSuite() {
       await completedRequest('#button');
       await assert.rejects(
         () => browser.assertRequests(),
-        /method PUT but was GET/
+        /method PUT but was GET/,
       );
     });
 
@@ -229,7 +229,7 @@ describe('webdriverajax', function testSuite() {
       await completedRequest('#button');
       await assert.rejects(
         () => browser.assertRequests(),
-        /to have URL \/wrong\.json but was/
+        /to have URL \/wrong\.json but was/,
       );
     });
 
@@ -243,7 +243,7 @@ describe('webdriverajax', function testSuite() {
         (err) => {
           assert.match(err.message, /to match \/wrong\\.json\/ but was/);
           return true;
-        }
+        },
       );
     });
 
@@ -254,7 +254,7 @@ describe('webdriverajax', function testSuite() {
       await completedRequest('#button');
       await assert.rejects(
         () => browser.assertRequests(),
-        /status 404 but was 200/
+        /status 404 but was 200/,
       );
     });
 
@@ -380,7 +380,7 @@ describe('webdriverajax', function testSuite() {
         {
           fetchResponse: false,
           headers: () => ({}),
-        }
+        },
       );
       await browser.setupInterceptor();
       await $('#buttonform').click();
@@ -419,7 +419,7 @@ describe('webdriverajax', function testSuite() {
       await browser.setupInterceptor();
       await assert.rejects(
         () => browser.assertRequests(),
-        /No\sexpectations\sfound/
+        /No\sexpectations\sfound/,
       );
     });
 
@@ -448,7 +448,7 @@ describe('webdriverajax', function testSuite() {
         await browser.assertExpectedRequestsOnly(args);
         await assert.rejects(
           () => browser.assertRequests(),
-          /Expected\s\d\srequests\sbut\swas\s\d/
+          /Expected\s\d\srequests\sbut\swas\s\d/,
         );
       });
     });
@@ -471,7 +471,7 @@ describe('webdriverajax', function testSuite() {
         await browser.assertExpectedRequestsOnly(args);
         await assert.rejects(
           () => browser.assertRequests(),
-          /Expected\s\d\srequests\sbut\swas\s\d/
+          /Expected\s\d\srequests\sbut\swas\s\d/,
         );
       });
       it(`can validate only the expected requests, in any order${
@@ -485,7 +485,7 @@ describe('webdriverajax', function testSuite() {
         await completedRequest('#postbutton');
         await assert.rejects(
           () => browser.assertExpectedRequestsOnly(args),
-          /Expected request was not found. method: POST url: \/invalid.json statusCode: 200/
+          /Expected request was not found. method: POST url: \/invalid.json statusCode: 200/,
         );
       });
     });
@@ -604,19 +604,19 @@ describe('webdriverajax', function testSuite() {
         assert.equal(
           await browser.hasPendingRequests(),
           false,
-          'should be false with no requests'
+          'should be false with no requests',
         );
         await $(button).click();
         assert.equal(
           await browser.hasPendingRequests(),
           true,
-          'should be true after clicking'
+          'should be true after clicking',
         );
         await browser.pause(wait);
         assert.equal(
           await browser.hasPendingRequests(),
           false,
-          'should be false after request completion'
+          'should be false after request completion',
         );
       });
 
@@ -633,18 +633,18 @@ describe('webdriverajax', function testSuite() {
         assert.equal(
           completedOnly.length,
           1,
-          '"includePending: false" should ignore pending requests'
+          '"includePending: false" should ignore pending requests',
         );
         const request = completedOnly[0];
         assert.equal(
           request.pending,
           false,
-          'should retrieve completed request only'
+          'should retrieve completed request only',
         );
         assert.notEqual(
           typeof request.response,
           'undefined',
-          'should retrieve completed request'
+          'should retrieve completed request',
         );
       });
     });
@@ -663,29 +663,29 @@ describe('webdriverajax', function testSuite() {
       assert.equal(
         requests[0].pending || requests[1].pending,
         false,
-        '1st and 2nd requests should be completed'
+        '1st and 2nd requests should be completed',
       );
       assert.equal(
         requests[2].pending && requests[3].pending,
         true,
-        '3rd & 4th requests should be pending'
+        '3rd & 4th requests should be pending',
       );
       // Default sort should be stable.
       assert.match(requests[0].url, /\?type=xhr/, 'fast XHR should come first');
       assert.match(
         requests[1].url,
         /\?type=fetch/,
-        'fast Fetch should come 2nd'
+        'fast Fetch should come 2nd',
       );
       assert.match(
         requests[2].url,
         /\?slow=true&type=xhr/,
-        'slow XHR should be 3rd'
+        'slow XHR should be 3rd',
       );
       assert.match(
         requests[3].url,
         /\?slow=true&type=fetch/,
-        'slow Fetch should be last'
+        'slow Fetch should be last',
       );
     });
 
@@ -706,28 +706,28 @@ describe('webdriverajax', function testSuite() {
       assert.equal(
         requests[0].pending && requests[2].pending,
         true,
-        '1st & 3rd requests should be pending'
+        '1st & 3rd requests should be pending',
       );
       assert.equal(
         requests[1].pending || requests[3].pending,
         false,
-        '2nd & 4th requests should be completed'
+        '2nd & 4th requests should be completed',
       );
       assert.match(
         requests[0].url,
         /\?slow=true&type=xhr/,
-        'slow XHR should be 1st'
+        'slow XHR should be 1st',
       );
       assert.match(requests[1].url, /\?type=xhr/, 'fast XHR should be 2nd');
       assert.match(
         requests[2].url,
         /\?slow=true&type=fetch/,
-        'slow Fetch should be 3rd'
+        'slow Fetch should be 3rd',
       );
       assert.match(
         requests[3].url,
         /\?type=fetch/,
-        'fast Fetch should be last'
+        'fast Fetch should be last',
       );
     });
 
@@ -737,7 +737,7 @@ describe('webdriverajax', function testSuite() {
       await browser.expectRequest('POST', /post\.json\?slow=true/, null);
       await $('#slow').click();
       await assert.rejects(() =>
-        browser.assertRequests({ includePending: true })
+        browser.assertRequests({ includePending: true }),
       );
     });
   });
@@ -776,14 +776,14 @@ describe('webdriverajax', function testSuite() {
     it('throws a TypeError if the index is given and not a number', async function () {
       await assert.rejects(
         () => browser.getRequest({ includePending: true }),
-        /TypeError.+index.+non-negative integer/
+        /TypeError.+index.+non-negative integer/,
       );
     });
 
     it('throws a RangeError if the index is given but is negative', async function () {
       await assert.rejects(
         () => browser.getRequest(-1),
-        /RangeError.+index.+non-negative integer/
+        /RangeError.+index.+non-negative integer/,
       );
     });
   });

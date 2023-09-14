@@ -11,7 +11,7 @@ class InterceptServiceError extends Error {
 const issueDeprecation = (map, key, what) => {
   if (!map[key]) {
     console.warn(
-      `${PKG_PREFIX}${what} is deprecated and will no longer work in v5`
+      `${PKG_PREFIX}${what} is deprecated and will no longer work in v5`,
     );
     map[key] = true;
   }
@@ -37,7 +37,7 @@ class WebdriverAjax {
      */
     if (typeof browser.addCommand !== 'function') {
       throw new Error(
-        "you can't use WebdriverAjax with this version of WebdriverIO"
+        "you can't use WebdriverAjax with this version of WebdriverIO",
       );
     }
 
@@ -50,7 +50,7 @@ class WebdriverAjax {
     browser.addCommand('assertRequests', assertRequests.bind(this));
     browser.addCommand(
       'assertExpectedRequestsOnly',
-      assertExpectedRequestsOnly.bind(this)
+      assertExpectedRequestsOnly.bind(this),
     );
     browser.addCommand('hasPendingRequests', hasPendingRequests);
     browser.addCommand('getRequest', getRequest);
@@ -87,14 +87,14 @@ class WebdriverAjax {
 
       if (!expectations.length) {
         return Promise.reject(
-          new Error('No expectations found. Call .expectRequest() first')
+          new Error('No expectations found. Call .expectRequest() first'),
         );
       }
 
       // Don't let users request pending requests:
       if (options.includePending) {
         throw new InterceptServiceError(
-          'passing `includePending` option to `assertRequests` is not supported!'
+          'passing `includePending` option to `assertRequests` is not supported!',
         );
       }
       return getRequests(options).then((requests) => {
@@ -104,8 +104,8 @@ class WebdriverAjax {
               'Expected ' +
                 expectations.length +
                 ' requests but was ' +
-                requests.length
-            )
+                requests.length,
+            ),
           );
         }
 
@@ -121,8 +121,8 @@ class WebdriverAjax {
                   ' to have method ' +
                   ex.method +
                   ' but was ' +
-                  request.method
-              )
+                  request.method,
+              ),
             );
           }
 
@@ -138,8 +138,8 @@ class WebdriverAjax {
                   ' to match ' +
                   ex.url.toString() +
                   ' but was ' +
-                  request.url
-              )
+                  request.url,
+              ),
             );
           }
 
@@ -151,8 +151,8 @@ class WebdriverAjax {
                   ' to have URL ' +
                   ex.url +
                   ' but was ' +
-                  request.url
-              )
+                  request.url,
+              ),
             );
           }
 
@@ -164,8 +164,8 @@ class WebdriverAjax {
                   ' to have status ' +
                   ex.statusCode +
                   ' but was ' +
-                  request.response.statusCode
-              )
+                  request.response.statusCode,
+              ),
             );
           }
         }
@@ -182,7 +182,7 @@ class WebdriverAjax {
         issueDeprecation(
           this._deprecations,
           'inOrder',
-          'Calling `assertExpectedRequestsOnly` with a boolean parameter'
+          'Calling `assertExpectedRequestsOnly` with a boolean parameter',
         );
         inOrder = orderOrOptions;
       } else if (orderOrOptions && typeof orderOrOptions === 'object') {
@@ -194,7 +194,7 @@ class WebdriverAjax {
       // Don't let users request pending requests:
       if (options.includePending) {
         throw new InterceptServiceError(
-          'passing `includePending` option to `assertExpectedRequestsOnly` is not supported!'
+          'passing `includePending` option to `assertExpectedRequestsOnly` is not supported!',
         );
       }
       return getRequests(options).then((requests) => {
@@ -232,8 +232,8 @@ class WebdriverAjax {
                   ' url: ' +
                   ex.url +
                   ' statusCode: ' +
-                  ex.statusCode
-              )
+                  ex.statusCode,
+              ),
             );
           }
         }
@@ -245,8 +245,8 @@ class WebdriverAjax {
                 expectations.length +
                 ' requests but found ' +
                 matchedRequestIndexes.length +
-                ' matching requests'
-            )
+                ' matching requests',
+            ),
           );
         } else if (
           inOrder &&
@@ -254,7 +254,7 @@ class WebdriverAjax {
             JSON.stringify(matchedRequestIndexes.slice().sort())
         ) {
           return Promise.reject(
-            new Error('Requests not received in the expected order')
+            new Error('Requests not received in the expected order'),
           );
         }
 
@@ -281,18 +281,18 @@ class WebdriverAjax {
       const hasIndex = typeof index === 'number';
       if (typeof index !== 'undefined' && !hasIndex) {
         throw new TypeError(
-          `${PKG_PREFIX}the "index" property must be a non-negative integer`
+          `${PKG_PREFIX}the "index" property must be a non-negative integer`,
         );
       }
       if (hasIndex && index < 0) {
         throw new RangeError(
-          `${PKG_PREFIX}the "index" property must be a non-negative integer`
+          `${PKG_PREFIX}the "index" property must be a non-negative integer`,
         );
       }
       const request = await browser.execute(
         interceptor.getRequest,
         hasIndex ? index : undefined,
-        options
+        options,
       );
       if (!request) {
         if (hasIndex) {
@@ -339,7 +339,7 @@ class WebdriverAjax {
         };
         if (!req.headers) {
           console.warn(
-            `${transformed.method} request to ${req.url} (HTTP ${req.statusCode}) had no response headers!`
+            `${transformed.method} request to ${req.url} (HTTP ${req.statusCode}) had no response headers!`,
           );
         }
       }
