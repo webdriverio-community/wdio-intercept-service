@@ -21,7 +21,7 @@ jobs:
         run: npm test
       - name: Upload WDIO logs
         if: failure()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: wdio-logs
           path: ${{ github.workspace }}/test/logs/
