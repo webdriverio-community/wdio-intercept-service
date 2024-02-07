@@ -54,12 +54,10 @@ describe('webdriverajax', function testSuite() {
 
   it('sets up the interceptor in standalone mode', async function () {
     const browser = await remote({
-      port: 9515,
-      path: '/',
       capabilities: {
         browserName: 'chrome',
         'goog:chromeOptions': {
-          args: ['--headless'],
+          args: ['--headless', '--disable-gpu'],
         },
       },
     });

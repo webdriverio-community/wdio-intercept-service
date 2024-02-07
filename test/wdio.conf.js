@@ -1,23 +1,5 @@
-const path = require('path');
 const plugin = require('../index.js').default;
 const localServer = require('./utils/express');
-
-// To support testing in both GitHub Actions and locally, configure
-// `wdio-chromedriver-service` based on environment variables.
-// Ref: https://github.com/actions/virtual-environments/blob/main/images/linux/Ubuntu2004-README.md#browsers-and-drivers
-const chromedriver = !process.env.CHROMEWEBDRIVER
-  ? 'chromedriver' // running locally
-  : [
-      'chromedriver',
-      {
-        chromedriverCustomPath: path.join(
-          process.env.CHROMEWEBDRIVER,
-          process.platform === 'win32' ? 'chromedriver.exe' : 'chromedriver',
-        ),
-      },
-    ];
-
-const geckodriver = 'geckodriver'; // running locally, or in CI.
 
 exports.config = {
   //
@@ -68,12 +50,14 @@ exports.config = {
   capabilities: [
     {
       browserName: 'chrome',
+      browserVersion: 'stable',
       'goog:chromeOptions': {
         args: ['--headless', '--disable-gpu'],
       },
     },
     {
       browserName: 'firefox',
+      browserVersion: 'latest',
       'moz:firefoxOptions': {
         args: ['-headless'],
       },
@@ -116,7 +100,7 @@ exports.config = {
   // Services take over a specific job you don't want to take care of. They enhance
   // your test setup with almost no effort. Unlike plugins, they don't add new
   // commands. Instead, they hook themselves up into the test process.
-  services: [chromedriver, geckodriver, [plugin, {}]],
+  services: [[plugin, {}]],
   // Framework you want to run your specs with.
   // The following are supported: Mocha, Jasmine, and Cucumber
   // see also: https://webdriver.io/docs/frameworks.html
