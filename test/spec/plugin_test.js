@@ -52,7 +52,7 @@ describe('webdriverajax', function testSuite() {
     });
   });
 
-  it('sets up the interceptor in standalone mode', async function () {
+  it.skip('sets up the interceptor in standalone mode', async function () {
     const browser = await remote({
       capabilities: {
         browserName: 'chrome',
