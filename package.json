@@ -13,7 +13,7 @@
     "release:minor": "npm run release -- minor",
     "release:major": "npm run release -- major",
     "test": "wdio run ./test/wdio.conf.js",
-    "prepare": "husky install"
+    "prepare": "husky"
   },
   "types": "./types/wdio-intercept-service.d.ts",
   "repository": {
