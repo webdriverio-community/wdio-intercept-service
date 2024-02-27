@@ -40,7 +40,41 @@ describe('webdriverajax', function testSuite() {
     );
   };
 
-  it('sets up the interceptor', async function () {
+  describe('before hook', function () {
+    it('registers service methods with specific browser instance when provided', async function () {
+      const browser = await remote({
+        capabilities: {
+          browserName: 'chrome',
+          'goog:chromeOptions': {
+            args: ['--headless', '--disable-gpu'],
+          },
+        },
+      });
+
+      new WebdriverAjax().before(null, null, browser);
+
+      assert.strictEqual(typeof browser.setupInterceptor, 'function');
+    });
+
+    it('registers service methods on the global browser when not provided a specific instance', async function () {
+      const originalBrowser = globalThis.browser;
+      const commands = [];
+      globalThis.browser = { addCommand: (name) => commands.push(name) };
+      new WebdriverAjax().before();
+
+      try {
+        assert.strictEqual(
+          commands.some((name) => name === 'setupInterceptor'),
+          true,
+          'should add commands to global browser',
+        );
+      } finally {
+        globalThis.browser = originalBrowser;
+      }
+    });
+  });
+
+  it('setupInterceptor - configures window state properly', async function () {
     assert.equal(typeof browser.setupInterceptor, 'function');
     await browser.url('/get.html');
     await browser.setupInterceptor();
@@ -50,22 +84,6 @@ describe('webdriverajax', function testSuite() {
       excludedUrls: [],
       requests: [],
     });
-  });
-
-  it('sets up the interceptor in standalone mode', async function () {
-    const browser = await remote({
-      capabilities: {
-        browserName: 'chrome',
-        'goog:chromeOptions': {
-          args: ['--headless', '--disable-gpu'],
-        },
-      },
-    });
-
-    const webdriverAjax = new WebdriverAjax();
-    webdriverAjax.before(null, null, browser);
-
-    assert.equal(typeof browser.setupInterceptor, 'function');
   });
 
   it('disables and enables interceptor', async function () {

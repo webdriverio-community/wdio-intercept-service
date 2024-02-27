@@ -31,11 +31,16 @@ class WebdriverAjax {
     this._wdajaxExpectations = [];
   }
 
-  before(_, __, browser) {
+  before() {
+    // WebdriverIO before v6.10 does not pass in the browser instance
+    /** @type {import('webdriverio').BrowserBase} */
+    const browser =
+      typeof arguments[2] === 'undefined' ? globalThis.browser : arguments[2];
+
     /**
      * instance need to have addCommand method
      */
-    if (typeof browser.addCommand !== 'function') {
+    if (!browser || typeof browser.addCommand !== 'function') {
       throw new Error(
         "you can't use WebdriverAjax with this version of WebdriverIO",
       );

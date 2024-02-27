@@ -1,6 +1,10 @@
 ## wdio-intercept-service changelog
 
 ### [ [>](https://github.com/webdriverio-community/wdio-intercept-service/tree/v.next) ] v.next / <DATE>
+- Upgrade WDIO test dependencies to minimum of 8.14 for auto-driver management
+- Update repo GH action dependencies
+- Update WDIO to v8.32 to fix Chromedriver download URL (thanks @seanpoulter)
+- Fix property check that broke compatibility with WDIO versions before v6.10
 
 ### [ [>](https://github.com/webdriverio-community/wdio-intercept-service/tree/v4.3.0) ] 4.4.0 / 24.02.2023
 - Promptly throw if the user passes an invalid "index" parameter to `getRequest`
