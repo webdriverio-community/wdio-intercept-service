@@ -5,6 +5,7 @@
 - Update repo GH action dependencies
 - Update WDIO to v8.32 to fix Chromedriver download URL (thanks @seanpoulter)
 - Fix property check that broke compatibility with WDIO versions before v6.10
+- Fix issue with unit test concurrency by removing unnecessary use of WebdriverIO `remote`
 
 ### [ [>](https://github.com/webdriverio-community/wdio-intercept-service/tree/v4.3.0) ] 4.4.0 / 24.02.2023
 - Promptly throw if the user passes an invalid "index" parameter to `getRequest`

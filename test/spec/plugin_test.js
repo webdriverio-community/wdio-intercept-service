@@ -2,7 +2,6 @@
 'use strict';
 
 const assert = require('assert');
-const { remote } = require('webdriverio');
 const WebdriverAjax = require('../../index').default;
 const { TestHeaders } = require('../utils/header-parser');
 // Since we serve the content from a file, the content-length depends on if the host is
@@ -42,18 +41,16 @@ describe('webdriverajax', function testSuite() {
 
   describe('before hook', function () {
     it('registers service methods with specific browser instance when provided', async function () {
-      const browser = await remote({
-        capabilities: {
-          browserName: 'chrome',
-          'goog:chromeOptions': {
-            args: ['--headless', '--disable-gpu'],
-          },
-        },
-      });
+      const commands = [];
+      const instanceBrowser = { addCommand: (name) => commands.push(name) };
 
-      new WebdriverAjax().before(null, null, browser);
+      new WebdriverAjax().before(null, null, instanceBrowser);
 
-      assert.strictEqual(typeof browser.setupInterceptor, 'function');
+      assert.strictEqual(
+        commands.some((name) => name === 'setupInterceptor'),
+        true,
+        'should add commands to specific browser instance',
+      );
     });
 
     it('registers service methods on the global browser when not provided a specific instance', async function () {
