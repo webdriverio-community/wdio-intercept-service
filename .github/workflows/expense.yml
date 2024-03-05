@@ -4,10 +4,10 @@ on:
   workflow_dispatch:
     inputs:
       prNumber:
-        description: "Number of the PR (without #)"
+        description: 'Number of the PR (without #)'
         required: true
       amount:
-        description: "The expense amount you like to grant for the contribution in $"
+        description: 'The expense amount you like to grant for the contribution in $'
         required: true
         type: choice
         options:

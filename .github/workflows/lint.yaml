@@ -12,6 +12,8 @@ jobs:
           node-version: '18.x'
           cache: 'npm'
       - name: Install Dependencies
-        run: npm install
+        run: npm ci
       - name: Lint
         run: npm run lint
+      - name: Style
+        run: npm run prettier:check
