@@ -7,6 +7,7 @@
 </head>
 <body>
   <p id="text">This file makes a sendBeacon request to /post.json</p>
+  <button id="url">Press me for a URL() argument</button>
   <button id="buttonstring">Press me for string data</button>
   <button id="buttonjson">Press me for JSON data as Blob</button>
   <div id="response"></div>
@@ -14,25 +15,27 @@
     'use strict';
 
     (function (window, document) {
-      var buttonstring = document.querySelector('#buttonstring');
-      var buttonjson = document.querySelector('#buttonjson');
+      const resp = document.querySelector('#response');
 
-      buttonstring.addEventListener('click', function (evt) {
-        var data = 'bar';
-        var isQueuedForDelivery = window.navigator.sendBeacon(new URL('/post.json', window.location.origin), data);
+      function log(queued, when) {
+        resp.textContent += `${queued === true ? "did" : "did not"} queue update ${when}\n`;
+      }
 
-        if(isQueuedForDelivery) {
-          document.querySelector('#response').textContent += "queued string for delivery\n";
-        }
+      document.querySelector('#url').addEventListener('click', function () {
+        const queued = window.navigator.sendBeacon(new URL('/telemetry?data=querystring', window.location.origin));
+        log(queued, 'when using `new URL()`');
       });
 
-      buttonjson.addEventListener('click', function (evt) {
-        var data = new Blob([JSON.stringify({ foo: 'bar' })], { type: 'text/plain' });
-        var isQueuedForDelivery = window.navigator.sendBeacon('/post.json', data);
+      document.querySelector('#buttonstring').addEventListener('click', function () {
+        const data = 'bar';
+        const isQueuedForDelivery = window.navigator.sendBeacon('/telemetry', data);
+        log(isQueuedForDelivery, "when payload is string");
+      });
 
-        if(isQueuedForDelivery) {
-          document.querySelector('#response').textContent += "queued json for delivery\n";
-        }
+      document.querySelector('#buttonjson').addEventListener('click', function () {
+        const data = new Blob([JSON.stringify({ foo: 'bar' })], { type: 'text/plain' });
+        const isQueuedForDelivery = window.navigator.sendBeacon('/telemetry', data);
+        log(isQueuedForDelivery, 'when payload is "text/plain" Blob')
       });
 
     })(window, window.document);

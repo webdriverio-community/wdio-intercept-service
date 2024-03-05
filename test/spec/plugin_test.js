@@ -543,54 +543,50 @@ describe('webdriverajax', function testSuite() {
   });
 
   describe('sendBeacon API', async function () {
-    it('can intercept a simple POST request', async function () {
+    this.beforeEach(async function () {
       await browser.url('/sendBeacon.html');
       await browser.setupInterceptor();
-      await browser.expectRequest('POST', '/post.json', 200);
-      await completedRequest('#buttonjson');
-      await browser.assertRequests();
-      await browser.assertExpectedRequestsOnly();
+    });
+
+    it('reports beacons as requests with POST method', async function () {
+      await completedRequest('#buttonstring');
+      const requests = await browser.getRequests();
+      assert.strictEqual(requests.length, 1, 'should capture single request');
+      assert.strictEqual(
+        requests[0].method,
+        'POST',
+        'should capture POST request',
+      );
     });
 
     it('can intercept when target is URL object', async function () {
-      await browser.url('/sendBeacon.html');
-      await browser.setupInterceptor();
-      await browser.expectRequest('POST', /\/post\.json/, 200);
-      await completedRequest('#buttonstring');
+      await browser.expectRequest('POST', /\/telemetry\?data=querystring/, 200);
+      await completedRequest('#url');
       await browser.assertRequests();
       await browser.assertExpectedRequestsOnly();
-    });
-
-    it('can access a certain request', async function () {
-      await browser.url('/sendBeacon.html');
-      await browser.setupInterceptor();
-      await completedRequest('#buttonjson');
-      const request = await browser.getRequest(0);
-      assert.equal(request.method, 'POST');
-      assert.equal(request.url, '/post.json');
-      assert.equal(request.response.body, true);
-      assert.equal(request.response.statusCode, 200);
-      assert.deepEqual(request.response.headers, {});
+      const action = await browser.$('#response').getText();
+      assert.strictEqual(action, 'did queue update when using `new URL()`');
     });
 
     it('can assess the request body using string data', async function () {
-      await browser.url('/sendBeacon.html');
-      await browser.setupInterceptor();
       await completedRequest('#buttonstring');
       const request = await browser.getRequest(0);
-      assert.equal(request.url, 'http://localhost:8080/post.json');
-      assert.equal(request.response.body, true);
+      assert.equal(request.url, '/telemetry');
       assert.deepEqual(request.body, 'bar');
+      const action = await browser.$('#response').getText();
+      assert.strictEqual(action, 'did queue update when payload is string');
     });
 
     it('can assess the request body using JSON data as Blob', async function () {
-      await browser.url('/sendBeacon.html');
-      await browser.setupInterceptor();
       await completedRequest('#buttonjson');
       const request = await browser.getRequest(0);
-      assert.equal(request.url, '/post.json');
-      assert.equal(request.response.body, true);
+      assert.equal(request.url, '/telemetry');
       assert.deepEqual(request.body, { foo: 'bar' });
+      const action = await browser.$('#response').getText();
+      assert.strictEqual(
+        action,
+        'did queue update when payload is "text/plain" Blob',
+      );
     });
   });
 
