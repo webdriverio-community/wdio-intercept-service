@@ -173,7 +173,7 @@ describe('webdriverajax', function testSuite() {
     it(
       'can access response headers when response ' + config.when,
       async function () {
-        await browser.url('/header-parsing.html');
+        await browser.url('/header_parsing.html');
         await browser.setupInterceptor();
         await completedRequest(config.buttonId);
         const request = await browser.getRequest(0);
@@ -544,7 +544,7 @@ describe('webdriverajax', function testSuite() {
 
   describe('sendBeacon API', async function () {
     this.beforeEach(async function () {
-      await browser.url('/sendBeacon.html');
+      await browser.url('/send_beacon.html');
       await browser.setupInterceptor();
     });
 
@@ -577,8 +577,8 @@ describe('webdriverajax', function testSuite() {
       assert.strictEqual(action, 'did queue update when payload is string');
     });
 
-    it('can assess the request body using JSON data as Blob', async function () {
-      await completedRequest('#buttonjson');
+    it('can assess the request body using Blob text data', async function () {
+      await completedRequest('#buttonblobplain');
       const request = await browser.getRequest(0);
       assert.equal(request.url, '/telemetry');
       assert.deepEqual(request.body, { foo: 'bar' });

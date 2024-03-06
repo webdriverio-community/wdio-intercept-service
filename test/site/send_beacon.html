@@ -6,10 +6,10 @@
   <title>sendBeacon request</title>
 </head>
 <body>
-  <p id="text">This file makes a sendBeacon request to /post.json</p>
+  <p id="text">This file makes various sendBeacon requests</p>
   <button id="url">Press me for a URL() argument</button>
   <button id="buttonstring">Press me for string data</button>
-  <button id="buttonjson">Press me for JSON data as Blob</button>
+  <button id="buttonblobplain">Press me for stringified JSON data as Blob</button>
   <div id="response"></div>
   <script>
     'use strict';
@@ -32,7 +32,7 @@
         log(isQueuedForDelivery, "when payload is string");
       });
 
-      document.querySelector('#buttonjson').addEventListener('click', function () {
+      document.querySelector('#buttonblobplain').addEventListener('click', function () {
         const data = new Blob([JSON.stringify({ foo: 'bar' })], { type: 'text/plain' });
         const isQueuedForDelivery = window.navigator.sendBeacon('/telemetry', data);
         log(isQueuedForDelivery, 'when payload is "text/plain" Blob')
