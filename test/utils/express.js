@@ -22,7 +22,11 @@ async function initialize({ baseUrl }) {
   app.use((req, resp, nextFn) => {
     if (req.method === 'POST') {
       // resp.sendFile(`${resources}${req.path}`);
-      resp.json({ OK: true });
+      if (req.url.startsWith('/telemetry')) {
+        resp.sendStatus(204);
+      } else {
+        resp.json({ OK: true });
+      }
     } else {
       nextFn();
     }
