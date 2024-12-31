@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>sendBeacon request</title>
+</head>
+<body>
+  <p id="text">This file makes various sendBeacon requests</p>
+  <button id="url">Press me for a URL() argument</button>
+  <button id="buttonstring">Press me for string data</button>
+  <button id="buttonblobplain">Press me for stringified JSON data as Blob</button>
+  <div id="response"></div>
+  <script>
+    'use strict';
+
+    (function (window, document) {
+      const resp = document.querySelector('#response');
+
+      function log(queued, when) {
+        resp.textContent += `${queued === true ? "did" : "did not"} queue update ${when}\n`;
+      }
+
+      document.querySelector('#url').addEventListener('click', function () {
+        const queued = window.navigator.sendBeacon(new URL('/telemetry?data=querystring', window.location.origin));
+        log(queued, 'when using `new URL()`');
+      });
+
+      document.querySelector('#buttonstring').addEventListener('click', function () {
+        const data = 'bar';
+        const isQueuedForDelivery = window.navigator.sendBeacon('/telemetry', data);
+        log(isQueuedForDelivery, "when payload is string");
+      });
+
+      document.querySelector('#buttonblobplain').addEventListener('click', function () {
+        const data = new Blob([JSON.stringify({ foo: 'bar' })], { type: 'text/plain' });
+        const isQueuedForDelivery = window.navigator.sendBeacon('/telemetry', data);
+        log(isQueuedForDelivery, 'when payload is "text/plain" Blob')
+      });
+
+    })(window, window.document);
+  </script>
+</body>
+</html>

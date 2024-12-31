@@ -173,7 +173,7 @@ describe('webdriverajax', function testSuite() {
     it(
       'can access response headers when response ' + config.when,
       async function () {
-        await browser.url('/header-parsing.html');
+        await browser.url('/header_parsing.html');
         await browser.setupInterceptor();
         await completedRequest(config.buttonId);
         const request = await browser.getRequest(0);
@@ -539,6 +539,54 @@ describe('webdriverajax', function testSuite() {
       await completedRequest('#button');
       requests = await browser.getRequests();
       assert.equal(requests.length, 2);
+    });
+  });
+
+  describe('sendBeacon API', async function () {
+    this.beforeEach(async function () {
+      await browser.url('/send_beacon.html');
+      await browser.setupInterceptor();
+    });
+
+    it('reports beacons as requests with POST method', async function () {
+      await completedRequest('#buttonstring');
+      const requests = await browser.getRequests();
+      assert.strictEqual(requests.length, 1, 'should capture single request');
+      assert.strictEqual(
+        requests[0].method,
+        'POST',
+        'should capture POST request',
+      );
+    });
+
+    it('can intercept when target is URL object', async function () {
+      await browser.expectRequest('POST', /\/telemetry\?data=querystring/, 200);
+      await completedRequest('#url');
+      await browser.assertRequests();
+      await browser.assertExpectedRequestsOnly();
+      const action = await browser.$('#response').getText();
+      assert.strictEqual(action, 'did queue update when using `new URL()`');
+    });
+
+    it('can assess the request body using string data', async function () {
+      await completedRequest('#buttonstring');
+      const request = await browser.getRequest(0);
+      assert.equal(request.url, '/telemetry');
+      assert.deepEqual(request.body, 'bar');
+      const action = await browser.$('#response').getText();
+      assert.strictEqual(action, 'did queue update when payload is string');
+    });
+
+    it('can assess the request body using Blob text data', async function () {
+      await completedRequest('#buttonblobplain');
+      const request = await browser.getRequest(0);
+      assert.equal(request.url, '/telemetry');
+      assert.deepEqual(request.body, { foo: 'bar' });
+      const action = await browser.$('#response').getText();
+      assert.strictEqual(
+        action,
+        'did queue update when payload is "text/plain" Blob',
+      );
     });
   });
 
